@@ -8,6 +8,7 @@ import org.droidplanner.android.communication.connection.MAVLinkConnection.MavLi
 import org.droidplanner.android.communication.connection.bluetooth.BluetoothServer;
 import org.droidplanner.android.notifications.NotificationHandler;
 import org.droidplanner.android.notifications.StatusBarNotificationProvider;
+import org.droidplanner.android.utils.Constants;
 import org.droidplanner.android.utils.DroidplannerPrefs;
 import org.droidplanner.android.utils.Utils;
 import org.droidplanner.android.utils.analytics.GAUtils;
@@ -24,6 +25,7 @@ import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
 

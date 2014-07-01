@@ -27,14 +27,6 @@ public class Constants {
      * By default, the system language should be used for the ui.
      */
     public static final boolean DEFAULT_PREF_UI_LANGUAGE = false;
-    /**
-     * This is the default mavlink connection type
-     *
-     * @since 1.2.0
-     */
-    public static final String DEFAULT_CONNECTION_TYPE = isGlassDevice()
-            ? ConnectionType.BLUETOOTH.name()
-            : ConnectionType.USB.name();
 
     /**
      * Preference key for the drone settings' category.
@@ -53,17 +45,11 @@ public class Constants {
      */
     public static final boolean DEFAULT_BLUETOOTH_RELAY_SERVER_TOGGLE = false;
 
-	/**
-	 * Preference screen grouping the ui related preferences.
-	 */
-	public static final String PREF_UI_SCREEN = "pref_ui";
-
     /*
     Intent actions
      */
     private static final String PREFIX_ACTION = PACKAGE_NAME + ".action.";
     public static final String ACTION_BLUETOOTH_RELAY_SERVER = PREFIX_ACTION + "RELAY_SERVER";
-
 
     /*
     Bundle extras
