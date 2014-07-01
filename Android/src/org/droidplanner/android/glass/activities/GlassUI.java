@@ -2,6 +2,7 @@ package org.droidplanner.android.glass.activities;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.InputDevice;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -13,10 +14,17 @@ import org.droidplanner.android.activities.helpers.SuperUI;
 import org.droidplanner.android.utils.DroidplannerPrefs;
 import org.droidplanner.core.drone.DroneInterfaces;
 
+import java.io.IOException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.atomic.AtomicBoolean;
+
 /**
  * This is the main activity for the glass interface.
  */
 public abstract class GlassUI extends SuperUI implements DroneInterfaces.OnDroneListener {
+
+    private static final String TAG = GlassUI.class.getSimpleName();
 
     /**
      * Handle to the app preferences.
@@ -29,6 +37,28 @@ public abstract class GlassUI extends SuperUI implements DroneInterfaces.OnDrone
      */
     protected GestureDetector mGestureDetector;
 
+    protected ScheduledExecutorService mThreadMgr;
+
+    /**
+     * Screen record tracker fields
+     */
+    private Process mScreenRecord;
+    private final AtomicBoolean mIsRecordingScreen = new AtomicBoolean(false);
+    private final Runnable mScreenRecordMonitor = new Runnable() {
+        @Override
+        public void run() {
+            if(mScreenRecord != null && mIsRecordingScreen.get()){
+                try {
+                    final int exitValue = mScreenRecord.waitFor();
+                    mIsRecordingScreen.compareAndSet(true, false);
+                }
+                catch (InterruptedException e) {
+                    Log.e(TAG, "Screen record monitoring thread was interrupted",e);
+                }
+            }
+        }
+    };
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         getWindow().requestFeature(WindowUtils.FEATURE_VOICE_COMMANDS);
@@ -37,6 +67,20 @@ public abstract class GlassUI extends SuperUI implements DroneInterfaces.OnDrone
         final Context context = getApplicationContext();
         mPrefs = new DroidplannerPrefs(context);
         mGestureDetector = new GestureDetector(context);
+    }
+
+    @Override
+    public void onStart(){
+        super.onStart();
+        mThreadMgr = Executors.newSingleThreadScheduledExecutor();
+    }
+
+    @Override
+    public void onStop(){
+        super.onStop();
+        if(mThreadMgr != null){
+            mThreadMgr.shutdownNow();
+        }
     }
 
     @Override
@@ -61,19 +105,35 @@ public abstract class GlassUI extends SuperUI implements DroneInterfaces.OnDrone
         if(keyCode == KeyEvent.KEYCODE_CAMERA){
             //For debug purposes, trigger recording of the glass screen using 'screenrecord',
             // as well as recording through the glass camera.
-
+            recordScreen();
         }
         return super.onKeyDown(keyCode, event);
     }
 
-    @Override
-    public boolean onKeyUp(int keyCode, KeyEvent event){
-        if(keyCode == KeyEvent.KEYCODE_CAMERA){
-            //For debug purposes, trigger recording of the glass screen using 'screenrecord',
-            // as well as recording through the glass camera.
-            return true;
+    /**
+     * Use screenrecord to record the screen
+     */
+    private void recordScreen(){
+        try {
+            if(mScreenRecord == null || !mIsRecordingScreen.get()) {
+                //TODO: retrieve storage location using the external storage api.
+                mScreenRecord = Runtime.getRuntime().exec("screenrecord /sdcard/Download/dp_screen_record");
+                mIsRecordingScreen.compareAndSet(false, true);
+                mThreadMgr.execute(mScreenRecordMonitor);
+            }
+            else{
+                mScreenRecord.destroy();
+            }
         }
+        catch (IOException e) {
+            Log.e(TAG, "Unable to start screen record process.", e);
+        }
+    }
 
-        return super.onKeyUp(keyCode, event);
+    /**
+     * Use the camera to record the user view.
+     */
+    private void recordViewPoint(){
+
     }
 }

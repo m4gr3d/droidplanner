@@ -26,8 +26,11 @@
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="com.google.android.glass.permission.DEVELOPMENT" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
     <uses-feature android:name="android.hardware.screen.portrait" />
+    <uses-feature android:name="android.hardware.camera" />
 
     <!-- Support devices without Bluetooth since there are other connection types -->
     <uses-feature
