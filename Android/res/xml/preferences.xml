@@ -28,7 +28,7 @@
                 android:title="@string/pref_title_screen" >
                 <CheckBoxPreference
                     android:defaultValue="true"
-                    android:key="pref_keep_screen_bright"
+                    android:key="@string/pref_keep_screen_bright_key"
                     android:summary="@string/pref_keep_screen_bright_summary"
                     android:title="@string/pref_keep_screen_bright" />
                 <CheckBoxPreference
@@ -56,6 +56,10 @@
                     android:key="pref_enable_tts"
                     android:summary="@string/pref_enable_tts_summary"
                     android:title="@string/pref_enable_tts" />
+                <CheckBoxPreference
+                    android:defaultValue="false"
+                    android:key="@string/pref_request_max_volume_key"
+                    android:title="@string/pref_request_max_value" />
             </PreferenceCategory>
         </PreferenceScreen>
         <PreferenceScreen
