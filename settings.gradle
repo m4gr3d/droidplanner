@@ -1,3 +1,3 @@
 include ':Core', ':Mavlink'
-include ':Android', ':Wearables:AndroidWear', ':AndroidLib', ':PebbleKit'
+include ':Android', ':Wearables:AndroidWear', ':Wearables:AndroidGlass', ':AndroidLib', ':PebbleKit'
 include ':usb-serial-for-android:UsbSerialLibrary', ':HorizontalVariableListView:HorizontalVariableListView'
