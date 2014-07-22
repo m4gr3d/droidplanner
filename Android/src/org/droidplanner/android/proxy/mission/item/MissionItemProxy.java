@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.droidplanner.R;
-import org.droidplanner.android.maps.MarkerInfo;
+import org.droidplanner.android.lib.maps.BaseMarkerInfo;
 import org.droidplanner.android.proxy.mission.MissionProxy;
 import org.droidplanner.android.proxy.mission.item.fragments.MissionDetailFragment;
 import org.droidplanner.android.proxy.mission.item.markers.MissionItemMarkerInfo;
@@ -46,7 +46,7 @@ public class MissionItemProxy implements Comparable<MissionItemProxy> {
 	/**
 	 * This is the marker source for this mission item render.
 	 */
-	private final List<MarkerInfo> mMarkerInfos;
+	private final List<BaseMarkerInfo> mMarkerInfos;
 
 	public MissionItemProxy(MissionProxy mission, MissionItem missionItem) {
 		mMission = mission;
@@ -76,7 +76,7 @@ public class MissionItemProxy implements Comparable<MissionItemProxy> {
 		return MissionDetailFragment.newInstance(mMissionItem.getType());
 	}
 
-	public List<MarkerInfo> getMarkerInfos() {
+	public List<BaseMarkerInfo> getMarkerInfos() {
 		return mMarkerInfos;
 	}
 

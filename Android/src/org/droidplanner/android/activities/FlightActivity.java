@@ -8,9 +8,10 @@ import org.droidplanner.android.fragments.RCFragment;
 import org.droidplanner.android.fragments.TelemetryFragment;
 import org.droidplanner.android.fragments.helpers.FlightSlidingDrawerContent;
 import org.droidplanner.android.fragments.mode.FlightModePanel;
+import org.droidplanner.android.lib.maps.BaseDPMap;
 import org.droidplanner.android.services.UploaderService;
 import org.droidplanner.android.utils.analytics.GAUtils;
-import org.droidplanner.android.utils.prefs.AutoPanMode;
+import org.droidplanner.android.lib.prefs.AutoPanMode;
 import org.droidplanner.core.drone.Drone;
 import org.droidplanner.core.drone.DroneInterfaces.DroneEventsType;
 import org.droidplanner.core.drone.DroneInterfaces.OnDroneListener;
@@ -30,7 +31,7 @@ import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 
-public class FlightActivity extends DrawerNavigationUI implements
+public class FlightActivity extends DrawerNavigationUI implements BaseDPMap.DroneProvider,
 		FlightActionsFragment.OnMissionControlInteraction, OnDroneListener {
 
 	private static final int GOOGLE_PLAY_SERVICES_REQUEST_CODE = 101;

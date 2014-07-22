@@ -72,7 +72,7 @@ public class ChecklistFragment extends Fragment implements OnXmlParserError,
 	@Override
 	public void onStart() {
 		super.onStart();
-		drone = ((SuperUI) this.context).drone;
+		drone = ((SuperUI) this.context).getDrone();
 		sysLink = new CheckListSysLink(this.drone);
 		drone.events.addDroneListener(this);
 	}

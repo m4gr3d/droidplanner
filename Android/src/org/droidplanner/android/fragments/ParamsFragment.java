@@ -7,10 +7,10 @@ import java.util.List;
 
 import org.droidplanner.R;
 import org.droidplanner.android.DroidPlannerApp;
-import org.droidplanner.android.dialogs.openfile.OpenFileDialog;
-import org.droidplanner.android.dialogs.openfile.OpenParameterDialog;
+import org.droidplanner.android.lib.dialogs.openfile.OpenFileDialog;
+import org.droidplanner.android.lib.dialogs.openfile.OpenParameterDialog;
 import org.droidplanner.android.dialogs.parameters.DialogParameterInfo;
-import org.droidplanner.android.utils.file.IO.ParameterWriter;
+import org.droidplanner.android.lib.utils.file.IO.ParameterWriter;
 import org.droidplanner.android.widgets.adapterViews.ParamsAdapter;
 import org.droidplanner.android.widgets.adapterViews.ParamsAdapterItem;
 import org.droidplanner.core.drone.Drone;

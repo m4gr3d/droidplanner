@@ -3,7 +3,7 @@ package org.droidplanner.android.graphic.map;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.droidplanner.android.utils.DroneHelper;
+import org.droidplanner.android.lib.utils.BaseMapUtils;
 import org.droidplanner.core.helpers.coordinates.Coord2D;
 import org.droidplanner.core.helpers.geoTools.GeoTools;
 import org.droidplanner.core.mission.survey.SurveyData;
@@ -56,8 +56,8 @@ public class CameraGroundOverlays {
 		Coord2D c4 = GeoTools.newCoordFromBearingAndDistance(center, orientation + 180
 				+ centerAngle, halfDiagonal);
 		cameraOverlays.add(mMap.addPolygon(new PolygonOptions()
-				.add(DroneHelper.CoordToLatLang(c1), DroneHelper.CoordToLatLang(c2),
-						DroneHelper.CoordToLatLang(c3), DroneHelper.CoordToLatLang(c4))
+				.add(BaseMapUtils.CoordToLatLang(c1), BaseMapUtils.CoordToLatLang(c2),
+						BaseMapUtils.CoordToLatLang(c3), BaseMapUtils.CoordToLatLang(c4))
 				.fillColor(Color.argb(40, 0, 0, 127)).strokeWidth(1)
 				.strokeColor(Color.argb(127, 0, 0, 255))));
 	}

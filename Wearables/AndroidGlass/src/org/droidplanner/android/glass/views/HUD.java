@@ -248,8 +248,7 @@ public class HUD extends View {
     public HUD(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
 
-        final TypedArray attributes = context.obtainStyledAttributes(attrs, org.droidplanner
-                        .android.glass.utils.hu.HUD,
+        final TypedArray attributes = context.obtainStyledAttributes(attrs, R.styleable.HUD,
                 defStyle, 0);
 
         try {

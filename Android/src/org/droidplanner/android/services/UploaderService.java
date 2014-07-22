@@ -5,7 +5,7 @@ import java.io.File;
 import org.apache.http.client.HttpResponseException;
 import org.droidplanner.R;
 import org.droidplanner.android.receivers.NetworkStateReceiver;
-import org.droidplanner.android.utils.file.DirectoryPath;
+import org.droidplanner.android.lib.utils.file.DirectoryPath;
 import org.droidplanner.android.utils.prefs.DroidPlannerPrefs;
 
 import android.app.IntentService;

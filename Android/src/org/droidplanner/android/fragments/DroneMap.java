@@ -7,11 +7,11 @@ import org.droidplanner.android.DroidPlannerApp;
 import org.droidplanner.android.graphic.map.GraphicDrone;
 import org.droidplanner.android.graphic.map.GraphicGuided;
 import org.droidplanner.android.graphic.map.GraphicHome;
-import org.droidplanner.android.maps.DPMap;
+import org.droidplanner.android.lib.maps.BaseDPMap;
 import org.droidplanner.android.maps.providers.DPMapProvider;
 import org.droidplanner.android.proxy.mission.MissionProxy;
 import org.droidplanner.android.utils.Utils;
-import org.droidplanner.android.utils.prefs.AutoPanMode;
+import org.droidplanner.android.lib.prefs.AutoPanMode;
 import org.droidplanner.core.drone.Drone;
 import org.droidplanner.core.drone.DroneInterfaces.DroneEventsType;
 import org.droidplanner.core.drone.DroneInterfaces.OnDroneListener;
@@ -28,7 +28,7 @@ import android.view.ViewGroup;
 
 public abstract class DroneMap extends Fragment implements OnDroneListener {
 
-	protected DPMap mMapFragment;
+	protected BaseDPMap mMapFragment;
 
 	private GraphicHome home;
 	public GraphicDrone graphicDrone;
@@ -65,10 +65,11 @@ public abstract class DroneMap extends Fragment implements OnDroneListener {
 				.getApplicationContext());
 
 		final FragmentManager fm = getChildFragmentManager();
-		mMapFragment = (DPMap) fm.findFragmentById(R.id.map_fragment_container);
-		if (mMapFragment == null || mMapFragment.getProvider() != mapProvider) {
+		mMapFragment = (BaseDPMap) fm.findFragmentById(R.id.map_fragment_container);
+		if (mMapFragment == null || !mMapFragment.getClass().equals(mapProvider
+                .getMapFragmentClass())) {
 			final Bundle mapArgs = new Bundle();
-			mapArgs.putInt(DPMap.EXTRA_MAX_FLIGHT_PATH_SIZE, getMaxFlightPathSize());
+			mapArgs.putInt(BaseDPMap.EXTRA_MAX_FLIGHT_PATH_SIZE, getMaxFlightPathSize());
 
 			mMapFragment = mapProvider.getMapFragment();
 			((Fragment) mMapFragment).setArguments(mapArgs);

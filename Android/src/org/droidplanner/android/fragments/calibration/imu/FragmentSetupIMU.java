@@ -88,14 +88,14 @@ public class FragmentSetupIMU extends SetupMainPanel implements OnDroneListener 
 	}
 
 	private void sendAck(int step) {
-		if (parentActivity.drone != null) {
-			parentActivity.drone.calibrationSetup.sendAckk(step);
+		if (parentActivity.getDrone() != null) {
+			parentActivity.getDrone().calibrationSetup.sendAckk(step);
 		}
 	}
 
 	private void startCalibration() {
-		if (parentActivity.drone != null) {
-			parentActivity.drone.calibrationSetup.startCalibration();
+		if (parentActivity.getDrone() != null) {
+			parentActivity.getDrone().calibrationSetup.startCalibration();
 		}
 	}
 
@@ -104,7 +104,7 @@ public class FragmentSetupIMU extends SetupMainPanel implements OnDroneListener 
 		if (event == DroneEventsType.CALIBRATION_IMU) {
 			processMAVMessage(drone.calibrationSetup.getMessage());
 		} else if (event == DroneEventsType.HEARTBEAT_TIMEOUT) {
-			if (parentActivity.drone != null) {
+			if (parentActivity.getDrone() != null) {
 				/*
 				 * here we will check if we are in calibration mode but if at
 				 * the same time 'msg' is empty - then it is actually not doing
@@ -114,7 +114,7 @@ public class FragmentSetupIMU extends SetupMainPanel implements OnDroneListener 
 				 */
 				if (Calibration.isCalibrating() && msg.isEmpty()) {
 					Calibration.setClibrating(false);
-					parentActivity.drone.events.notifyDroneEvent(DroneEventsType.HEARTBEAT_TIMEOUT);
+					parentActivity.getDrone().events.notifyDroneEvent(DroneEventsType.HEARTBEAT_TIMEOUT);
 				} else {
 					parentActivity.getDroidPlannerApi().quickNotify(msg);
 				}
@@ -207,7 +207,7 @@ public class FragmentSetupIMU extends SetupMainPanel implements OnDroneListener 
 	public void onPause() {
 		super.onPause();
 		if (parentActivity != null) {
-			parentActivity.drone.events.removeDroneListener(this);
+			parentActivity.getDrone().events.removeDroneListener(this);
 		}
 	}
 
@@ -216,7 +216,7 @@ public class FragmentSetupIMU extends SetupMainPanel implements OnDroneListener 
 		super.onResume();
 
 		if (parentActivity != null) {
-			parentActivity.drone.events.addDroneListener(this);
+			parentActivity.getDrone().events.addDroneListener(this);
 		}
 	}
 }

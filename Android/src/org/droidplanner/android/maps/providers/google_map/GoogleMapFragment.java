@@ -5,20 +5,20 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
-import org.droidplanner.android.DroidPlannerApp;
 import org.droidplanner.android.helpers.LocalMapTileProvider;
+import org.droidplanner.android.lib.maps.BaseDPMap;
+import org.droidplanner.android.lib.maps.BaseMarkerInfo;
 import org.droidplanner.android.lib.utils.GoogleApiClientManager;
 import org.droidplanner.android.lib.utils.GoogleApiClientManager.GoogleApiClientTask;
-import org.droidplanner.android.maps.DPMap;
-import org.droidplanner.android.maps.MarkerInfo;
-import org.droidplanner.android.maps.providers.DPMapProvider;
-import org.droidplanner.android.utils.DroneHelper;
-import org.droidplanner.android.utils.prefs.AutoPanMode;
+import org.droidplanner.android.lib.utils.BaseMapUtils;
+import org.droidplanner.android.lib.prefs.AutoPanMode;
+import org.droidplanner.android.utils.MapUtils;
 import org.droidplanner.android.utils.prefs.DroidPlannerPrefs;
 import org.droidplanner.core.drone.Drone;
 import org.droidplanner.core.drone.DroneInterfaces;
 import org.droidplanner.core.helpers.coordinates.Coord2D;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -53,7 +53,7 @@ import com.google.android.gms.maps.model.TileOverlay;
 import com.google.android.gms.maps.model.TileOverlayOptions;
 import com.google.common.collect.HashBiMap;
 
-public class GoogleMapFragment extends SupportMapFragment implements DPMap, LocationListener {
+public class GoogleMapFragment extends SupportMapFragment implements BaseDPMap, LocationListener {
 
 	private static final String TAG = GoogleMapFragment.class.getSimpleName();
 
@@ -69,7 +69,7 @@ public class GoogleMapFragment extends SupportMapFragment implements DPMap, Loca
 	private static final long USER_LOCATION_UPDATE_FASTEST_INTERVAL = 1000; // ms
 	private static final float USER_LOCATION_UPDATE_MIN_DISPLACEMENT = 5; // m
 
-	private final HashBiMap<MarkerInfo, Marker> mMarkers = HashBiMap.create();
+	private final HashBiMap<BaseMarkerInfo, Marker> mMarkers = HashBiMap.create();
 
 	private Drone mDrone;
 	private DroidPlannerPrefs mAppPrefs;
@@ -92,10 +92,18 @@ public class GoogleMapFragment extends SupportMapFragment implements DPMap, Loca
 	/*
 	 * DP Map listeners
 	 */
-	private DPMap.OnMapClickListener mMapClickListener;
-	private DPMap.OnMapLongClickListener mMapLongClickListener;
-	private DPMap.OnMarkerClickListener mMarkerClickListener;
-	private DPMap.OnMarkerDragListener mMarkerDragListener;
+	private BaseDPMap.OnMapClickListener mMapClickListener;
+	private BaseDPMap.OnMapLongClickListener mMapLongClickListener;
+	private BaseDPMap.OnMarkerClickListener mMarkerClickListener;
+	private BaseDPMap.OnMarkerDragListener mMarkerDragListener;
+
+    @Override
+    public void onAttach(Activity activity){
+        if(!(activity instanceof DroneProvider)){
+            throw new IllegalStateException("Parent activity must implement " + DroneProvider
+                    .class.getName());
+        }
+    }
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup viewGroup,
@@ -114,7 +122,7 @@ public class GoogleMapFragment extends SupportMapFragment implements DPMap, Loca
                         .getLastLocation(getGoogleApiClient());
                 if (myLocation != null) {
                     final float currentZoomLevel = mMap.getCameraPosition().zoom;
-                    updateCamera(DroneHelper.LocationToCoord(myLocation), (int) currentZoomLevel);
+                    updateCamera(BaseMapUtils.LocationToCoord(myLocation), (int) currentZoomLevel);
                 }
             }
         };
@@ -141,7 +149,7 @@ public class GoogleMapFragment extends SupportMapFragment implements DPMap, Loca
             }
         };
 
-		mDrone = ((DroidPlannerApp) activity.getApplication()).getDrone();
+		mDrone = ((DroneProvider) activity).getDrone();
 		mAppPrefs = new DroidPlannerPrefs(context);
 
 		final Bundle args = getArguments();
@@ -220,13 +228,8 @@ public class GoogleMapFragment extends SupportMapFragment implements DPMap, Loca
 	}
 
 	@Override
-	public DPMapProvider getProvider() {
-		return DPMapProvider.GOOGLE_MAP;
-	}
-
-	@Override
 	public void addFlightPathPoint(Coord2D coord) {
-		final LatLng position = DroneHelper.CoordToLatLang(coord);
+		final LatLng position = MapUtils.CoordToLatLang(coord);
 
 		if (maxFlightPathSize > 0) {
 			if (flightPath == null) {
@@ -247,7 +250,7 @@ public class GoogleMapFragment extends SupportMapFragment implements DPMap, Loca
 
 	@Override
 	public void cleanMarkers() {
-		for (Map.Entry<MarkerInfo, Marker> entry : mMarkers.entrySet()) {
+		for (Map.Entry<BaseMarkerInfo, Marker> entry : mMarkers.entrySet()) {
 			Marker marker = entry.getValue();
 			marker.remove();
 		}
@@ -256,14 +259,14 @@ public class GoogleMapFragment extends SupportMapFragment implements DPMap, Loca
 	}
 
 	@Override
-	public void updateMarker(MarkerInfo markerInfo) {
+	public void updateMarker(BaseMarkerInfo markerInfo) {
 		updateMarker(markerInfo, markerInfo.isDraggable());
 	}
 
 	@Override
-	public void updateMarker(MarkerInfo markerInfo, boolean isDraggable) {
-		final LatLng position = DroneHelper.CoordToLatLang(markerInfo
-				.getPosition());
+	public void updateMarker(BaseMarkerInfo markerInfo, boolean isDraggable) {
+		final LatLng position = MapUtils.CoordToLatLang(markerInfo
+                .getPosition());
 		Marker marker = mMarkers.get(markerInfo);
 		if (marker == null) {
 			// Generate the marker
@@ -291,15 +294,15 @@ public class GoogleMapFragment extends SupportMapFragment implements DPMap, Loca
 	}
 
 	@Override
-	public void updateMarkers(List<MarkerInfo> markersInfos) {
-		for (MarkerInfo info : markersInfos) {
+	public void updateMarkers(List<BaseMarkerInfo> markersInfos) {
+		for (BaseMarkerInfo info : markersInfos) {
 			updateMarker(info);
 		}
 	}
 
 	@Override
-	public void updateMarkers(List<MarkerInfo> markersInfos, boolean isDraggable) {
-		for (MarkerInfo info : markersInfos) {
+	public void updateMarkers(List<BaseMarkerInfo> markersInfos, boolean isDraggable) {
+		for (BaseMarkerInfo info : markersInfos) {
 			updateMarker(info, isDraggable);
 		}
 	}
@@ -311,7 +314,7 @@ public class GoogleMapFragment extends SupportMapFragment implements DPMap, Loca
 	 *            marker whose info to retrieve
 	 * @return marker's info
 	 */
-	private MarkerInfo getMarkerInfo(Marker marker) {
+	private BaseMarkerInfo getMarkerInfo(Marker marker) {
 		return mMarkers.inverse().get(marker);
 	}
 
@@ -323,7 +326,7 @@ public class GoogleMapFragment extends SupportMapFragment implements DPMap, Loca
 		for (Coord2D point : path) {
 			LatLng coord = projection.fromScreenLocation(new Point((int) point
 					.getX(), (int) point.getY()));
-			coords.add(DroneHelper.LatLngToCoord(coord));
+			coords.add(MapUtils.LatLngToCoord(coord));
 		}
 
 		return coords;
@@ -358,7 +361,7 @@ public class GoogleMapFragment extends SupportMapFragment implements DPMap, Loca
 	public void updateCamera(Coord2D coord, int zoomLevel) {
 		if (coord != null) {
 			mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
-					DroneHelper.CoordToLatLang(coord), zoomLevel));
+					MapUtils.CoordToLatLang(coord), zoomLevel));
 		}
 	}
 
@@ -367,14 +370,14 @@ public class GoogleMapFragment extends SupportMapFragment implements DPMap, Loca
 		List<Coord2D> pathCoords = pathSource.getPathPoints();
 		final List<LatLng> pathPoints = new ArrayList<LatLng>(pathCoords.size());
 		for (Coord2D coord : pathCoords) {
-			pathPoints.add(DroneHelper.CoordToLatLang(coord));
+			pathPoints.add(MapUtils.CoordToLatLang(coord));
 		}
 
 		if (mDroneLeashPath == null) {
 			PolylineOptions flightPath = new PolylineOptions();
 			flightPath.color(DRONE_LEASH_DEFAULT_COLOR).width(
-					DroneHelper.scaleDpToPixels(DRONE_LEASH_DEFAULT_WIDTH,
-							getResources()));
+					MapUtils.scaleDpToPixels(DRONE_LEASH_DEFAULT_WIDTH,
+                            getResources()));
 			mDroneLeashPath = mMap.addPolyline(flightPath);
 		}
 
@@ -386,7 +389,7 @@ public class GoogleMapFragment extends SupportMapFragment implements DPMap, Loca
 		List<Coord2D> pathCoords = pathSource.getPathPoints();
 		final List<LatLng> pathPoints = new ArrayList<LatLng>(pathCoords.size());
 		for (Coord2D coord : pathCoords) {
-			pathPoints.add(DroneHelper.CoordToLatLang(coord));
+			pathPoints.add(MapUtils.CoordToLatLang(coord));
 		}
 
 		if (missionPath == null) {
@@ -450,7 +453,7 @@ public class GoogleMapFragment extends SupportMapFragment implements DPMap, Loca
         if (!coords.isEmpty()) {
             final List<LatLng> points = new ArrayList<LatLng>();
             for (Coord2D coord : coords)
-                points.add(DroneHelper.CoordToLatLang(coord));
+                points.add(MapUtils.CoordToLatLang(coord));
 
             LatLngBounds bounds = getBounds(points);
             CameraUpdate animation;
@@ -482,8 +485,7 @@ public class GoogleMapFragment extends SupportMapFragment implements DPMap, Loca
 			@Override
 			public void onMapClick(LatLng latLng) {
 				if (mMapClickListener != null) {
-					mMapClickListener.onMapClick(DroneHelper
-							.LatLngToCoord(latLng));
+					mMapClickListener.onMapClick(MapUtils.LatLngToCoord(latLng));
 				}
 			}
 		});
@@ -492,8 +494,7 @@ public class GoogleMapFragment extends SupportMapFragment implements DPMap, Loca
 			@Override
 			public void onMapLongClick(LatLng latLng) {
 				if (mMapLongClickListener != null) {
-					mMapLongClickListener.onMapLongClick(DroneHelper
-							.LatLngToCoord(latLng));
+					mMapLongClickListener.onMapLongClick(MapUtils.LatLngToCoord(latLng));
 				}
 			}
 		});
@@ -502,9 +503,9 @@ public class GoogleMapFragment extends SupportMapFragment implements DPMap, Loca
 			@Override
 			public void onMarkerDragStart(Marker marker) {
 				if (mMarkerDragListener != null) {
-					final MarkerInfo markerInfo = getMarkerInfo(marker);
-					markerInfo.setPosition(DroneHelper.LatLngToCoord(marker
-							.getPosition()));
+					final BaseMarkerInfo markerInfo = getMarkerInfo(marker);
+					markerInfo.setPosition(MapUtils.LatLngToCoord(marker
+                            .getPosition()));
 					mMarkerDragListener.onMarkerDragStart(markerInfo);
 				}
 			}
@@ -512,9 +513,9 @@ public class GoogleMapFragment extends SupportMapFragment implements DPMap, Loca
 			@Override
 			public void onMarkerDrag(Marker marker) {
 				if (mMarkerDragListener != null) {
-					final MarkerInfo markerInfo = getMarkerInfo(marker);
-					markerInfo.setPosition(DroneHelper.LatLngToCoord(marker
-							.getPosition()));
+					final BaseMarkerInfo markerInfo = getMarkerInfo(marker);
+					markerInfo.setPosition(MapUtils.LatLngToCoord(marker
+                            .getPosition()));
 					mMarkerDragListener.onMarkerDrag(markerInfo);
 				}
 			}
@@ -522,24 +523,24 @@ public class GoogleMapFragment extends SupportMapFragment implements DPMap, Loca
 			@Override
 			public void onMarkerDragEnd(Marker marker) {
 				if (mMarkerDragListener != null) {
-					final MarkerInfo markerInfo = getMarkerInfo(marker);
-					markerInfo.setPosition(DroneHelper.LatLngToCoord(marker
-							.getPosition()));
+					final BaseMarkerInfo markerInfo = getMarkerInfo(marker);
+					markerInfo.setPosition(MapUtils.LatLngToCoord(marker
+                            .getPosition()));
 					mMarkerDragListener.onMarkerDragEnd(markerInfo);
 				}
 			}
 		});
 
 		mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-			@Override
-			public boolean onMarkerClick(Marker marker) {
-				if (mMarkerClickListener != null) {
-					return mMarkerClickListener
-							.onMarkerClick(getMarkerInfo(marker));
-				}
-				return false;
-			}
-		});
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                if (mMarkerClickListener != null) {
+                    return mMarkerClickListener
+                            .onMarkerClick(getMarkerInfo(marker));
+                }
+                return false;
+            }
+        });
 	}
 
 	private void setupMapUI() {
@@ -655,7 +656,7 @@ public class GoogleMapFragment extends SupportMapFragment implements DPMap, Loca
 	public void onLocationChanged(Location location) {
 		Log.d(TAG, "User location changed.");
 		if (mPanMode.get() == AutoPanMode.USER) {
-			updateCamera(DroneHelper.LocationToCoord(location),(int) mMap.getCameraPosition().zoom);
+			updateCamera(MapUtils.LocationToCoord(location),(int) mMap.getCameraPosition().zoom);
 		}
 	}
 }

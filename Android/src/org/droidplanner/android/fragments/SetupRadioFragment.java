@@ -24,7 +24,7 @@ public class SetupRadioFragment extends SuperSetupFragment {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		this.drone = parentActivity.drone;
+		this.drone = parentActivity.getDrone();
 	}
 
 	@Override

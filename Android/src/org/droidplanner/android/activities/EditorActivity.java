@@ -6,9 +6,9 @@ import org.droidplanner.R;
 import org.droidplanner.android.DroidPlannerApp;
 import org.droidplanner.android.activities.helpers.SuperUI;
 import org.droidplanner.android.activities.interfaces.OnEditorInteraction;
-import org.droidplanner.android.dialogs.YesNoDialog;
-import org.droidplanner.android.dialogs.openfile.OpenFileDialog;
-import org.droidplanner.android.dialogs.openfile.OpenMissionDialog;
+import org.droidplanner.android.lib.dialogs.YesNoDialog;
+import org.droidplanner.android.lib.dialogs.openfile.OpenFileDialog;
+import org.droidplanner.android.lib.dialogs.openfile.OpenMissionDialog;
 import org.droidplanner.android.fragments.EditorListFragment;
 import org.droidplanner.android.fragments.EditorMapFragment;
 import org.droidplanner.android.fragments.EditorToolsFragment;
@@ -16,13 +16,14 @@ import org.droidplanner.android.fragments.EditorToolsFragment.EditorTools;
 import org.droidplanner.android.fragments.EditorToolsFragment.OnEditorToolSelected;
 import org.droidplanner.android.fragments.helpers.GestureMapFragment;
 import org.droidplanner.android.fragments.helpers.GestureMapFragment.OnPathFinishedListener;
+import org.droidplanner.android.lib.maps.BaseDPMap;
 import org.droidplanner.android.proxy.mission.MissionProxy;
 import org.droidplanner.android.proxy.mission.MissionSelection;
 import org.droidplanner.android.proxy.mission.item.MissionItemProxy;
 import org.droidplanner.android.proxy.mission.item.fragments.MissionDetailFragment;
-import org.droidplanner.android.utils.file.IO.MissionReader;
-import org.droidplanner.android.utils.file.IO.MissionWriter;
-import org.droidplanner.android.utils.prefs.AutoPanMode;
+import org.droidplanner.android.lib.utils.file.IO.MissionReader;
+import org.droidplanner.android.lib.utils.file.IO.MissionWriter;
+import org.droidplanner.android.lib.prefs.AutoPanMode;
 import org.droidplanner.core.drone.Drone;
 import org.droidplanner.core.drone.DroneInterfaces.DroneEventsType;
 import org.droidplanner.core.helpers.coordinates.Coord2D;
@@ -45,7 +46,7 @@ import android.widget.Toast;
  * This implements the map editor activity. The map editor activity allows the
  * user to create and/or modify autonomous missions for the drone.
  */
-public class EditorActivity extends SuperUI implements OnPathFinishedListener,
+public class EditorActivity extends SuperUI implements BaseDPMap.DroneProvider, OnPathFinishedListener,
 		OnEditorToolSelected, MissionDetailFragment.OnMissionDetailListener, OnEditorInteraction,
 		Callback, MissionSelection.OnSelectionUpdateListener {
 
@@ -214,10 +215,10 @@ public class EditorActivity extends SuperUI implements OnPathFinishedListener,
 	}
 
 	private void openMissionFile() {
-		OpenFileDialog missionDialog = new OpenMissionDialog(drone) {
+		OpenFileDialog missionDialog = new OpenMissionDialog(getDrone()) {
 			@Override
 			public void waypointFileLoaded(MissionReader reader) {
-				drone.mission.onMissionLoaded(reader.getMsgMissionItems());
+				getDrone().mission.onMissionLoaded(reader.getMsgMissionItems());
 				planningMapFragment.zoomToFit();
 			}
 		};
@@ -226,7 +227,7 @@ public class EditorActivity extends SuperUI implements OnPathFinishedListener,
 
 	private void saveMissionFile() {
 
-		if (MissionWriter.write(drone.mission.getMsgMissionItems())) {
+		if (MissionWriter.write(getDrone().mission.getMsgMissionItems())) {
 			Toast.makeText(this, "File saved", Toast.LENGTH_SHORT).show();
 		} else {
 			Toast.makeText(this, "Error saving file", Toast.LENGTH_SHORT).show();

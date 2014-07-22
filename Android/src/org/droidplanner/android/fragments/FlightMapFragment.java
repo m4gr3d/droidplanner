@@ -1,11 +1,11 @@
 package org.droidplanner.android.fragments;
 
-import org.droidplanner.android.dialogs.GuidedDialog;
-import org.droidplanner.android.dialogs.GuidedDialog.GuidedDialogListener;
-import org.droidplanner.android.maps.DPMap;
-import org.droidplanner.android.maps.MarkerInfo;
-import org.droidplanner.android.utils.DroneHelper;
-import org.droidplanner.android.utils.prefs.AutoPanMode;
+import org.droidplanner.android.lib.dialogs.GuidedDialog;
+import org.droidplanner.android.lib.dialogs.GuidedDialog.GuidedDialogListener;
+import org.droidplanner.android.lib.maps.BaseDPMap;
+import org.droidplanner.android.lib.maps.BaseMarkerInfo;
+import org.droidplanner.android.lib.utils.BaseMapUtils;
+import org.droidplanner.android.lib.prefs.AutoPanMode;
 import org.droidplanner.android.utils.prefs.DroidPlannerPrefs;
 import org.droidplanner.core.drone.Drone;
 import org.droidplanner.core.drone.DroneInterfaces.DroneEventsType;
@@ -22,8 +22,8 @@ import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
 
-public class FlightMapFragment extends DroneMap implements DPMap.OnMapLongClickListener,
-		DPMap.OnMarkerClickListener, DPMap.OnMarkerDragListener, GuidedDialogListener,
+public class FlightMapFragment extends DroneMap implements BaseDPMap.OnMapLongClickListener,
+		BaseDPMap.OnMarkerClickListener, BaseDPMap.OnMarkerDragListener, GuidedDialogListener,
 		OnDroneListener {
 
 	private static final int MAX_TOASTS_FOR_LOCATION_PRESS = 3;
@@ -90,7 +90,7 @@ public class FlightMapFragment extends DroneMap implements DPMap.OnMapLongClickL
 			} else {
 				if (guidedModeOnLongPress) {
 					GuidedDialog dialog = new GuidedDialog();
-					dialog.setCoord(DroneHelper.CoordToLatLang(coord));
+					dialog.setCoord(BaseMapUtils.CoordToLatLang(coord));
 					dialog.setListener(this);
 					dialog.show(getChildFragmentManager(), "GUIDED dialog");
 				}
@@ -101,27 +101,27 @@ public class FlightMapFragment extends DroneMap implements DPMap.OnMapLongClickL
 	@Override
 	public void onForcedGuidedPoint(LatLng coord) {
 		try {
-			drone.guidedPoint.forcedGuidedCoordinate(DroneHelper.LatLngToCoord(coord));
+			drone.guidedPoint.forcedGuidedCoordinate(BaseMapUtils.LatLngToCoord(coord));
 		} catch (Exception e) {
 			Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
 		}
 	}
 
 	@Override
-	public void onMarkerDragStart(MarkerInfo markerInfo) {
+	public void onMarkerDragStart(BaseMarkerInfo markerInfo) {
 	}
 
 	@Override
-	public void onMarkerDrag(MarkerInfo markerInfo) {
+	public void onMarkerDrag(BaseMarkerInfo markerInfo) {
 	}
 
 	@Override
-	public void onMarkerDragEnd(MarkerInfo markerInfo) {
+	public void onMarkerDragEnd(BaseMarkerInfo markerInfo) {
 		drone.guidedPoint.newGuidedCoord(markerInfo.getPosition());
 	}
 
 	@Override
-	public boolean onMarkerClick(MarkerInfo markerInfo) {
+	public boolean onMarkerClick(BaseMarkerInfo markerInfo) {
 		drone.guidedPoint.newGuidedCoord(markerInfo.getPosition());
 		return true;
 	}

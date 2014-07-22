@@ -34,7 +34,7 @@ public abstract class SuperSetupMainPanel extends SetupMainPanel implements OnCa
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		this.drone = parentActivity.drone;
+		this.drone = parentActivity.getDrone();
 		parameters = getParameterHandler();
 		parameters.setOnCalibrationEventListener(this);
 		onInitialize();

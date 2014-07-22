@@ -3,11 +3,11 @@ package org.droidplanner.android.fragments;
 import java.util.List;
 
 import org.droidplanner.android.activities.interfaces.OnEditorInteraction;
-import org.droidplanner.android.maps.DPMap;
-import org.droidplanner.android.maps.MarkerInfo;
+import org.droidplanner.android.lib.maps.BaseDPMap;
+import org.droidplanner.android.lib.maps.BaseMarkerInfo;
 import org.droidplanner.android.proxy.mission.item.markers.MissionItemMarkerInfo;
 import org.droidplanner.android.proxy.mission.item.markers.SurveyMarkerInfoProvider;
-import org.droidplanner.android.utils.prefs.AutoPanMode;
+import org.droidplanner.android.lib.prefs.AutoPanMode;
 import org.droidplanner.core.helpers.coordinates.Coord2D;
 import org.droidplanner.core.mission.waypoints.SpatialCoordItem;
 
@@ -20,8 +20,8 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 @SuppressLint("UseSparseArrays")
-public class EditorMapFragment extends DroneMap implements DPMap.OnMapLongClickListener,
-		DPMap.OnMarkerDragListener, DPMap.OnMapClickListener, DPMap.OnMarkerClickListener {
+public class EditorMapFragment extends DroneMap implements BaseDPMap.OnMapLongClickListener,
+		BaseDPMap.OnMarkerDragListener, BaseDPMap.OnMapClickListener, BaseDPMap.OnMarkerClickListener {
 
 	// public MapPath polygonPath;
 	// public CameraGroundOverlays cameraOverlays;
@@ -49,16 +49,16 @@ public class EditorMapFragment extends DroneMap implements DPMap.OnMapLongClickL
 	}
 
 	@Override
-	public void onMarkerDrag(MarkerInfo markerInfo) {
+	public void onMarkerDrag(BaseMarkerInfo markerInfo) {
 		checkForWaypointMarkerMoving(markerInfo);
 	}
 
 	@Override
-	public void onMarkerDragStart(MarkerInfo markerInfo) {
+	public void onMarkerDragStart(BaseMarkerInfo markerInfo) {
 		checkForWaypointMarkerMoving(markerInfo);
 	}
 
-	private void checkForWaypointMarkerMoving(MarkerInfo markerInfo) {
+	private void checkForWaypointMarkerMoving(BaseMarkerInfo markerInfo) {
 		if (SpatialCoordItem.class.isInstance(markerInfo)) {
 			Coord2D position = markerInfo.getPosition();
 
@@ -79,12 +79,12 @@ public class EditorMapFragment extends DroneMap implements DPMap.OnMapLongClickL
 	}
 
 	@Override
-	public void onMarkerDragEnd(MarkerInfo markerInfo) {
+	public void onMarkerDragEnd(BaseMarkerInfo markerInfo) {
 		checkForWaypointMarker(markerInfo);
 		checkForPolygonMarker();
 	}
 
-	private void checkForWaypointMarker(MarkerInfo markerInfo) {
+	private void checkForWaypointMarker(BaseMarkerInfo markerInfo) {
 		if (!(markerInfo instanceof SurveyMarkerInfoProvider)
 				&& (markerInfo instanceof MissionItemMarkerInfo)) {
 			missionProxy.move(((MissionItemMarkerInfo) markerInfo).getMarkerOrigin(),
@@ -122,7 +122,7 @@ public class EditorMapFragment extends DroneMap implements DPMap.OnMapLongClickL
 	}
 
 	@Override
-	public boolean onMarkerClick(MarkerInfo info) {
+	public boolean onMarkerClick(BaseMarkerInfo info) {
 		if (info instanceof MissionItemMarkerInfo) {
 			editorListener.onItemClick(((MissionItemMarkerInfo) info).getMarkerOrigin());
 			return true;

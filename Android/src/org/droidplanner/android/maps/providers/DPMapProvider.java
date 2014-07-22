@@ -1,9 +1,9 @@
 package org.droidplanner.android.maps.providers;
 
-import org.droidplanner.android.maps.DPMap;
+import org.droidplanner.android.lib.maps.BaseDPMap;
 import org.droidplanner.android.maps.providers.google_map.GoogleMapFragment;
 import org.droidplanner.android.maps.providers.google_map.GoogleMapProviderPreferences;
-import org.droidplanner.android.maps.providers.osm.OSMapFragment;
+import org.droidplanner.android.lib.maps.providers.osm.OSMapFragment;
 import org.droidplanner.android.maps.providers.osm.OSMapProviderPreferences;
 
 /**
@@ -16,11 +16,16 @@ public enum DPMapProvider {
 	 */
 	GOOGLE_MAP {
 		@Override
-		public DPMap getMapFragment() {
+		public BaseDPMap getMapFragment() {
 			return new GoogleMapFragment();
 		}
 
-		@Override
+        @Override
+        public Class<? extends BaseDPMap> getMapFragmentClass() {
+            return GoogleMapFragment.class;
+        }
+
+        @Override
 		public MapProviderPreferences getMapProviderPreferences() {
 			return new GoogleMapProviderPreferences();
 		}
@@ -32,11 +37,16 @@ public enum DPMapProvider {
 	 */
 	OPEN_STREET_MAP {
 		@Override
-		public DPMap getMapFragment() {
+		public BaseDPMap getMapFragment() {
 			return new OSMapFragment();
 		}
 
-		@Override
+        @Override
+        public Class<? extends BaseDPMap> getMapFragmentClass() {
+            return OSMapFragment.class;
+        }
+
+        @Override
 		public MapProviderPreferences getMapProviderPreferences() {
 			return new OSMapProviderPreferences();
 		}
@@ -45,7 +55,12 @@ public enum DPMapProvider {
 	/**
 	 * @return the fragment implementing the map.
 	 */
-	public abstract DPMap getMapFragment();
+	public abstract BaseDPMap getMapFragment();
+
+    /**
+     * @return the class of the fragment implementing the map.
+     */
+    public abstract Class<? extends BaseDPMap> getMapFragmentClass();
 
 	/**
 	 * @return the set of preferences supported by the map.

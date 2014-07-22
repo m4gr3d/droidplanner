@@ -4,14 +4,13 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.UnknownHostException;
 import java.nio.BufferOverflowException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
 import org.droidplanner.android.services.UploaderService;
 import org.droidplanner.android.utils.analytics.GAUtils;
-import org.droidplanner.android.utils.file.FileStream;
+import org.droidplanner.android.lib.utils.file.FileStream;
 import org.droidplanner.android.utils.prefs.DroidPlannerPrefs;
 
 import android.content.Context;

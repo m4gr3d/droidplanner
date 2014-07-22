@@ -24,10 +24,8 @@ import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.NavUtils;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 /**
  * Parent class for the app activity classes.
@@ -55,7 +53,7 @@ public abstract class SuperUI extends FragmentActivity implements OnDroneListene
 	private InfoBarActionProvider infoBar;
 	private GCSHeartbeat gcsHeartbeat;
 	public DroidPlannerApp app;
-	public Drone drone;
+	protected Drone drone;
 
 	/**
 	 * Handle to the app preferences.
@@ -73,7 +71,7 @@ public abstract class SuperUI extends FragmentActivity implements OnDroneListene
 
 		app = (DroidPlannerApp) getApplication();
 		this.drone = app.getDrone();
-		gcsHeartbeat = new GCSHeartbeat(drone, 1);
+		gcsHeartbeat = new GCSHeartbeat(getDrone(), 1);
 		mAppPrefs = new DroidPlannerPrefs(getApplicationContext());
 
 		PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
@@ -100,8 +98,8 @@ public abstract class SuperUI extends FragmentActivity implements OnDroneListene
         bindService(new Intent(getApplicationContext(), DroidPlannerService.class),
                 mServiceConnection, Context.BIND_AUTO_CREATE);
 		maxVolumeIfEnabled();
-		drone.events.addDroneListener(this);
-		drone.events.notifyDroneEvent(DroneEventsType.MISSION_UPDATE);
+		getDrone().events.addDroneListener(this);
+		getDrone().events.notifyDroneEvent(DroneEventsType.MISSION_UPDATE);
 	}
 
 	private void maxVolumeIfEnabled() {
@@ -121,7 +119,7 @@ public abstract class SuperUI extends FragmentActivity implements OnDroneListene
 	protected void onStop() {
 		super.onStop();
         unbindService(mServiceConnection);
-		drone.events.removeDroneListener(this);
+		getDrone().events.removeDroneListener(this);
 
 		if (infoBar != null) {
 			infoBar.setDrone(null);
@@ -169,7 +167,7 @@ public abstract class SuperUI extends FragmentActivity implements OnDroneListene
 			infoBar = (InfoBarActionProvider) infoBarItem.getActionProvider();
 
 		// Configure the info bar action provider if we're connected
-		if (drone.MavClient.isConnected()) {
+		if (getDrone().MavClient.isConnected()) {
 			menu.setGroupEnabled(R.id.menu_group_connected, true);
 			menu.setGroupVisible(R.id.menu_group_connected, true);
 
@@ -177,7 +175,7 @@ public abstract class SuperUI extends FragmentActivity implements OnDroneListene
 			toggleConnectionItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
 
 			if (infoBar != null) {
-				infoBar.setDrone(drone);
+				infoBar.setDrone(getDrone());
 			}
 		} else {
 			menu.setGroupEnabled(R.id.menu_group_connected, false);
@@ -198,11 +196,11 @@ public abstract class SuperUI extends FragmentActivity implements OnDroneListene
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.menu_send_mission:
-			drone.mission.sendMissionToAPM();
+			getDrone().mission.sendMissionToAPM();
 			return true;
 
 		case R.id.menu_load_mission:
-			drone.waypointManager.getWaypoints();
+			getDrone().waypointManager.getWaypoints();
 			return true;
 
 		case android.R.id.home:
@@ -261,4 +259,7 @@ public abstract class SuperUI extends FragmentActivity implements OnDroneListene
 		// drone.notifyMapTypeChanged();
 	}
 
+    public Drone getDrone() {
+        return drone;
+    }
 }

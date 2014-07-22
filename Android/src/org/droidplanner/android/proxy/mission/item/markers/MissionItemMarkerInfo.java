@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.droidplanner.android.maps.MarkerInfo;
+import org.droidplanner.android.lib.maps.BaseMarkerInfo;
 import org.droidplanner.android.maps.MarkerWithText;
 import org.droidplanner.android.proxy.mission.MissionProxy;
 import org.droidplanner.android.proxy.mission.item.MissionItemProxy;
@@ -17,13 +17,13 @@ import android.graphics.Bitmap;
 /**
  * Template class and factory for a mission item's marker source.
  */
-public abstract class MissionItemMarkerInfo extends MarkerInfo.SimpleMarkerInfo implements
+public abstract class MissionItemMarkerInfo extends BaseMarkerInfo.SimpleMarkerInfo implements
 		Serializable {
 
 	protected final MissionItemProxy mMarkerOrigin;
 
-	public static List<MarkerInfo> newInstance(MissionItemProxy origin) {
-		List<MarkerInfo> markerInfos = new ArrayList<MarkerInfo>();
+	public static List<BaseMarkerInfo> newInstance(MissionItemProxy origin) {
+		List<BaseMarkerInfo> markerInfos = new ArrayList<BaseMarkerInfo>();
 		switch (origin.getMissionItem().getType()) {
 		case LAND:
 			markerInfos.add(new LandMarkerInfo(origin));

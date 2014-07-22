@@ -1,11 +1,11 @@
 package org.droidplanner.android.proxy.mission.item.markers;
 
-import org.droidplanner.android.maps.MarkerInfo;
+import org.droidplanner.android.lib.maps.BaseMarkerInfo;
 import org.droidplanner.core.helpers.coordinates.Coord2D;
 
 /**
  */
-public class PolygonMarkerInfo extends MarkerInfo.SimpleMarkerInfo {
+public class PolygonMarkerInfo extends BaseMarkerInfo.SimpleMarkerInfo {
 
 	private final Coord2D mPoint;
 

@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.droidplanner.android.maps.DPMap;
-import org.droidplanner.android.maps.MarkerInfo;
+import org.droidplanner.android.lib.maps.BaseDPMap;
+import org.droidplanner.android.lib.maps.BaseMarkerInfo;
 import org.droidplanner.android.proxy.mission.item.MissionItemProxy;
 import org.droidplanner.core.helpers.coordinates.Coord2D;
 import org.droidplanner.core.helpers.coordinates.Coord3D;
@@ -26,7 +26,7 @@ import android.util.Pair;
  * This class is used to render a {@link org.droidplanner.core.mission.Mission}
  * object on the Android side.
  */
-public class MissionProxy implements DPMap.PathSource {
+public class MissionProxy implements BaseDPMap.PathSource {
 
 	private final Mission mMission;
 
@@ -58,11 +58,11 @@ public class MissionProxy implements DPMap.PathSource {
 	/**
 	 * @return the map markers corresponding to this mission's command set.
 	 */
-	public List<MarkerInfo> getMarkersInfos() {
-		List<MarkerInfo> markerInfos = new ArrayList<MarkerInfo>();
+	public List<BaseMarkerInfo> getMarkersInfos() {
+		List<BaseMarkerInfo> markerInfos = new ArrayList<BaseMarkerInfo>();
 
 		for (MissionItemProxy itemProxy : mMissionItems) {
-			List<MarkerInfo> itemMarkerInfos = itemProxy.getMarkerInfos();
+			List<BaseMarkerInfo> itemMarkerInfos = itemProxy.getMarkerInfos();
 			if (itemMarkerInfos != null && !itemMarkerInfos.isEmpty()) {
 				markerInfos.addAll(itemMarkerInfos);
 			}

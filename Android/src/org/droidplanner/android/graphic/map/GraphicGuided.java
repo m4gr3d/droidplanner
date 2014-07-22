@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.droidplanner.R;
-import org.droidplanner.android.maps.DPMap.PathSource;
-import org.droidplanner.android.maps.MarkerInfo;
+import org.droidplanner.android.lib.maps.BaseDPMap.PathSource;
+import org.droidplanner.android.lib.maps.BaseMarkerInfo;
 import org.droidplanner.android.maps.MarkerWithText;
 import org.droidplanner.core.drone.Drone;
 import org.droidplanner.core.drone.variables.GPS;
@@ -16,7 +16,7 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.util.Log;
 
-public class GraphicGuided extends MarkerInfo.SimpleMarkerInfo implements PathSource {
+public class GraphicGuided extends BaseMarkerInfo.SimpleMarkerInfo implements PathSource {
 
 	private final static String TAG = GraphicGuided.class.getSimpleName();
 

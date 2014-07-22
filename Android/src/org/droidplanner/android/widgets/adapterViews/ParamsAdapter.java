@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.droidplanner.R;
-import org.droidplanner.android.utils.file.IO.ParameterMetadataMapReader;
+import org.droidplanner.android.lib.utils.file.IO.ParameterMetadataMapReader;
 import org.droidplanner.core.drone.Drone;
 import org.droidplanner.core.drone.profiles.VehicleProfile;
 import org.droidplanner.core.parameters.Parameter;
@@ -18,7 +18,6 @@ import android.content.Context;
 import android.graphics.Color;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
