@@ -4,9 +4,10 @@ import java.util.List;
 
 import org.droidplanner.R;
 import org.droidplanner.android.DroidPlannerApp;
-import org.droidplanner.android.graphic.map.GraphicDrone;
-import org.droidplanner.android.graphic.map.GraphicGuided;
-import org.droidplanner.android.graphic.map.GraphicHome;
+import org.droidplanner.android.lib.maps.graphics.GraphicDrone;
+import org.droidplanner.android.lib.maps.graphics.GraphicGuided;
+import org.droidplanner.android.lib.maps.graphics.GraphicHome;
+import org.droidplanner.android.lib.fragments.BaseDroneMap;
 import org.droidplanner.android.lib.maps.BaseDPMap;
 import org.droidplanner.android.maps.providers.DPMapProvider;
 import org.droidplanner.android.proxy.mission.MissionProxy;
@@ -14,7 +15,6 @@ import org.droidplanner.android.utils.Utils;
 import org.droidplanner.android.lib.prefs.AutoPanMode;
 import org.droidplanner.core.drone.Drone;
 import org.droidplanner.core.drone.DroneInterfaces.DroneEventsType;
-import org.droidplanner.core.drone.DroneInterfaces.OnDroneListener;
 import org.droidplanner.core.helpers.coordinates.Coord2D;
 
 import android.app.Activity;
@@ -26,40 +26,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-public abstract class DroneMap extends Fragment implements OnDroneListener {
-
-	protected BaseDPMap mMapFragment;
-
-	private GraphicHome home;
-	public GraphicDrone graphicDrone;
-	public GraphicGuided guided;
+public abstract class DroneMap extends BaseDroneMap {
 
 	protected MissionProxy missionProxy;
-	public Drone drone;
-
-	protected Context context;
 
 	protected abstract boolean isMissionDraggable();
 
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup viewGroup, Bundle bundle) {
-		final View view = inflater.inflate(R.layout.fragment_drone_map, viewGroup, false);
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState){
+        super.onActivityCreated(savedInstanceState);
+        missionProxy = ((DroidPlannerApp) getActivity().getApplication()).missionProxy;
+    }
 
-		final Activity activity = getActivity();
-		final DroidPlannerApp app = ((DroidPlannerApp) activity.getApplication());
-		drone = app.getDrone();
-		missionProxy = app.missionProxy;
-
-		home = new GraphicHome(drone);
-		graphicDrone = new GraphicDrone(drone);
-		guided = new GraphicGuided(drone);
-
-		updateMapFragment();
-
-		return view;
-	}
-
-	private void updateMapFragment() {
+    @Override
+	protected final void updateMapFragment() {
 		// Add the map fragment instance (based on user preference)
 		final DPMapProvider mapProvider = Utils.getMapProvider(getActivity()
 				.getApplicationContext());
@@ -79,62 +59,18 @@ public abstract class DroneMap extends Fragment implements OnDroneListener {
 	}
 
 	@Override
-	public void onPause() {
-		super.onPause();
-		drone.events.removeDroneListener(this);
-		mMapFragment.saveCameraPosition();
-	}
-
-	@Override
-	public void onResume() {
-		super.onResume();
-		drone.events.addDroneListener(this);
-		mMapFragment.loadCameraPosition();
-		update();
-	}
-
-	@Override
-	public void onStart() {
-		super.onStart();
-		updateMapFragment();
-	}
-
-	@Override
-	public void onAttach(Activity activity) {
-		super.onAttach(activity);
-		context = activity.getApplicationContext();
-	}
-
-	@Override
 	public void onDroneEvent(DroneEventsType event, Drone drone) {
 		switch (event) {
 		case MISSION_UPDATE:
 			update();
 			break;
-
-		case GPS:
-			mMapFragment.updateMarker(graphicDrone);
-			mMapFragment.updateDroneLeashPath(guided);
-			mMapFragment.addFlightPathPoint(drone.GPS.getPosition());
-			break;
-
-		case GUIDEDPOINT:
-			mMapFragment.updateMarker(guided);
-			mMapFragment.updateDroneLeashPath(guided);
-			break;
-
-		default:
-			break;
 		}
+        super.onDroneEvent(event, drone);
 	}
 
+    @Override
 	public void update() {
-		mMapFragment.cleanMarkers();
-
-		if (home.isValid()) {
-			mMapFragment.updateMarker(home);
-		}
-
+		super.update();
 		mMapFragment.updateMarkers(missionProxy.getMarkersInfos(), isMissionDraggable());
 		mMapFragment.updateMissionPath(missionProxy);
 	}

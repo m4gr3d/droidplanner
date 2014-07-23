@@ -6,6 +6,7 @@ import org.droidplanner.android.lib.maps.BaseDPMap;
 import org.droidplanner.android.lib.maps.BaseMarkerInfo;
 import org.droidplanner.android.lib.utils.BaseMapUtils;
 import org.droidplanner.android.lib.prefs.AutoPanMode;
+import org.droidplanner.android.utils.MapUtils;
 import org.droidplanner.android.utils.prefs.DroidPlannerPrefs;
 import org.droidplanner.core.drone.Drone;
 import org.droidplanner.core.drone.DroneInterfaces.DroneEventsType;
@@ -90,7 +91,7 @@ public class FlightMapFragment extends DroneMap implements BaseDPMap.OnMapLongCl
 			} else {
 				if (guidedModeOnLongPress) {
 					GuidedDialog dialog = new GuidedDialog();
-					dialog.setCoord(BaseMapUtils.CoordToLatLang(coord));
+					dialog.setCoord(MapUtils.CoordToLatLang(coord));
 					dialog.setListener(this);
 					dialog.show(getChildFragmentManager(), "GUIDED dialog");
 				}
@@ -101,7 +102,7 @@ public class FlightMapFragment extends DroneMap implements BaseDPMap.OnMapLongCl
 	@Override
 	public void onForcedGuidedPoint(LatLng coord) {
 		try {
-			drone.guidedPoint.forcedGuidedCoordinate(BaseMapUtils.LatLngToCoord(coord));
+			drone.guidedPoint.forcedGuidedCoordinate(MapUtils.LatLngToCoord(coord));
 		} catch (Exception e) {
 			Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
 		}

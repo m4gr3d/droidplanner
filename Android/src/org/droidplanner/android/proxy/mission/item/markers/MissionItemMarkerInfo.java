@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.droidplanner.android.lib.maps.BaseMarkerInfo;
-import org.droidplanner.android.maps.MarkerWithText;
+import org.droidplanner.android.lib.maps.graphics.MarkerWithText;
 import org.droidplanner.android.proxy.mission.MissionProxy;
 import org.droidplanner.android.proxy.mission.item.MissionItemProxy;
 import org.droidplanner.core.helpers.coordinates.Coord2D;

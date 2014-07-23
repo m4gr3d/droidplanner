@@ -1,12 +1,11 @@
-package org.droidplanner.android.graphic.map;
+package org.droidplanner.android.lib.maps.graphics;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.droidplanner.R;
+import org.droidplanner.android.lib.R;
 import org.droidplanner.android.lib.maps.BaseDPMap.PathSource;
 import org.droidplanner.android.lib.maps.BaseMarkerInfo;
-import org.droidplanner.android.maps.MarkerWithText;
 import org.droidplanner.core.drone.Drone;
 import org.droidplanner.core.drone.variables.GPS;
 import org.droidplanner.core.drone.variables.GuidedPoint;

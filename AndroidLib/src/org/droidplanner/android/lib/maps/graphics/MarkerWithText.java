@@ -1,6 +1,5 @@
-package org.droidplanner.android.maps;
+package org.droidplanner.android.lib.maps.graphics;
 
-import org.droidplanner.R;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -11,6 +10,8 @@ import android.graphics.Color;
 import android.graphics.LightingColorFilter;
 import android.graphics.Paint;
 import android.graphics.Rect;
+
+import org.droidplanner.android.lib.R;
 
 public class MarkerWithText {
 

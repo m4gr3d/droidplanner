@@ -9,13 +9,14 @@ import com.google.android.glass.touchpad.Gesture;
 import com.google.android.glass.touchpad.GestureDetector;
 
 import org.droidplanner.android.fragments.DroneMap;
+import org.droidplanner.android.lib.fragments.BaseDroneMap;
 import org.droidplanner.android.maps.providers.DPMapProvider;
 
 /**
  * Used on glass to display the flight map data. Provides support for map control via glass
  * gestures.
  */
-public class GlassMapFragment extends DroneMap {
+public class GlassMapFragment extends BaseDroneMap {
 
     private static final String TAG = GlassMapFragment.class.getSimpleName();
 
@@ -80,6 +81,11 @@ public class GlassMapFragment extends DroneMap {
                         return false;
                     }
                 });
+    }
+
+    @Override
+    protected void updateMapFragment() {
+
     }
 
     private float clampZoomLevel(float zoomLevel) {
