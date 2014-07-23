@@ -3,27 +3,37 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <group
-        android:id="@+id/menu_group_drone_connected"
+        android:id="@+id/menu_group_glass_paired"
         android:visible="false"
         android:enabled="false">
+        <group
+            android:id="@+id/menu_group_drone_connected"
+            android:visible="false"
+            android:enabled="false">
+
+            <item
+                android:id="@+id/menu_flight_modes"
+                android:title="@string/flight_modes_label"
+                android:icon="@drawable/ic_action_plane_white">
+                <menu/>
+            </item>
+
+            <item
+                android:id="@+id/menu_toggle_follow_me"
+                android:icon="@drawable/ic_follow"
+                android:title="@string/menu_enable_follow_me"/>
+
+        </group>
 
         <item
-            android:id="@+id/menu_flight_modes"
-            android:title="@string/menu_flight_modes">
-            <menu/>
-        </item>
-
+            android:id="@+id/menu_toggle_connection"
+            android:icon="@drawable/ic_action_io"
+            android:title="@string/menu_connect"/>
     </group>
 
     <item
-        android:id="@+id/menu_connect"
+        android:id="@+id/menu_device_pairing"
         android:icon="@drawable/ic_bluetooth_50"
-        android:title="@string/menu_connect"/>
-
-    <item android:id="@+id/menu_settings"
-        android:icon="@drawable/ic_action_settings_white"
-        android:title="@string/settings"
-        android:enabled="false"
-        android:visible="false"/>
+        android:title="@string/menu_pair_device"/>
 
 </menu>

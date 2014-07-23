@@ -1,17 +1,21 @@
 package org.droidplanner.android.glass.activities;
 
-import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.SubMenu;
 
 import com.MAVLink.Messages.ApmModes;
+import com.google.android.glass.touchpad.GestureDetector;
 import com.google.android.glass.view.WindowUtils;
 
+import org.droidplanner.R;
 import org.droidplanner.android.glass.fragments.GlassMapFragment;
 import org.droidplanner.android.glass.views.HUD;
+import org.droidplanner.android.lib.maps.BaseDPMap;
 import org.droidplanner.core.MAVLink.MavLinkArm;
 import org.droidplanner.core.drone.Drone;
 import org.droidplanner.core.drone.DroneEvents;
@@ -19,9 +23,15 @@ import org.droidplanner.core.drone.DroneInterfaces;
 
 import java.util.List;
 
-public class GlassHudActivity extends GlassUI {
+public class GlassHudActivity extends FragmentActivity implements BaseDPMap.DroneProvider {
 
     private HUD hudWidget;
+
+    /**
+     * Glass gesture detector.
+     * Detects glass specific swipes, and taps, and uses it for navigation.
+     */
+    protected GestureDetector mGestureDetector;
 
     /**
      * Reference to the menu so it can be updated when used with contextual voice commands.
@@ -32,12 +42,15 @@ public class GlassHudActivity extends GlassUI {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        getWindow().requestFeature(WindowUtils.FEATURE_VOICE_COMMANDS);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_glass_hud);
 
         hudWidget = (HUD) findViewById(R.id.hudWidget);
         mMapFragment = (GlassMapFragment) getSupportFragmentManager().findFragmentById(R.id
                 .glass_flight_map_fragment);
+
+        mGestureDetector = new GestureDetector(getApplicationContext());
     }
 
     @Override
@@ -53,7 +66,21 @@ public class GlassHudActivity extends GlassUI {
     @Override
     public boolean onGenericMotionEvent(MotionEvent event) {
         return mMapFragment != null && mMapFragment.onGenericMotionEvent(event)
-                || super.onGenericMotionEvent(event);
+                || mGestureDetector.onMotionEvent(event);
+    }
+
+    /**
+     * Used to detect glass specific gestures.
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER) {
+            openOptionsMenu();
+            return true;
+        }
+
+        return super.onKeyDown(keyCode, event);
     }
 
     protected void updateMenu(Menu menu) {
@@ -113,14 +140,6 @@ public class GlassHudActivity extends GlassUI {
 
                 return false;
             }
-
-            case R.id.menu_arming_state:
-                toggleArming();
-                return true;
-
-            case R.id.menu_settings:
-                startActivity(new Intent(getApplicationContext(), GlassSettingsActivity.class));
-                return true;
 
             default:
                 return super.onMenuItemSelected(featureId, item);
@@ -206,5 +225,10 @@ public class GlassHudActivity extends GlassUI {
                 break;
         }
         super.onDroneEvent(event, drone);
+    }
+
+    @Override
+    public Drone getDrone() {
+        return null;
     }
 }

@@ -337,8 +337,9 @@ public class DroidPlannerWearService extends WearableListenerService {
             extender.addAction(flightModeAction);
 
             //Follow me toggle action
-            final CharSequence followTitle = String.format("%s Follow-Me",
-                    isFollowMeEnabled ? "Disable" : "Enable");
+            final CharSequence followTitle = getText(isFollowMeEnabled
+                    ? R.string.menu_disable_follow_me
+                    : R.string.menu_enable_follow_me);
             final Intent followIntent = new Intent(context, DroidPlannerWearService.class)
                     .setAction(WearUtils.TOGGLE_DRONE_FOLLOW_ME_PATH)
                     .putExtra(WearUtils.TOGGLE_DRONE_FOLLOW_ME_PATH, !isFollowMeEnabled);

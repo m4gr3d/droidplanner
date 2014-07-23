@@ -99,6 +99,7 @@ public class GoogleMapFragment extends SupportMapFragment implements BaseDPMap, 
 
     @Override
     public void onAttach(Activity activity){
+        super.onAttach(activity);
         if(!(activity instanceof DroneProvider)){
             throw new IllegalStateException("Parent activity must implement " + DroneProvider
                     .class.getName());

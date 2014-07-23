@@ -109,6 +109,10 @@
     <string name="connected">Connected</string>
     <string name="disconnected">Disconnected</string>
 
+    <!-- Follow Me mode state -->
+    <string name="menu_enable_follow_me">Enable Follow-Me</string>
+    <string name="menu_disable_follow_me">Disable Follow-Me</string>
+
     <!-- Failsafe Strings -->
     <string name="RCFailsafe">Warning! RC Failsafe – Returning to Launch</string>
 
