@@ -167,10 +167,6 @@ public class FlightActivity extends DrawerNavigationUI implements BaseDPMap.Dron
 		}
 
 		DroneshareDialog.perhapsShow(this);
-
-		// Any time the main activity is relaunched, do a quick scan to see if
-		// we need any uploads
-		startService(UploaderService.createIntent(this));
 	}
 
 	private void updateMapLocationButtons(AutoPanMode mode) {
