@@ -1,6 +1,8 @@
 package org.droidplanner.android.glass.activities;
 
 import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -17,11 +19,11 @@ import com.google.android.glass.view.WindowUtils;
 
 import org.droidplanner.R;
 import org.droidplanner.android.glass.fragments.GlassMapFragment;
+import org.droidplanner.android.glass.services.DroidPlannerGlassService;
+import org.droidplanner.android.glass.services.DroidPlannerGlassService.DroidPlannerApi;
 import org.droidplanner.android.glass.views.HUD;
 import org.droidplanner.android.lib.maps.BaseDPMap;
-import org.droidplanner.core.MAVLink.MavLinkArm;
 import org.droidplanner.core.drone.Drone;
-import org.droidplanner.core.drone.DroneEvents;
 import org.droidplanner.core.drone.DroneInterfaces;
 
 import java.util.List;
@@ -31,15 +33,23 @@ public class GlassHudActivity extends FragmentActivity implements BaseDPMap.Dron
     private final ServiceConnection mServiceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
+            mDpApi = (DroidPlannerApi) service;
+            mDrone = mDpApi.getDrone();
+            mDpApi.queryConnectionState();
 
+            updateMenu(mMenu);
+
+            mDpApi.addDroneListener(GlassHudActivity.this);
         }
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
-
+            mDpApi = null;
         }
     };
 
+    private DroidPlannerApi mDpApi;
+    private Drone mDrone;
     private HUD hudWidget;
 
     /**
@@ -74,7 +84,7 @@ public class GlassHudActivity extends FragmentActivity implements BaseDPMap.Dron
         if (featureId == WindowUtils.FEATURE_VOICE_COMMANDS) {
             mMenu = menu;
         }
-        updateMenu(menu);
+            updateMenu(menu);
         return true;
     }
 
@@ -99,11 +109,13 @@ public class GlassHudActivity extends FragmentActivity implements BaseDPMap.Dron
     }
 
     protected void updateMenu(Menu menu) {
-        if (menu != null) {
+        if (menu != null && mDpApi != null) {
+            final boolean isDroneConnected = mDpApi.isDroneConnected();
+
             //Update the toggle connection menu title
-            MenuItem connectMenuItem = menu.findItem(R.id.menu_connect);
-            if (connectMenuItem != null) {
-                connectMenuItem.setTitle(drone.MavClient.isConnected()
+            MenuItem connectionToggleItem = menu.findItem(R.id.menu_toggle_connection);
+            if (connectionToggleItem != null) {
+                connectionToggleItem.setTitle(isDroneConnected
                         ? R.string.menu_disconnect
                         : R.string.menu_connect);
             }
@@ -114,14 +126,12 @@ public class GlassHudActivity extends FragmentActivity implements BaseDPMap.Dron
             flightModesMenu.clear();
 
             //Get the list of apm modes for this drone
-            List<ApmModes> apmModesList = ApmModes.getModeList(drone.type.getType());
+            List<ApmModes> apmModesList = mDpApi.getApmModes();
 
             //Add them to the flight modes menu
             for (ApmModes apmMode : apmModesList) {
                 flightModesMenu.add(apmMode.getName());
             }
-
-            final boolean isDroneConnected = drone.MavClient.isConnected();
 
             //Make the drone control menu visible if connected
             menu.setGroupVisible(R.id.menu_group_drone_connected, isDroneConnected);
@@ -137,9 +147,9 @@ public class GlassHudActivity extends FragmentActivity implements BaseDPMap.Dron
 
                 //Handle the flight modes
                 final String itemTitle = item.getTitle().toString();
-                final ApmModes selectedMode = ApmModes.getMode(itemTitle, drone.type.getType());
+                final ApmModes selectedMode = ApmModes.getMode(itemTitle, mDpApi.getDroneType());
                 if (ApmModes.isValid(selectedMode)) {
-                    drone.state.changeFlightMode(selectedMode);
+                    mDpApi.changeFlightMode(selectedMode);
                     return true;
                 }
 
@@ -154,18 +164,17 @@ public class GlassHudActivity extends FragmentActivity implements BaseDPMap.Dron
     @Override
     public void onStart() {
         super.onStart();
-
-        drone.events.addDroneListener(this);
-
-        //Check if we're connected to the drone
-//        hudWidget.setEnabled(drone.MavClient.isConnected());
+        bindService(new Intent(getApplicationContext(), DroidPlannerGlassService.class),
+                mServiceConnection, Context.BIND_AUTO_CREATE);
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        final DroneEvents droneEvents = drone.events;
-        droneEvents.removeDroneListener(this);
+        if(mDpApi != null){
+            mDpApi.removeDroneListener(this);
+        }
+        unbindService(mServiceConnection);
     }
 
     @Override
@@ -223,6 +232,6 @@ public class GlassHudActivity extends FragmentActivity implements BaseDPMap.Dron
 
     @Override
     public Drone getDrone() {
-        return null;
+        return mDrone;
     }
 }

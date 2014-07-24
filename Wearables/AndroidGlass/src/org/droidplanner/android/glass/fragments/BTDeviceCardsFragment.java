@@ -21,6 +21,9 @@ import com.google.android.glass.app.Card;
 import com.google.android.glass.widget.CardScrollAdapter;
 import com.google.android.glass.widget.CardScrollView;
 
+import org.droidplanner.R;
+import org.droidplanner.android.lib.maps.BaseDPMap;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -40,6 +43,12 @@ public class BTDeviceCardsFragment extends DialogFragment {
      * @since 1.2.0
      */
     private static final String TAG = BTDeviceCardsFragment.class.getName();
+
+    /**
+     * Request code used in onActivityResult to check for bluetooth activation
+     * result.
+     */
+    private static final int REQUEST_ENABLE_BT = 111;
 
     /**
      * This is the bluetooth adapter.
@@ -121,12 +130,10 @@ public class BTDeviceCardsFragment extends DialogFragment {
                 // so the bluetooth client can retrieve it on connection.
                 final SharedPreferences.Editor editor = PreferenceManager
                         .getDefaultSharedPreferences(activity).edit();
-                editor.putString(Constants.PREF_BLUETOOTH_DEVICE_ADDRESS,
-                        device.getAddress()).apply();
+                editor.putString("pref_bluetooth_device_address", device.getAddress()).apply();
 
                 //Toggle the drone connection
-                ((DroidPlannerApp) activity.getApplication()).drone.MavClient
-                        .toggleConnectionState();
+                ((BaseDPMap.DroneProvider) activity).getDrone().MavClient.toggleConnectionState();
 
                 //Close the dialog fragment
                 dismiss();
@@ -165,7 +172,7 @@ public class BTDeviceCardsFragment extends DialogFragment {
         else {
             //Request that bluetooth be enabled
             startActivityForResult(new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE),
-                    BTDeviceListFragment.REQUEST_ENABLE_BT);
+                    REQUEST_ENABLE_BT);
         }
     }
 
@@ -237,7 +244,7 @@ public class BTDeviceCardsFragment extends DialogFragment {
                 final BluetoothDevice device = (BluetoothDevice) getItem(i);
                 card.setText(device.getName())
                         .setFootnote(device.getAddress())
-                        .addImage(R.drawable.ic_action_bluetooth);
+                        .addImage(R.drawable.ic_bluetooth_50);
             }
             return card.getView();
         }
