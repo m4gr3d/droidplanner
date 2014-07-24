@@ -1,6 +1,9 @@
 package org.droidplanner.android.glass.activities;
 
+import android.content.ComponentName;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.v4.app.FragmentActivity;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -23,7 +26,19 @@ import org.droidplanner.core.drone.DroneInterfaces;
 
 import java.util.List;
 
-public class GlassHudActivity extends FragmentActivity implements BaseDPMap.DroneProvider {
+public class GlassHudActivity extends FragmentActivity implements BaseDPMap.DroneProvider, DroneInterfaces.OnDroneListener {
+
+    private final ServiceConnection mServiceConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+
+        }
+    };
 
     private HUD hudWidget;
 
@@ -112,16 +127,6 @@ public class GlassHudActivity extends FragmentActivity implements BaseDPMap.Dron
             menu.setGroupVisible(R.id.menu_group_drone_connected, isDroneConnected);
             menu.setGroupEnabled(R.id.menu_group_drone_connected, isDroneConnected);
 
-            //Update the drone arming state if connected
-            if (isDroneConnected) {
-                final MenuItem armingMenuItem = menu.findItem(R.id.menu_arming_state);
-                armingMenuItem.setVisible(false);
-                armingMenuItem.setEnabled(false);
-//                if (armingMenuItem != null) {
-//                    boolean isArmed = drone.state.isArmed();
-//                    armingMenuItem.setTitle(isArmed ? R.string.menu_disarm : R.string.menu_arm);
-//                }
-            }
         }
     }
 
@@ -144,16 +149,6 @@ public class GlassHudActivity extends FragmentActivity implements BaseDPMap.Dron
             default:
                 return super.onMenuItemSelected(featureId, item);
         }
-    }
-
-    private void toggleArming() {
-        final boolean isDroneArmed = drone.state.isArmed();
-        if (!isDroneArmed) {
-            app.mNotificationHandler.getTtsNotificationProvider().speak("Arming the vehicle, " +
-                    "please standby");
-        }
-
-        MavLinkArm.sendArmMessage(drone, !isDroneArmed);
     }
 
     @Override
@@ -224,7 +219,6 @@ public class GlassHudActivity extends FragmentActivity implements BaseDPMap.Dron
                 hudWidget.setDroneType(drone.type.getType());
                 break;
         }
-        super.onDroneEvent(event, drone);
     }
 
     @Override

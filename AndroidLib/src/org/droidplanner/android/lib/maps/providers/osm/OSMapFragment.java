@@ -238,7 +238,27 @@ public class OSMapFragment extends Fragment implements BaseDPMap {
 		}
 	}
 
-	@Override
+    @Override
+    public Coord2D getMapCenter() {
+        return BaseMapUtils.GeoPointToCoord(mMapView.getMapCenter());
+    }
+
+    @Override
+    public float getMaxZoomLevel() {
+        return mMapView.getMaxZoomLevel();
+    }
+
+    @Override
+    public float getMinZoomLevel() {
+        return mMapView.getMinZoomLevel();
+    }
+
+    @Override
+    public float getZoomLevel() {
+        return mMapView.getZoomLevel();
+    }
+
+    @Override
 	public void selectAutoPanMode(AutoPanMode target) {
 		final AutoPanMode currentMode = mPanMode.get();
 		if (currentMode == target)
@@ -405,14 +425,14 @@ public class OSMapFragment extends Fragment implements BaseDPMap {
 	}
 
 	@Override
-	public void updateCamera(Coord2D coord, int zoomLevel) {
+	public void updateCamera(Coord2D coord, float zoomLevel) {
 		if (coord == null) {
 			return;
 		}
 
 		IMapController mapController = mMapView.getController();
 		mapController.animateTo(BaseMapUtils.CoordToGeoPoint(coord));
-		mapController.setZoom(zoomLevel);
+		mapController.setZoom((int)zoomLevel);
 	}
 
 	@Override

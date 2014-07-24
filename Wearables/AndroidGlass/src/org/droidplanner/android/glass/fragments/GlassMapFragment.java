@@ -2,15 +2,19 @@ package org.droidplanner.android.glass.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.MotionEvent;
 import android.view.View;
 
 import com.google.android.glass.touchpad.Gesture;
 import com.google.android.glass.touchpad.GestureDetector;
 
-import org.droidplanner.android.fragments.DroneMap;
+import org.droidplanner.R;
 import org.droidplanner.android.lib.fragments.BaseDroneMap;
-import org.droidplanner.android.maps.providers.DPMapProvider;
+import org.droidplanner.android.lib.maps.BaseDPMap;
+import org.droidplanner.android.lib.maps.providers.osm.OSMapFragment;
+import org.droidplanner.android.lib.prefs.AutoPanMode;
 
 /**
  * Used on glass to display the flight map data. Provides support for map control via glass
@@ -50,8 +54,7 @@ public class GlassMapFragment extends BaseDroneMap {
         final Context context = getActivity().getApplicationContext();
 
         mGestureDetector = new GestureDetector(context);
-        mGestureDetector
-                .setBaseListener(new GestureDetector.BaseListener() {
+        mGestureDetector.setBaseListener(new GestureDetector.BaseListener() {
                     @Override
                     public boolean onGesture(Gesture gesture) {
                         if (mMinZoomLevel == -1) {
@@ -69,12 +72,12 @@ public class GlassMapFragment extends BaseDroneMap {
 
                         switch (gesture) {
                             case SWIPE_RIGHT: {
-                                updateMapZoomLevel(mMapFragment.getMapZoomLevel() + mZoomStep);
+                                updateMapZoomLevel(mMapFragment.getZoomLevel() + mZoomStep);
                                 return true;
                             }
 
                             case SWIPE_LEFT: {
-                                updateMapZoomLevel(mMapFragment.getMapZoomLevel() - mZoomStep);
+                                updateMapZoomLevel(mMapFragment.getZoomLevel() - mZoomStep);
                                 return true;
                             }
                         }
@@ -85,7 +88,18 @@ public class GlassMapFragment extends BaseDroneMap {
 
     @Override
     protected void updateMapFragment() {
+        //Add the map fragment instance
+        final FragmentManager fm = getChildFragmentManager();
+        mMapFragment = (BaseDPMap) fm.findFragmentById(R.id.map_fragment_container);
+        if(mMapFragment == null){
+            //TODO: replace with mapbox map implementation
+            mMapFragment = new OSMapFragment();
+            fm.beginTransaction()
+                    .add(R.id.map_fragment_container, (Fragment) mMapFragment)
+                    .commit();
+        }
 
+        mMapFragment.selectAutoPanMode(AutoPanMode.DRONE);
     }
 
     private float clampZoomLevel(float zoomLevel) {
@@ -105,15 +119,5 @@ public class GlassMapFragment extends BaseDroneMap {
 
     public boolean onGenericMotionEvent(MotionEvent event) {
         return mGestureDetector != null && mGestureDetector.onMotionEvent(event);
-    }
-
-    @Override
-    protected DPMapProvider getMapProvider() {
-        return DPMapProvider.MAPBOX;
-    }
-
-    @Override
-    protected boolean isAutoPanEnabled() {
-        return true;
     }
 }

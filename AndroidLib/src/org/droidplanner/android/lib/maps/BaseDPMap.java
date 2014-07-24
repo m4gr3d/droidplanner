@@ -150,13 +150,25 @@ public interface BaseDPMap extends DroneInterfaces.OnDroneListener {
 	 */
 	public void clearFlightPath();
 
-	/**
-	 * Enable map auto panning on the passed target type.
-	 * 
-	 * @param mode
-	 *            auto pan target (user / drone / disabled).
-	 */
-	public void selectAutoPanMode(AutoPanMode mode);
+    /**
+     * @return
+     */
+    public Coord2D getMapCenter();
+
+    /**
+     * @return the map maximum zoom level
+     */
+    public float getMaxZoomLevel();
+
+    /**
+     * @return the map minimum zoom level
+     */
+    public float getMinZoomLevel();
+
+    /**
+     * @return the map zoom level
+     */
+    public float getZoomLevel();
 
 	/**
 	 * Move the map to the drone location.
@@ -180,7 +192,15 @@ public interface BaseDPMap extends DroneInterfaces.OnDroneListener {
 	 */
 	public void saveCameraPosition();
 
-	/**
+    /**
+     * Enable map auto panning on the passed target type.
+     *
+     * @param mode
+     *            auto pan target (user / drone / disabled).
+     */
+    public void selectAutoPanMode(AutoPanMode mode);
+
+    /**
 	 * Adds padding around the edges of the map.
 	 * 
 	 * @param left
@@ -242,7 +262,7 @@ public interface BaseDPMap extends DroneInterfaces.OnDroneListener {
 	 * @param zoomLevel
 	 *            zoom level for the map
 	 */
-	public void updateCamera(Coord2D coord, int zoomLevel);
+	public void updateCamera(Coord2D coord, float zoomLevel);
 
 	/**
 	 * Updates the drone leash path on the map.

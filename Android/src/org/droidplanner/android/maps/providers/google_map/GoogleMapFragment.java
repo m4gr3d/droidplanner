@@ -183,7 +183,27 @@ public class GoogleMapFragment extends SupportMapFragment implements BaseDPMap, 
 		}
 	}
 
-	@Override
+    @Override
+    public Coord2D getMapCenter() {
+        return MapUtils.LatLngToCoord(mMap.getCameraPosition().target);
+    }
+
+    @Override
+    public float getMaxZoomLevel() {
+        return mMap.getMaxZoomLevel();
+    }
+
+    @Override
+    public float getMinZoomLevel() {
+        return mMap.getMinZoomLevel();
+    }
+
+    @Override
+    public float getZoomLevel() {
+        return mMap.getCameraPosition().zoom;
+    }
+
+    @Override
 	public void selectAutoPanMode(AutoPanMode target) {
 		final AutoPanMode currentMode = mPanMode.get();
 		if (currentMode == target)
@@ -359,7 +379,7 @@ public class GoogleMapFragment extends SupportMapFragment implements BaseDPMap, 
 	}
 
 	@Override
-	public void updateCamera(Coord2D coord, int zoomLevel) {
+	public void updateCamera(Coord2D coord, float zoomLevel) {
 		if (coord != null) {
 			mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
 					MapUtils.CoordToLatLang(coord), zoomLevel));
