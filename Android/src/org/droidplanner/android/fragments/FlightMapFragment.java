@@ -136,6 +136,8 @@ public class FlightMapFragment extends DroneMap implements BaseDPMap.OnMapLongCl
 				mMapFragment.clearFlightPath();
 			}
 			break;
+		default:
+			break;
 
 		}
 		super.onDroneEvent(event, drone);

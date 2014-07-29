@@ -670,6 +670,8 @@ public class GoogleMapFragment extends SupportMapFragment implements BaseDPMap, 
 				updateCamera(droneLocation, (int) currentZoomLevel);
 			}
 			break;
+		default:
+			break;
 		}
 	}
 
