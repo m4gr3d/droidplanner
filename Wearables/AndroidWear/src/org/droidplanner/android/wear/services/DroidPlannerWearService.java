@@ -372,8 +372,8 @@ public class DroidPlannerWearService extends WearableListenerService {
                         .putExtra(EXTRA_DRONE_STATE, droneState));
     }
 
+    //remove the notification from the context stream
     private void cancelNotification(){
-        //remove the notification from the context stream
         NotificationManagerCompat.from(getApplicationContext()).cancel(WEAR_NOTIFICATION_ID);
     }
 
