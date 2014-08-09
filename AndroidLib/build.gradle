@@ -61,7 +61,7 @@ dependencies {
     compile 'org.osmdroid:osmdroid-android:4.1'
     compile files('libs/osmbonuspack_v4.4.jar')
 
-    compile 'com.google.android.gms:play-services:5.+'
+    compile 'com.google.android.gms:play-services:5.0.+'
     compile 'com.android.support:support-v4:20.+'
 
     compile project(':Core')
