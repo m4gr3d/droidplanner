@@ -15,8 +15,8 @@ import org.droidplanner.core.drone.variables.Type;
 import java.util.List;
 
 /**
- * Glass' droidplanner background service.
- * This service establishes a bluetooth bridge with the main app, through which it's pushed data
+ * Glass's DroidPlanner background service.
+ * This service establishes a bluetooth bridge with the main app, through which it receives data
  * update for the connected drone.
  */
 public class DroidPlannerGlassService extends Service {
