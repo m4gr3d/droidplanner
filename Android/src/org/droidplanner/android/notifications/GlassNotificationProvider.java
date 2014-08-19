@@ -24,7 +24,6 @@ public class GlassNotificationProvider implements NotificationHandler.Notificati
 
     private final BluetoothAdapter mAdapter;
     private AcceptThread mSecureAcceptThread;
-    private ConnectThread mConnectThread;
     private ConnectedThread mConnectedThread;
     private volatile int mState;
 
@@ -37,6 +36,7 @@ public class GlassNotificationProvider implements NotificationHandler.Notificati
     GlassNotificationProvider(){
         mAdapter = BluetoothAdapter.getDefaultAdapter();
         mState = STATE_NONE;
+        start();
     }
 
     /**
@@ -52,12 +52,6 @@ public class GlassNotificationProvider implements NotificationHandler.Notificati
      * Specifically, start AcceptThread to begin a session in listening (server) mode.
      */
     private void start(){
-        //Cancel any thread attempting to make a connection
-        if(mConnectThread != null){
-            mConnectThread.cancel();
-            mConnectThread = null;
-        }
-
         //Cancel any thread currently running a connection
         if(mConnectedThread != null){
             mConnectedThread.cancel();
@@ -97,12 +91,6 @@ public class GlassNotificationProvider implements NotificationHandler.Notificati
      * @param device The BluetoothDevice that has been connected
      */
     public synchronized void connected(BluetoothSocket socket, BluetoothDevice device){
-        //Cancel the thread that completed the connection
-        if(mConnectThread != null){
-            mConnectThread.cancel();
-            mConnectThread = null;
-        }
-
         //Cancel any thread currently running a connection
         if(mConnectedThread != null){
             mConnectedThread.cancel();
@@ -126,11 +114,6 @@ public class GlassNotificationProvider implements NotificationHandler.Notificati
      * Stops all threads
      */
     private synchronized void stop(){
-        if(mConnectThread != null){
-            mConnectThread.cancel();
-            mConnectThread = null;
-        }
-
         if(mConnectedThread != null){
             mConnectedThread.cancel();
             mConnectedThread = null;
@@ -248,70 +231,6 @@ public class GlassNotificationProvider implements NotificationHandler.Notificati
                 mServerSocket.close();
             }catch(IOException e){
                 Log.e(TAG, "BT server accept thread close() failed.", e);
-            }
-        }
-    }
-
-    /**
-     * This thread runs while attempting to make an outgoing connection with a device. It runs
-     * straight through; the connection either succeeds or fails.
-     */
-    private class ConnectThread extends Thread {
-        private final BluetoothSocket mSocket;
-        private final BluetoothDevice mDevice;
-
-        public ConnectThread(BluetoothDevice device){
-            mDevice = device;
-            BluetoothSocket tmp = null;
-
-            //Get a BluetoothSocket for a connection with the given BluetoothDevice
-            try{
-                tmp = device.createRfcommSocketToServiceRecord(GlassUtils.GLASS_BT_UUID_SECURE);
-            } catch(IOException e){
-                Log.e(TAG, "BT server create() failed.", e);
-            }
-            mSocket = tmp;
-        }
-
-        @Override
-        public void run(){
-            Log.i(TAG, "Beginning connect thread.");
-            setName(TAG + " connect thread.");
-
-            //Always cancel discovery because it will slow down a connection
-            mAdapter.cancelDiscovery();
-
-            //Make a connection to the BluetoothSocket
-            try{
-                //This is a blocking call and will only return on a successful connection or an
-                // exception
-                mSocket.connect();
-            }catch(IOException e){
-                //Close the socket
-                try{
-                    mSocket.close();
-                }catch(IOException f){
-                    Log.e(TAG, "Unable to close() during connection failure.", f);
-                }
-
-                connectionFailed();
-                return;
-            }
-
-            //Reset the ConnectThread because we're done.
-            synchronized(GlassNotificationProvider.this){
-                mConnectThread = null;
-            }
-
-            //Start the connected thread
-            connected(mSocket, mDevice);
-        }
-
-        public void cancel(){
-            try{
-                mSocket.close();
-            } catch(IOException e){
-                Log.e(TAG, "BT server connect thread close() failed.",e );
             }
         }
     }
