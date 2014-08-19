@@ -89,20 +89,20 @@ public class FragmentSetupIMU extends SetupMainPanel implements OnDroneListener 
 
 	private void sendAck(int step) {
 		if (parentActivity.getDrone() != null) {
-			parentActivity.getDrone().calibrationSetup.sendAckk(step);
+			parentActivity.getDrone().getCalibrationSetup().sendAckk(step);
 		}
 	}
 
 	private void startCalibration() {
 		if (parentActivity.getDrone() != null) {
-			parentActivity.getDrone().calibrationSetup.startCalibration();
+			parentActivity.getDrone().getCalibrationSetup().startCalibration();
 		}
 	}
 
 	@Override
 	public void onDroneEvent(DroneEventsType event, Drone drone) {
 		if (event == DroneEventsType.CALIBRATION_IMU) {
-			processMAVMessage(drone.calibrationSetup.getMessage());
+			processMAVMessage(drone.getCalibrationSetup().getMessage());
 		} else if (event == DroneEventsType.HEARTBEAT_TIMEOUT) {
 			if (parentActivity.getDrone() != null) {
 				/*
@@ -114,7 +114,7 @@ public class FragmentSetupIMU extends SetupMainPanel implements OnDroneListener 
 				 */
 				if (Calibration.isCalibrating() && msg.isEmpty()) {
 					Calibration.setClibrating(false);
-					parentActivity.getDrone().events.notifyDroneEvent(DroneEventsType.HEARTBEAT_TIMEOUT);
+					parentActivity.getDrone().notifyDroneEvent(DroneEventsType.HEARTBEAT_TIMEOUT);
 				} else {
 					parentActivity.getDroidPlannerApi().quickNotify(msg);
 				}
@@ -207,7 +207,7 @@ public class FragmentSetupIMU extends SetupMainPanel implements OnDroneListener 
 	public void onPause() {
 		super.onPause();
 		if (parentActivity != null) {
-			parentActivity.getDrone().events.removeDroneListener(this);
+			parentActivity.getDrone().removeDroneListener(this);
 		}
 	}
 
@@ -216,7 +216,7 @@ public class FragmentSetupIMU extends SetupMainPanel implements OnDroneListener 
 		super.onResume();
 
 		if (parentActivity != null) {
-			parentActivity.getDrone().events.addDroneListener(this);
+			parentActivity.getDrone().addDroneListener(this);
 		}
 	}
 }

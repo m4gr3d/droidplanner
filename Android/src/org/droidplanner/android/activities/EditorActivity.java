@@ -216,7 +216,7 @@ public class EditorActivity extends SuperUI implements BaseDPMap.DroneProvider, 
 		OpenFileDialog missionDialog = new OpenMissionDialog(getDrone()) {
 			@Override
 			public void waypointFileLoaded(MissionReader reader) {
-				getDrone().mission.onMissionLoaded(reader.getMsgMissionItems());
+				drone.getMission().onMissionLoaded(reader.getMsgMissionItems());
 				planningMapFragment.zoomToFit();
 			}
 		};
@@ -225,7 +225,7 @@ public class EditorActivity extends SuperUI implements BaseDPMap.DroneProvider, 
 
 	private void saveMissionFile() {
 
-		if (MissionWriter.write(getDrone().mission.getMsgMissionItems())) {
+		if (MissionWriter.write(drone.getMission().getMsgMissionItems())) {
 			Toast.makeText(this, "File saved", Toast.LENGTH_SHORT).show();
 		} else {
 			Toast.makeText(this, "Error saving file", Toast.LENGTH_SHORT).show();

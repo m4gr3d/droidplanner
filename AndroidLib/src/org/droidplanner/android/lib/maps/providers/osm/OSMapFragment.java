@@ -272,7 +272,7 @@ public class OSMapFragment extends Fragment implements BaseDPMap {
 		if (mPanMode.compareAndSet(current, update)) {
 			switch (current) {
 			case DRONE:
-				mDrone.events.removeDroneListener(this);
+				mDrone.removeDroneListener(this);
 				break;
 
 			case USER:
@@ -286,7 +286,7 @@ public class OSMapFragment extends Fragment implements BaseDPMap {
 
 			switch (update) {
 			case DRONE:
-				mDrone.events.addDroneListener(this);
+				mDrone.addDroneListener(this);
 				break;
 
 			case USER:
@@ -312,7 +312,7 @@ public class OSMapFragment extends Fragment implements BaseDPMap {
 	@Override
 	public void goToDroneLocation() {
 		final int currentZoomLevel = mMapView.getZoomLevel();
-		final Coord2D droneLocation = mDrone.GPS.getPosition();
+		final Coord2D droneLocation = mDrone.getGps().getPosition();
 		updateCamera(droneLocation, currentZoomLevel);
 	}
 

@@ -34,17 +34,17 @@ public class Follow implements OnDroneListener, LocationReceiver {
 		followAlgorithm = new FollowLeash(drone, new Length(5.0));
 		locationFinder = new FusedLocation(context, this);
 		roiEstimator = new ROIEstimator(handler,drone);
-		drone.events.addDroneListener(this);
+		drone.addDroneListener(this);
 	}
 
 	public void toggleFollowMeState() {
 		if (isEnabled()) {
 			disableFollowMe();
-			drone.state.changeFlightMode(ApmModes.ROTOR_LOITER);
+			drone.getState().changeFlightMode(ApmModes.ROTOR_LOITER);
 		} else {
-			if (drone.MavClient.isConnected()) {
-				if (drone.state.isArmed()) {
-					drone.state.changeFlightMode(ApmModes.ROTOR_GUIDED);
+			if (drone.getMavClient().isConnected()) {
+				if (drone.getState().isArmed()) {
+					drone.getState().changeFlightMode(ApmModes.ROTOR_GUIDED);
 					enableFollowMe();
 				} else {
 					Toast.makeText(context, "Drone Not Armed", Toast.LENGTH_SHORT).show();
@@ -62,7 +62,7 @@ public class Follow implements OnDroneListener, LocationReceiver {
 		locationFinder.enableLocationUpdates();
 
 		followMeEnabled = true;
-        drone.events.notifyDroneEvent(DroneEventsType.FOLLOW_START);
+        drone.notifyDroneEvent(DroneEventsType.FOLLOW_START);
 	}
 
 	private void disableFollowMe() {
@@ -73,7 +73,7 @@ public class Follow implements OnDroneListener, LocationReceiver {
 		}
 		locationFinder.disableLocationUpdates();
 		roiEstimator.disableLocationUpdates();
-        drone.events.notifyDroneEvent(DroneEventsType.FOLLOW_STOP);
+        drone.notifyDroneEvent(DroneEventsType.FOLLOW_STOP);
 	}
 
 	public boolean isEnabled() {
@@ -84,7 +84,7 @@ public class Follow implements OnDroneListener, LocationReceiver {
 	public void onDroneEvent(DroneEventsType event, Drone drone) {
 		switch (event) {
 		case MODE:
-			if ((drone.state.getMode() != ApmModes.ROTOR_GUIDED)) {
+			if ((drone.getState().getMode() != ApmModes.ROTOR_GUIDED)) {
 				disableFollowMe();
 			}
 			break;
@@ -107,7 +107,7 @@ public class Follow implements OnDroneListener, LocationReceiver {
 
 	public void setType(FollowModes item) {
 		followAlgorithm = item.getAlgorithmType(drone);
-		drone.events.notifyDroneEvent(DroneEventsType.FOLLOW_CHANGE_TYPE);
+		drone.notifyDroneEvent(DroneEventsType.FOLLOW_CHANGE_TYPE);
 	}
 
 	public void changeRadius(double increment) {

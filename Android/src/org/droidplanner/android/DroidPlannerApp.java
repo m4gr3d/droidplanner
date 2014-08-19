@@ -58,7 +58,7 @@ public class DroidPlannerApp extends ErrorReportApp implements MAVLinkStreams.Ma
 		drone = new Drone(MAVClient, clock, handler, pref);
 		drone.addDroneListener(this);
 
-		missionProxy = new MissionProxy(getDrone().mission);
+		missionProxy = new MissionProxy(getDrone().getMission());
 		mavLinkMsgHandler = new org.droidplanner.core.MAVLink.MavLinkMsgHandler(getDrone());
 
 		followMe = new Follow(this, getDrone(), handler);

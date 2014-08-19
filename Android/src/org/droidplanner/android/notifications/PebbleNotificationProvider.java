@@ -97,8 +97,8 @@ public class PebbleNotificationProvider implements NotificationHandler.Notificat
 		Follow followMe = ((DroidPlannerApp) applicationContext).followMe;
 		PebbleDictionary data = new PebbleDictionary();
 
-		String mode = drone.state.getMode().getName();
-		if (!drone.state.isArmed())
+		String mode = drone.getState().getMode().getName();
+		if (!drone.getState().isArmed())
 			mode = "Disarmd";
 		else if (((DroidPlannerApp) applicationContext).followMe.isEnabled() && mode == "Guided")
 			mode = "Follow";
@@ -110,10 +110,10 @@ public class PebbleNotificationProvider implements NotificationHandler.Notificat
 		} else
 			data.addString(KEY_FOLLOW_TYPE, "none");
 
-		String bat = "Bat:" + Double.toString(roundToOneDecimal(drone.battery.getBattVolt())) + "V";
-		String speed = "Speed: " + Double.toString(roundToOneDecimal(drone.speed.getAirSpeed().valueInMetersPerSecond()));
+		String bat = "Bat:" + Double.toString(roundToOneDecimal(drone.getBattery().getBattVolt())) + "V";
+		String speed = "Speed: " + Double.toString(roundToOneDecimal(drone.getSpeed().getAirSpeed().valueInMetersPerSecond()));
 		String altitude = "Alt: "
-				+ Double.toString(roundToOneDecimal(drone.altitude.getAltitude()));
+				+ Double.toString(roundToOneDecimal(drone.getAltitude().getAltitude()));
 		String telem = bat + "\n" + altitude + "\n" + speed;
 		data.addString(KEY_TELEM, telem);
 
@@ -151,11 +151,11 @@ public class PebbleNotificationProvider implements NotificationHandler.Notificat
 				followMe.cycleType();
 				break;
 			case KEY_REQUEST_MODE_LOITER:
-				((DroidPlannerApp) applicationContext).getDrone().state
+				((DroidPlannerApp) applicationContext).getDrone().getState()
 						.changeFlightMode(ApmModes.ROTOR_LOITER);
 				break;
 			case KEY_REQUEST_MODE_RTL:
-				((DroidPlannerApp) applicationContext).getDrone().state
+				((DroidPlannerApp) applicationContext).getDrone().getState()
 						.changeFlightMode(ApmModes.ROTOR_RTL);
 				break;
 			}

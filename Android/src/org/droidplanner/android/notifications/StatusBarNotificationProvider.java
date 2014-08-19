@@ -154,25 +154,25 @@ public class StatusBarNotificationProvider implements NotificationHandler.Notifi
 		if (mInboxBuilder == null)
 			return;
 
-		mInboxBuilder.setLine(4, TextUtils.normal("Signal:   ",TextUtils.bold(String.format("%d%%",
-								drone.radio.getSignalStrength()))));
+		mInboxBuilder.setLine(4, TextUtils.normal("Signal:   ",
+						TextUtils.bold(String.format("%d%%", drone.getRadio().getSignalStrength()))));
 	}
 
 	private void updateHome(Drone drone) {
 		if (mInboxBuilder == null)
 			return;
 
-		mInboxBuilder.setLine(0, TextUtils.normal("Home:   ", TextUtils
-						.bold(drone.home.getDroneDistanceToHome().toString())));
+		mInboxBuilder.setLine(0, TextUtils.normal("Home:   ",
+						TextUtils.bold(drone.getHome().getDroneDistanceToHome().toString())));
 	}
 
 	private void updateGps(Drone drone) {
 		if (mInboxBuilder == null)
 			return;
 
-		mInboxBuilder.setLine(1, TextUtils.normal("Satellite:   ", TextUtils
-				.bold(String.format("%d, %s", drone.GPS.getSatCount(),
-						drone.GPS.getFixType()))));
+		mInboxBuilder.setLine(1, TextUtils.normal("Satellite:   ",
+						TextUtils.bold(String.format("%d, %s", drone.getGps().getSatCount(),
+								drone.getGps().getFixType()))));
 	}
 
 	private void updateBattery(Drone drone) {
@@ -180,16 +180,15 @@ public class StatusBarNotificationProvider implements NotificationHandler.Notifi
 			return;
 
 		mInboxBuilder.setLine(3, TextUtils.normal("Battery:   ",
-				TextUtils.bold(String.format("%2.1fv (%2.0f%%)",
-						drone.battery.getBattVolt(),
-						drone.battery.getBattRemain()))));
+						TextUtils.bold(String.format("%2.1fv (%2.0f%%)",
+								drone.getBattery().getBattVolt(), drone.getBattery().getBattRemain()))));
 	}
 
 	private void updateDroneState(Drone drone) {
 		if (mInboxBuilder == null)
 			return;
 
-		long timeInSeconds = drone.state.getFlightTime();
+		long timeInSeconds = drone.getState().getFlightTime();
 		long minutes = timeInSeconds / 60;
 		long seconds = timeInSeconds % 60;
 
@@ -202,7 +201,7 @@ public class StatusBarNotificationProvider implements NotificationHandler.Notifi
 			return;
 
 		final CharSequence modeSummary = TextUtils.normal("Flight Mode:   ",
-				TextUtils.bold(drone.state.getMode().getName()));
+				TextUtils.bold(drone.getState().getMode().getName()));
 		mNotificationBuilder.setContentTitle(modeSummary);
 	}
 
@@ -246,8 +245,7 @@ public class StatusBarNotificationProvider implements NotificationHandler.Notifi
 
 		public void setLine(int index, CharSequence content) {
 			if (index >= mLines.length || index < 0) {
-				Log.w(LOG_TAG, "Invalid index (" + index
-						+ ") for inbox content.");
+				Log.w(LOG_TAG, "Invalid index (" + index + ") for inbox content.");
 				return;
 			}
 

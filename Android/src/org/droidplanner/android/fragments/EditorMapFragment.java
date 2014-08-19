@@ -140,7 +140,7 @@ public class EditorMapFragment extends DroneMap implements BaseDPMap.OnMapLongCl
 		final List<Coord2D> visibleCoords = missionProxy.getVisibleCoords();
 
 		// add home coord if visible
-		final Coord2D homeCoord = drone.home.getCoord();
+		final Coord2D homeCoord = drone.getHome().getCoord();
 		if (homeCoord != null && !homeCoord.isEmpty())
 			visibleCoords.add(homeCoord);
 

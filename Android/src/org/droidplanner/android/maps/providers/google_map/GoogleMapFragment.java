@@ -216,7 +216,7 @@ public class GoogleMapFragment extends SupportMapFragment implements BaseDPMap, 
 		if (mPanMode.compareAndSet(current, update)) {
 			switch (current) {
 			case DRONE:
-				mDrone.events.removeDroneListener(this);
+				mDrone.removeDroneListener(this);
 				break;
 
 			case USER:
@@ -232,7 +232,7 @@ public class GoogleMapFragment extends SupportMapFragment implements BaseDPMap, 
 
 			switch (update) {
 			case DRONE:
-				mDrone.events.addDroneListener(this);
+				mDrone.addDroneListener(this);
 				break;
 
 			case USER:
@@ -497,7 +497,7 @@ public class GoogleMapFragment extends SupportMapFragment implements BaseDPMap, 
 	@Override
 	public void goToDroneLocation() {
 		final float currentZoomLevel = mMap.getCameraPosition().zoom;
-		final Coord2D droneLocation = mDrone.GPS.getPosition();
+		final Coord2D droneLocation = mDrone.getGps().getPosition();
 		updateCamera(droneLocation, (int) currentZoomLevel);
 	}
 
@@ -666,7 +666,7 @@ public class GoogleMapFragment extends SupportMapFragment implements BaseDPMap, 
 		case GPS:
 			if (mPanMode.get() == AutoPanMode.DRONE) {
 				final float currentZoomLevel = mMap.getCameraPosition().zoom;
-				final Coord2D droneLocation = drone.GPS.getPosition();
+				final Coord2D droneLocation = drone.getGps().getPosition();
 				updateCamera(droneLocation, (int) currentZoomLevel);
 			}
 			break;

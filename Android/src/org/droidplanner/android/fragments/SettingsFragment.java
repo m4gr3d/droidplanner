@@ -373,8 +373,7 @@ public class SettingsFragment extends DpPreferenceFragment implements
 		}
 
 		if (key.equals(getString(R.string.pref_vehicle_type_key))) {
-			((DroidPlannerApp) getActivity().getApplication()).getDrone().events
-					.notifyDroneEvent(DroneEventsType.TYPE);
+			((DroidPlannerApp) getActivity().getApplication()).getDrone().notifyDroneEvent(DroneEventsType.TYPE);
 		}
 
 		if (key.equals(getString(R.string.pref_rc_mode_key))) {
@@ -391,14 +390,14 @@ public class SettingsFragment extends DpPreferenceFragment implements
 		super.onStart();
 
 		final Drone drone = ((DroidPlannerApp) getActivity().getApplication()).getDrone();
-		final byte mavlinkVersion = drone.heartbeat.getMavlinkVersion();
+		final int mavlinkVersion = drone.getMavlinkVersion();
 		if (mavlinkVersion != HeartBeat.INVALID_MAVLINK_VERSION) {
 			updateMavlinkVersionPreference(String.valueOf(mavlinkVersion));
 		} else {
 			updateMavlinkVersionPreference(null);
 		}
 
-		drone.events.addDroneListener(this);
+		drone.addDroneListener(this);
 	}
 
 	@Override
@@ -406,7 +405,7 @@ public class SettingsFragment extends DpPreferenceFragment implements
 		super.onStop();
 
 		final Drone drone = ((DroidPlannerApp) getActivity().getApplication()).getDrone();
-		drone.events.removeDroneListener(this);
+		drone.removeDroneListener(this);
 	}
 
 	@Override
@@ -431,7 +430,7 @@ public class SettingsFragment extends DpPreferenceFragment implements
 
 		case HEARTBEAT_FIRST:
 		case HEARTBEAT_RESTORED:
-			updateMavlinkVersionPreference(String.valueOf(drone.heartbeat.getMavlinkVersion()));
+			updateMavlinkVersionPreference(String.valueOf(drone.getMavlinkVersion()));
 			break;
 		default:
 			break;

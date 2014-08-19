@@ -342,8 +342,8 @@ public class FlightActivity extends DrawerNavigationUI implements BaseDPMap.Dron
 	}
 
 	public void onFailsafeChanged(Drone drone) {
-		if (drone.state.isFailsafe()) {
-			failsafeView.setText(drone.state.getFailsafe());
+		if (drone.getState().isFailsafe()) {
+			failsafeView.setText(drone.getState().getFailsafe());
 			failsafeView.setVisibility(View.VISIBLE);
 		} else {
 			failsafeView.setVisibility(View.GONE);
