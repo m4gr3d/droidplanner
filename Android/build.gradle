@@ -5,15 +5,18 @@ repositories {
 }
 
 dependencies {
+    compile 'com.google.android.gms:play-services:5.0.89'
 
     compile files('libs/droneapi-java.jar')
     compile files('libs/usbseriallibrary.jar')
+    compile files('libs/j2xx.jar')
     compile files('libs/protobuf-java-2.5.0.jar')
     compile files('libs/jeromq-0.3.4.jar')
 
     compile project(':AndroidLib')
-    compile project(':PebbleKit')
-    compile project(':usb-serial-for-android:UsbSerialLibrary')
+
+    compile project(':Libraries:PebbleKit')
+    compile project(':Libraries:usb-serial-for-android:UsbSerialLibrary')
 
     wearApp project(':Wearables:AndroidWear')
 }

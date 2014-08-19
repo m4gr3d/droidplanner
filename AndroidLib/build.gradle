@@ -6,7 +6,7 @@ repositories {
 
 android {
     compileSdkVersion 19
-    buildToolsVersion "20.0.0"
+    buildToolsVersion '20.0.0'
 
     defaultConfig {
         applicationId "org.droidplanner.android.lib"
@@ -61,10 +61,10 @@ dependencies {
     compile 'org.osmdroid:osmdroid-android:4.1'
     compile files('libs/osmbonuspack_v4.4.jar')
 
-    compile 'com.google.android.gms:play-services:5.0.+'
-    compile 'com.android.support:support-v4:20.+'
+        compile 'com.android.support:support-v4:20.0.0'
+    provided 'com.google.android.gms:play-services:5.0.+'
 
     compile project(':Core')
     compile project(':Mavlink')
-    compile project(':HorizontalVariableListView:HorizontalVariableListView')
+    compile project(':Libraries:HorizontalVariableListView:HorizontalVariableListView')
 }

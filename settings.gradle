@@ -1,3 +1,16 @@
-include ':Core', ':Mavlink'
-include ':Android', ':Wearables:AndroidWear', ':Wearables:AndroidGlass', ':AndroidLib', ':PebbleKit'
-include ':usb-serial-for-android:UsbSerialLibrary', ':HorizontalVariableListView:HorizontalVariableListView'
+//Pure Java projects
+include ':Core'
+include ':Mavlink'
+
+//Android projects
+include ':Android'
+include ':AndroidLib'
+
+//Library projects
+include ':Libraries:HorizontalVariableListView:HorizontalVariableListView'
+include ':Libraries:usb-serial-for-android:UsbSerialLibrary'
+include ':Libraries:PebbleKit'
+
+//Wearable projects
+include ':Wearables:AndroidWear'
+include ':Wearables:AndroidGlass'
