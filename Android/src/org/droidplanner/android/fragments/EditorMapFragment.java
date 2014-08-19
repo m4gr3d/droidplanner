@@ -27,21 +27,20 @@ public class EditorMapFragment extends DroneMap implements BaseDPMap.OnMapLongCl
 	// public CameraGroundOverlays cameraOverlays;
 	private OnEditorInteraction editorListener;
 
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup viewGroup, Bundle bundle) {
-		View view = super.onCreateView(inflater, viewGroup, bundle);
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState){
+        super.onViewCreated(view, savedInstanceState);
 
-		mMapFragment.setOnMarkerDragListener(this);
-		mMapFragment.setOnMarkerClickListener(this);
-		mMapFragment.setOnMapClickListener(this);
-		mMapFragment.setOnMapLongClickListener(this);
+        mMapFragment.setOnMarkerDragListener(this);
+        mMapFragment.setOnMarkerClickListener(this);
+        mMapFragment.setOnMapClickListener(this);
+        mMapFragment.setOnMapLongClickListener(this);
 
-		// TODO: figure out if it's still needed
-		// polygonPath = new MapPath(mMap, Color.BLACK, getResources());
-		// cameraOverlays = new CameraGroundOverlays(mMap);
+        // TODO: figure out if it's still needed
+        // polygonPath = new MapPath(mMap, Color.BLACK, getResources());
+        // cameraOverlays = new CameraGroundOverlays(mMap);
 
-		return view;
-	}
+    }
 
 	@Override
 	public void onMapLongClick(Coord2D point) {

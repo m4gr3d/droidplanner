@@ -970,10 +970,10 @@ public class HUD extends View {
         this.altitude = droneAltitude.getAltitude();
         this.targetAltitude = droneAltitude.getTargetAltitude();
 
-        this.verticalSpeed = droneSpeed.getVerticalSpeed();
-        this.airSpeed = droneSpeed.getAirSpeed();
-        this.groundSpeed = droneSpeed.getGroundSpeed();
-        this.targetSpeed = droneSpeed.getTargetSpeed();
+        this.verticalSpeed = droneSpeed.getVerticalSpeed().valueInMetersPerSecond();
+        this.airSpeed = droneSpeed.getAirSpeed().valueInMetersPerSecond();
+        this.groundSpeed = droneSpeed.getGroundSpeed().valueInMetersPerSecond();
+        this.targetSpeed = droneSpeed.getTargetSpeed().valueInMetersPerSecond();
 
         invalidate();
     }
