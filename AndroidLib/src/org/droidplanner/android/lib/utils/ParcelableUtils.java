@@ -29,9 +29,18 @@ public class ParcelableUtils {
      * @param bytes
      * @return
      */
-    public static Parcel unmarshall(byte[] bytes) {
+    public static Parcel unmarshall(byte[] bytes){
+        return unmarshall(bytes, bytes.length);
+    }
+    /**
+     * Unmarshall a parcel object from a byte array.
+     * @param bytes
+     * @param bytesLength
+     * @return
+     */
+    public static Parcel unmarshall(byte[] bytes, int bytesLength) {
         Parcel parcel = Parcel.obtain();
-        parcel.unmarshall(bytes, 0, bytes.length);
+        parcel.unmarshall(bytes, 0, bytesLength);
         parcel.setDataPosition(0); // this is extremely important!
         return parcel;
     }
@@ -45,6 +54,11 @@ public class ParcelableUtils {
      */
     public static <T> T unmarshall(byte[] bytes, Parcelable.Creator<T> creator) {
         Parcel parcel = unmarshall(bytes);
+        return creator.createFromParcel(parcel);
+    }
+
+    public static <T> T unmarshall(byte[] bytes, int bytesLength, Parcelable.Creator<T> creator){
+        Parcel parcel = unmarshall(bytes, bytesLength);
         return creator.createFromParcel(parcel);
     }
 }

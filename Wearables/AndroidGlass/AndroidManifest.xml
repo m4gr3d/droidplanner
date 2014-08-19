@@ -18,6 +18,10 @@
                 android:name="com.google.android.glass.VoiceTrigger"
                 android:resource="@xml/glass_trigger"/>
         </activity>
+        <activity android:name=".android.glass.activities.BTDeviceActivity"
+                  android:launchMode="singleTask"/>
+
+        <service android:name=".android.glass.services.DroidPlannerGlassService" />
 
     </application>
 

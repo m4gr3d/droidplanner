@@ -1,4 +1,4 @@
-package org.droidplanner.android.lib.utils;
+package org.droidplanner.android.lib.utils.glass;
 
 import java.util.UUID;
 

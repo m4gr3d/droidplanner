@@ -11,6 +11,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.SoundEffectConstants;
 import android.view.View;
@@ -22,6 +23,7 @@ import com.google.android.glass.widget.CardScrollAdapter;
 import com.google.android.glass.widget.CardScrollView;
 
 import org.droidplanner.R;
+import org.droidplanner.android.glass.services.DroidPlannerGlassService;
 import org.droidplanner.android.lib.maps.BaseDPMap;
 
 import java.util.ArrayList;
@@ -33,14 +35,11 @@ import java.util.Set;
  * It shows the devices as a set of glass cards to be scrolled through.
  *
  * @author Fredia Huya-Kouadio
- * @since 1.2.0
  */
-public class BTDeviceCardsFragment extends DialogFragment {
+public class BTDeviceCardsFragment extends Fragment {
 
     /**
      * This tag is used for logging.
-     *
-     * @since 1.2.0
      */
     private static final String TAG = BTDeviceCardsFragment.class.getName();
 
@@ -51,30 +50,27 @@ public class BTDeviceCardsFragment extends DialogFragment {
     private static final int REQUEST_ENABLE_BT = 111;
 
     /**
+     * Preference key used to store the selected bluetooth device address.
+     */
+    public static final String PREF_PAIRED_BT_ADDRESS = "pref_paired_bt_address";
+
+    /**
      * This is the bluetooth adapter.
-     *
-     * @since 1.2.0
      */
     private BluetoothAdapter mBtAdapter;
 
     /**
      * Cards adapter for the bluetooth devices.
-     *
-     * @since 1.2.0
      */
     private BluetoothDeviceCardAdapter mCardsAdapter;
 
     /**
      * Cards view for the bluetooth devices.
-     *
-     * @since 1.2.0
      */
     private CardScrollView mCardsView;
 
     /**
      * This broadcast listener listens for discovered devices, and adds them to the list.
-     *
-     * @since 1.2.0
      */
     private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
@@ -96,7 +92,6 @@ public class BTDeviceCardsFragment extends DialogFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setStyle(DialogFragment.STYLE_NO_TITLE, 0);
     }
 
     @Override
@@ -126,17 +121,16 @@ public class BTDeviceCardsFragment extends DialogFragment {
                 //Cancel discovery because it's costly, and we're about to connect
                 mBtAdapter.cancelDiscovery();
 
-                //Stores the mac address in the shared preferences,
-                // so the bluetooth client can retrieve it on connection.
-                final SharedPreferences.Editor editor = PreferenceManager
-                        .getDefaultSharedPreferences(activity).edit();
-                editor.putString("pref_bluetooth_device_address", device.getAddress()).apply();
+                //Stores the selected bluetooth address in the shared preferences,
+                PreferenceManager.getDefaultSharedPreferences(activity).edit()
+                        .putString(PREF_PAIRED_BT_ADDRESS, device.getAddress()).apply();
 
-                //Toggle the drone connection
-                ((BaseDPMap.DroneProvider) activity).getDrone().MavClient.toggleConnectionState();
+                //Tell the service to attempt connection again
+                activity.startService(new Intent(activity, DroidPlannerGlassService.class)
+                        .setAction(DroidPlannerGlassService.ACTION_START_BT_CONNECTION));
 
-                //Close the dialog fragment
-                dismiss();
+                //Close the activity
+                activity.finish();
             }
         });
 
