@@ -56,7 +56,7 @@ public class DroidPlannerApp extends ErrorReportApp implements MAVLinkStreams.Ma
 
 		DroidPlannerPrefs pref = new DroidPlannerPrefs(context);
 		drone = new Drone(MAVClient, clock, handler, pref);
-		drone.events.addDroneListener(this);
+		drone.addDroneListener(this);
 
 		missionProxy = new MissionProxy(getDrone().mission);
 		mavLinkMsgHandler = new org.droidplanner.core.MAVLink.MavLinkMsgHandler(getDrone());
@@ -77,12 +77,12 @@ public class DroidPlannerApp extends ErrorReportApp implements MAVLinkStreams.Ma
 
 	@Override
 	public void notifyConnected() {
-		getDrone().events.notifyDroneEvent(DroneEventsType.CONNECTED);
+		getDrone().notifyDroneEvent(DroneEventsType.CONNECTED);
 	}
 
 	@Override
 	public void notifyDisconnected() {
-		getDrone().events.notifyDroneEvent(DroneEventsType.DISCONNECTED);
+		getDrone().notifyDroneEvent(DroneEventsType.DISCONNECTED);
 	}
 
 	@Override

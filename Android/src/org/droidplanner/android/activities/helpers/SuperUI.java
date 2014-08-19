@@ -98,8 +98,8 @@ public abstract class SuperUI extends FragmentActivity implements OnDroneListene
         bindService(new Intent(getApplicationContext(), DroidPlannerService.class),
                 mServiceConnection, Context.BIND_AUTO_CREATE);
 		maxVolumeIfEnabled();
-		getDrone().events.addDroneListener(this);
-		getDrone().events.notifyDroneEvent(DroneEventsType.MISSION_UPDATE);
+		getDrone().addDroneListener(this);
+		getDrone().notifyDroneEvent(DroneEventsType.MISSION_UPDATE);
 	}
 
 	private void maxVolumeIfEnabled() {
@@ -119,7 +119,7 @@ public abstract class SuperUI extends FragmentActivity implements OnDroneListene
 	protected void onStop() {
 		super.onStop();
         unbindService(mServiceConnection);
-		getDrone().events.removeDroneListener(this);
+		getDrone().removeDroneListener(this);
 
 		if (infoBar != null) {
 			infoBar.setDrone(null);

@@ -48,9 +48,9 @@ public abstract class BaseDroneMap extends Fragment implements DroneInterfaces.O
 
         drone = ((BaseDPMap.DroneProvider)getActivity()).getDrone();
 
-        home = new GraphicHome(drone);
-        graphicDrone = new GraphicDrone(drone);
-        guided = new GraphicGuided(drone);
+        home = new GraphicHome(drone.home);
+        graphicDrone = new GraphicDrone(drone.GPS, drone.orientation);
+        guided = new GraphicGuided(drone.guidedPoint, drone.GPS);
     }
 
     @Override

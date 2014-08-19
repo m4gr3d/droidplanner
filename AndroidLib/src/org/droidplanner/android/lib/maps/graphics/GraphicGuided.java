@@ -19,12 +19,12 @@ public class GraphicGuided extends BaseMarkerInfo.SimpleMarkerInfo implements Pa
 
 	private final static String TAG = GraphicGuided.class.getSimpleName();
 
-	private GuidedPoint guidedPoint;
-	private GPS GPS;
+	private final GuidedPoint guidedPoint;
+	private final GPS GPS;
 
-	public GraphicGuided(Drone drone) {
-		guidedPoint = drone.guidedPoint;
-		GPS = drone.GPS;
+	public GraphicGuided(GuidedPoint guidedPoint, GPS gps) {
+		this.guidedPoint = guidedPoint;
+		GPS = gps;
 	}
 
 	@Override

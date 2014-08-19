@@ -12,10 +12,10 @@ import android.graphics.BitmapFactory;
 
 public class GraphicHome extends BaseMarkerInfo.SimpleMarkerInfo {
 
-	private Home home;
+	private final Home home;
 
-	public GraphicHome(Drone drone) {
-		home = drone.home;
+	public GraphicHome(Home droneHome) {
+		home = droneHome;
 	}
 
 	public boolean isValid() {

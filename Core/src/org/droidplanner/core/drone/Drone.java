@@ -25,7 +25,7 @@ import org.droidplanner.core.drone.variables.StreamRates;
 import org.droidplanner.core.drone.variables.Type;
 import org.droidplanner.core.mission.Mission;
 
-public class Drone {
+public class Drone implements AbstractDrone {
 
 	public final DroneEvents events = new DroneEvents(this);
 	public final Type type = new Type(this);
@@ -75,4 +75,18 @@ public class Drone {
 		events.notifyDroneEvent(DroneEventsType.ORIENTATION);
 	}
 
+    @Override
+    public void addDroneListener(DroneInterfaces.OnDroneListener listener) {
+        events.addDroneListener(listener);
+    }
+
+    @Override
+    public void removeDroneListener(DroneInterfaces.OnDroneListener listener) {
+        events.removeDroneListener(listener);
+    }
+
+    @Override
+    public void notifyDroneEvent(DroneEventsType event) {
+        events.notifyDroneEvent(event);
+    }
 }
