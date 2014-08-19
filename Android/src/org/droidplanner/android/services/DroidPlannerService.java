@@ -1,10 +1,7 @@
 package org.droidplanner.android.services;
 
 import android.app.Service;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Binder;
 import android.os.Handler;
 import android.os.IBinder;
@@ -61,14 +58,14 @@ public class DroidPlannerService extends Service implements DroneInterfaces.OnDr
     private Follow mFollowMe;
 
     @Override
-    public void onCreate(){
+    public void onCreate() {
         super.onCreate();
 
         final DroidPlannerApp dpApp = (DroidPlannerApp) getApplication();
         mFollowMe = dpApp.followMe;
 
         mDrone = dpApp.getDrone();
-        mDrone.events.addDroneListener(this);
+        mDrone.addDroneListener(this);
 
         mAppPrefs = new DroidPlannerPrefs(getApplicationContext());
 
@@ -76,17 +73,17 @@ public class DroidPlannerService extends Service implements DroneInterfaces.OnDr
     }
 
     @Override
-    public void onDestroy(){
+    public void onDestroy() {
         super.onDestroy();
-        mDrone.events.removeDroneListener(this);
+        mDrone.removeDroneListener(this);
         mNotificationHandler.terminate();
     }
 
     @Override
-    public int onStartCommand(Intent intent, int flags, int startId){
-        if(intent != null) {
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        if (intent != null) {
             final String action = intent.getAction();
-            if(ACTION_TOGGLE_DRONE_CONNECTION.equals(action)){
+            if (ACTION_TOGGLE_DRONE_CONNECTION.equals(action)) {
                 mDpApi.toggleDroneConnection();
             }
         }
@@ -101,7 +98,7 @@ public class DroidPlannerService extends Service implements DroneInterfaces.OnDr
 
     @Override
     public void onDroneEvent(DroneInterfaces.DroneEventsType event, Drone drone) {
-        switch(event){
+        switch (event) {
             case CONNECTED:
                 break;
 
@@ -118,17 +115,18 @@ public class DroidPlannerService extends Service implements DroneInterfaces.OnDr
 
         /**
          * Toggle the connection with the drone.
+         *
          * @return true to indicate the operation is in process,
          * false to indicate that additional user interaction is needed.
          */
-        public boolean toggleDroneConnection(){
-            if (!mDrone.MavClient.isConnected()) {
+        public boolean toggleDroneConnection() {
+            if (!mDrone.getMavClient().isConnected()) {
                 final String connectionType = mAppPrefs.getMavLinkConnectionType();
 
                 if (Utils.ConnectionType.BLUETOOTH.name().equals(connectionType)) {
                     // Launch a bluetooth device selection screen for the user
                     final String address = mAppPrefs.getBluetoothDeviceAddress();
-                    if(address == null || address.isEmpty()) {
+                    if (address == null || address.isEmpty()) {
                         startActivity(new Intent(getApplicationContext(),
                                 BluetoothDevicesActivity.class).addFlags(Intent
                                 .FLAG_ACTIVITY_NEW_TASK));
@@ -140,26 +138,26 @@ public class DroidPlannerService extends Service implements DroneInterfaces.OnDr
             mHandler.post(new Runnable() {
                 @Override
                 public void run() {
-                    mDrone.MavClient.toggleConnectionState();
+                    mDrone.getMavClient().toggleConnectionState();
                 }
             });
             return true;
         }
 
-        public boolean isFollowMeEnabled(){
+        public boolean isFollowMeEnabled() {
             return mFollowMe.isEnabled();
         }
 
-        public void setFlightMode(final ApmModes flightMode){
+        public void setFlightMode(final ApmModes flightMode) {
             mHandler.post(new Runnable() {
                 @Override
                 public void run() {
-                    mDrone.state.changeFlightMode(flightMode);
+                    mDrone.getState().changeFlightMode(flightMode);
                 }
             });
         }
 
-        public void toggleFollowMe(){
+        public void toggleFollowMe() {
             mHandler.post(new Runnable() {
                 @Override
                 public void run() {
@@ -168,25 +166,25 @@ public class DroidPlannerService extends Service implements DroneInterfaces.OnDr
             });
         }
 
-        public void resetFlightTimer(){
+        public void resetFlightTimer() {
             mHandler.post(new Runnable() {
                 @Override
                 public void run() {
-                    mDrone.state.resetFlightTimer();
+                    mDrone.getState().resetFlightTimer();
                 }
             });
         }
 
-        public boolean isDroneConnected(){
-            return mDrone.MavClient.isConnected();
+        public boolean isDroneConnected() {
+            return mDrone.getMavClient().isConnected();
         }
 
-        public void quickNotify(String msg){
+        public void quickNotify(String msg) {
             mNotificationHandler.quickNotify(msg);
         }
 
-        public void queryConnectionState(){
-            mDrone.MavClient.queryConnectionState();
+        public void queryConnectionState() {
+            mDrone.getMavClient().queryConnectionState();
         }
     }
 }

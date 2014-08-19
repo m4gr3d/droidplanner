@@ -7,7 +7,7 @@ import android.preference.PreferenceManager;
 import org.droidplanner.android.lib.utils.file.IO.VehicleProfileReader;
 import org.droidplanner.core.drone.Preferences;
 import org.droidplanner.core.drone.profiles.VehicleProfile;
-import org.droidplanner.core.drone.variables.Type;
+import org.droidplanner.core.firmware.FirmwareType;
 
 /**
  * Provides structured access to Droidplanner preferences.
@@ -24,13 +24,13 @@ public class BaseDroidPlannerPrefs implements Preferences {
     }
 
     @Override
-    public Type.FirmwareType getVehicleType() {
-        String str = prefs.getString("pref_vehicle_type", Type.FirmwareType.ARDU_COPTER.toString());
-        return Type.FirmwareType.firmwareFromString(str);
+    public FirmwareType getVehicleType() {
+        String str = prefs.getString("pref_vehicle_type", FirmwareType.ARDU_COPTER.toString());
+        return FirmwareType.firmwareFromString(str);
     }
 
     @Override
-    public VehicleProfile loadVehicleProfile(Type.FirmwareType firmwareType) {
+    public VehicleProfile loadVehicleProfile(FirmwareType firmwareType) {
         return VehicleProfileReader.load(context, firmwareType);
     }
 

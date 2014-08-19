@@ -167,7 +167,7 @@ public abstract class SuperUI extends FragmentActivity implements OnDroneListene
 			infoBar = (InfoBarActionProvider) infoBarItem.getActionProvider();
 
 		// Configure the info bar action provider if we're connected
-		if (getDrone().MavClient.isConnected()) {
+		if (getDrone().getMavClient().isConnected()) {
 			menu.setGroupEnabled(R.id.menu_group_connected, true);
 			menu.setGroupVisible(R.id.menu_group_connected, true);
 
@@ -196,11 +196,11 @@ public abstract class SuperUI extends FragmentActivity implements OnDroneListene
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.menu_send_mission:
-			getDrone().mission.sendMissionToAPM();
+			getDrone().getMission().sendMissionToAPM();
 			return true;
 
 		case R.id.menu_load_mission:
-			getDrone().waypointManager.getWaypoints();
+			getDrone().getWaypointManager().getWaypoints();
 			return true;
 
 		case android.R.id.home:

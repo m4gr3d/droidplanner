@@ -57,7 +57,7 @@ public class NotificationHandler implements DroneInterfaces.OnDroneListener {
 		mPebbleNotification = new PebbleNotificationProvider(context);
         mWearNotification = new WearNotificationProvider(context, dpApp.followMe);
 
-        mDrone.events.addDroneListener(this);
+        mDrone.addDroneListener(this);
 	}
 
 	@Override
@@ -87,7 +87,7 @@ public class NotificationHandler implements DroneInterfaces.OnDroneListener {
      * After calling this method, this object should no longer be used.
      */
     public void terminate(){
-        mDrone.events.removeDroneListener(this);
+        mDrone.removeDroneListener(this);
         mTtsNotification.onTerminate();
         mStatusBarNotification.onTerminate();
         mPebbleNotification.onTerminate();

@@ -20,7 +20,7 @@ import org.droidplanner.core.drone.DroneInterfaces;
 /**
  * Relays drone data to the connected wear nodes.
  */
-public class WearNotificationProvider implements NotificationHandler.NotificationProvider{
+public class WearNotificationProvider implements NotificationHandler.NotificationProvider {
 
     private final static String TAG = WearNotificationProvider.class.getSimpleName();
 
@@ -41,7 +41,7 @@ public class WearNotificationProvider implements NotificationHandler.Notificatio
 
     private final Follow mFollowMe;
 
-    WearNotificationProvider(Context context, Follow followMe){
+    WearNotificationProvider(Context context, Follow followMe) {
         mContext = context;
         mFollowMe = followMe;
         mContext.startService(new Intent(mContext, WearNotificationService.class).setAction
@@ -66,13 +66,13 @@ public class WearNotificationProvider implements NotificationHandler.Notificatio
         handleDroneTelemetry(event, drone);
     }
 
-    private void handleDroneState(DroneInterfaces.DroneEventsType event, Drone drone){
+    private void handleDroneState(DroneInterfaces.DroneEventsType event, Drone drone) {
         boolean relayState = true;
         switch (event) {
             case CONNECTED:
             case DISCONNECTED:
                 mDroneStateBundle.putBoolean(WearUtils.KEY_DRONE_CONNECTION_STATE,
-                        drone.MavClient.isConnected());
+                        drone.getMavClient().isConnected());
                 break;
 
             case FOLLOW_CHANGE_TYPE:
@@ -85,58 +85,58 @@ public class WearNotificationProvider implements NotificationHandler.Notificatio
             case MODE:
             case TYPE:
                 mDroneStateBundle.putByteArray(WearUtils.KEY_DRONE_FLIGHT_MODE,
-                        ParcelableUtils.marshall(new ParcelableApmMode(drone.state.getMode())));
-                mDroneStateBundle.putInt(WearUtils.KEY_DRONE_TYPE, drone.type.getType());
+                        ParcelableUtils.marshall(new ParcelableApmMode(drone.getState().getMode())));
+                mDroneStateBundle.putInt(WearUtils.KEY_DRONE_TYPE, drone.getType());
                 break;
 
             default:
                 relayState = false;
         }
 
-        if(relayState){
+        if (relayState) {
             relayDroneState();
         }
     }
 
-    private void handleDroneTelemetry(DroneInterfaces.DroneEventsType event, Drone drone){
+    private void handleDroneTelemetry(DroneInterfaces.DroneEventsType event, Drone drone) {
         boolean relayInfo = true;
         switch (event) {
             case HOME:
                 mDroneInfoBundle.putString(WearUtils.KEY_DRONE_HOME,
-                        drone.home.getDroneDistanceToHome().toString());
+                        drone.getHome().getDroneDistanceToHome().toString());
                 break;
 
             case STATE:
                 mDroneInfoBundle.putLong(WearUtils.KEY_DRONE_FLIGHT_TIME,
-                        drone.state.getFlightTime());
+                        drone.getState().getFlightTime());
                 break;
 
             case RADIO:
                 mDroneInfoBundle.putByteArray(WearUtils.KEY_DRONE_SIGNAL,
-                        ParcelableUtils.marshall(new ParcelableRadio(drone.radio)));
+                        ParcelableUtils.marshall(new ParcelableRadio(drone.getRadio())));
                 break;
 
             case BATTERY:
                 mDroneInfoBundle.putByteArray(WearUtils.KEY_DRONE_BATTERY,
-                        ParcelableUtils.marshall(new ParcelableBattery(drone.battery)));
+                        ParcelableUtils.marshall(new ParcelableBattery(drone.getBattery())));
                 break;
 
             case GPS_COUNT:
             case GPS_FIX:
                 mDroneInfoBundle.putByteArray(WearUtils.KEY_DRONE_GPS,
-                        ParcelableUtils.marshall(new ParcelableGPS(drone.GPS)));
+                        ParcelableUtils.marshall(new ParcelableGPS(drone.getGps())));
                 break;
 
             case ORIENTATION:
                 mDroneInfoBundle.putByteArray(WearUtils.KEY_DRONE_ORIENTATION,
-                        ParcelableUtils.marshall(new ParcelableOrientation(drone.orientation)));
+                        ParcelableUtils.marshall(new ParcelableOrientation(drone.getOrientation())));
                 break;
 
             case SPEED:
                 mDroneInfoBundle.putByteArray(WearUtils.KEY_DRONE_SPEED,
-                        ParcelableUtils.marshall(new ParcelableSpeed(drone.speed)));
+                        ParcelableUtils.marshall(new ParcelableSpeed(drone.getSpeed())));
                 mDroneInfoBundle.putDouble(WearUtils.KEY_DRONE_ALTITUDE,
-                        drone.altitude.getAltitude());
+                        drone.getAltitude().getAltitude());
                 break;
 
             default:
@@ -154,7 +154,7 @@ public class WearNotificationProvider implements NotificationHandler.Notificatio
                 .DRONE_INFO_PATH).putExtra(WearUtils.DRONE_INFO_PATH, mDroneInfoBundle));
     }
 
-    private void relayDroneState(){
+    private void relayDroneState() {
         mContext.startService(new Intent(mContext, WearNotificationService.class).setAction
                 (WearUtils.DRONE_STATE_PATH).putExtra(WearUtils.DRONE_STATE_PATH,
                 mDroneStateBundle));

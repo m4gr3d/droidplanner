@@ -185,11 +185,11 @@ public class GlassHudActivity extends FragmentActivity implements BaseDPMap.Dron
                 updateMenu(mMenu);
 
             case MODE:
-                hudWidget.updateDroneState(drone.state);
+                hudWidget.updateDroneState(drone.getState());
                 break;
 
             case BATTERY:
-                hudWidget.updateBatteryInfo(drone.battery);
+                hudWidget.updateBatteryInfo(drone.getBattery());
                 break;
 
             case CONNECTED:
@@ -211,21 +211,21 @@ public class GlassHudActivity extends FragmentActivity implements BaseDPMap.Dron
             case GPS:
             case GPS_COUNT:
             case GPS_FIX:
-                hudWidget.updateGpsInfo(drone.GPS);
+                hudWidget.updateGpsInfo(drone.getGps());
                 break;
 
             case ORIENTATION:
                 //Update yaw, pitch, and roll
-                hudWidget.updateOrientation(drone.orientation);
+                hudWidget.updateOrientation(drone.getOrientation());
                 break;
 
             case SPEED:
-                hudWidget.updateAltitudeAndSpeed(drone.altitude, drone.speed);
+                hudWidget.updateAltitudeAndSpeed(drone.getAltitude(), drone.getSpeed());
                 break;
 
             case TYPE:
                 updateMenu(mMenu);
-                hudWidget.setDroneType(drone.type.getType());
+                hudWidget.setDroneType(drone.getType());
                 break;
         }
     }

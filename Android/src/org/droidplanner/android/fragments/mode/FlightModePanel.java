@@ -54,7 +54,7 @@ public class FlightModePanel extends Fragment implements OnDroneListener {
 		super.onActivityCreated(savedInstanceState);
 
 		// Update the mode info panel based on the current mode.
-		onModeUpdate(mParentActivity.getDrone().state.getMode());
+		onModeUpdate(mParentActivity.getDrone().getState().getMode());
 	}
 
 	@Override
@@ -62,7 +62,7 @@ public class FlightModePanel extends Fragment implements OnDroneListener {
 		super.onStart();
 
 		if (mParentActivity != null) {
-			mParentActivity.getDrone().events.addDroneListener(this);
+			mParentActivity.getDrone().addDroneListener(this);
 		}
 	}
 
@@ -71,7 +71,7 @@ public class FlightModePanel extends Fragment implements OnDroneListener {
 		super.onStop();
 
 		if (mParentActivity != null) {
-			mParentActivity.getDrone().events.removeDroneListener(this);
+			mParentActivity.getDrone().removeDroneListener(this);
 		}
 	}
 
@@ -83,7 +83,7 @@ public class FlightModePanel extends Fragment implements OnDroneListener {
 		case MODE:
 		case TYPE:
 			// Update the mode info panel
-			onModeUpdate(drone.state.getMode());
+			onModeUpdate(drone.getState().getMode());
 			break;
 		default:
 			break;
@@ -93,7 +93,7 @@ public class FlightModePanel extends Fragment implements OnDroneListener {
 	private void onModeUpdate(ApmModes mode) {
 		// Update the info panel fragment
 		Fragment infoPanel;
-		if (mParentActivity == null || !mParentActivity.getDrone().MavClient.isConnected()) {
+		if (mParentActivity == null || !mParentActivity.getDrone().getMavClient().isConnected()) {
 			infoPanel = new ModeDisconnectedFragment();
 		} else {
 			switch (mode) {

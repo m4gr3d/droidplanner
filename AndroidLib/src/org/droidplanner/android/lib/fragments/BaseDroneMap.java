@@ -48,9 +48,9 @@ public abstract class BaseDroneMap extends Fragment implements DroneInterfaces.O
 
         drone = ((BaseDPMap.DroneProvider)getActivity()).getDrone();
 
-        home = new GraphicHome(drone.home);
-        graphicDrone = new GraphicDrone(drone.GPS, drone.orientation);
-        guided = new GraphicGuided(drone.guidedPoint, drone.GPS);
+        home = new GraphicHome(drone.getHome());
+        graphicDrone = new GraphicDrone(drone.getGps(), drone.getOrientation());
+        guided = new GraphicGuided(drone.getGuidedPoint(), drone.getGps());
     }
 
     @Override
@@ -67,14 +67,14 @@ public abstract class BaseDroneMap extends Fragment implements DroneInterfaces.O
     @Override
     public void onPause() {
         super.onPause();
-        drone.events.removeDroneListener(this);
+        drone.removeDroneListener(this);
         mMapFragment.saveCameraPosition();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        drone.events.addDroneListener(this);
+        drone.addDroneListener(this);
         mMapFragment.loadCameraPosition();
         update();
     }
@@ -93,7 +93,7 @@ public abstract class BaseDroneMap extends Fragment implements DroneInterfaces.O
             case GPS:
                 mMapFragment.updateMarker(graphicDrone);
                 mMapFragment.updateDroneLeashPath(guided);
-                mMapFragment.addFlightPathPoint(drone.GPS.getPosition());
+                mMapFragment.addFlightPathPoint(drone.getGps().getPosition());
                 break;
 
             case GUIDEDPOINT:
