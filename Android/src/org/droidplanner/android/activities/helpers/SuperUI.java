@@ -31,7 +31,7 @@ import android.view.MenuItem;
 /**
  * Parent class for the app activity classes.
  */
-public abstract class SuperUI extends FragmentActivity implements OnDroneListener {
+public abstract class SuperUI extends FragmentActivity implements OnDroneListener<Drone> {
 
     private final static String TAG = SuperUI.class.getSimpleName();
 
@@ -129,7 +129,7 @@ public abstract class SuperUI extends FragmentActivity implements OnDroneListene
 	}
 
 	@Override
-	public void onDroneEvent(DroneEventsType event, AbstractDrone drone) {
+	public void onDroneEvent(DroneEventsType event, Drone drone) {
 		if (infoBar != null) {
 			infoBar.onDroneEvent(event, drone);
 		}

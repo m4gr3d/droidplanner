@@ -3,9 +3,9 @@ package org.droidplanner.android.fragments.mode;
 import org.droidplanner.R;
 import org.droidplanner.android.DroidPlannerApp;
 import org.droidplanner.android.activities.helpers.SuperUI;
+import org.droidplanner.core.drone.Drone;
 import org.droidplanner.core.drone.DroneInterfaces;
 import org.droidplanner.core.drone.DroneInterfaces.OnDroneListener;
-import org.droidplanner.core.model.AbstractDrone;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -76,7 +76,7 @@ public class FlightModePanel extends Fragment implements OnDroneListener {
 	}
 
 	@Override
-	public void onDroneEvent(DroneInterfaces.DroneEventsType event, AbstractDrone drone) {
+	public void onDroneEvent(DroneInterfaces.DroneEventsType event, Drone drone) {
 		switch (event) {
 		case CONNECTED:
 		case DISCONNECTED:

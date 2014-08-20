@@ -14,7 +14,6 @@ import org.droidplanner.android.lib.prefs.AutoPanMode;
 import org.droidplanner.core.drone.Drone;
 import org.droidplanner.core.drone.DroneInterfaces.DroneEventsType;
 import org.droidplanner.core.drone.DroneInterfaces.OnDroneListener;
-import org.droidplanner.core.model.AbstractDrone;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -35,7 +34,7 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 //TODO find some newer class to use instead of the SlidingDrawer
 @SuppressWarnings("deprecation")
 public class FlightActivity extends DrawerNavigationUI implements BaseDPMap.DroneProvider,
-		FlightActionsFragment.OnMissionControlInteraction, OnDroneListener {
+		FlightActionsFragment.OnMissionControlInteraction {
 
 	private static final int GOOGLE_PLAY_SERVICES_REQUEST_CODE = 101;
 
@@ -329,7 +328,7 @@ public class FlightActivity extends DrawerNavigationUI implements BaseDPMap.Dron
 	}
 
 	@Override
-	public void onDroneEvent(DroneEventsType event, AbstractDrone drone) {
+	public void onDroneEvent(DroneEventsType event, Drone drone) {
 		super.onDroneEvent(event, drone);
 		switch (event) {
 		case FAILSAFE:

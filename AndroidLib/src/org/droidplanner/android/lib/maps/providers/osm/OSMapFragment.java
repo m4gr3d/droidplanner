@@ -11,6 +11,7 @@ import org.droidplanner.android.lib.maps.BaseMarkerInfo;
 import org.droidplanner.android.lib.prefs.BaseDroidPlannerPrefs;
 import org.droidplanner.android.lib.utils.BaseMapUtils;
 import org.droidplanner.android.lib.prefs.AutoPanMode;
+import org.droidplanner.core.drone.Drone;
 import org.droidplanner.core.drone.DroneInterfaces;
 import org.droidplanner.core.helpers.coordinates.Coord2D;
 import org.droidplanner.core.model.AbstractDrone;
@@ -533,12 +534,12 @@ public class OSMapFragment extends Fragment implements BaseDPMap {
 	/**
 	 * Used to monitor drone gps location updates if autopan is enabled.
 	 * {@inheritDoc}
-	 *  @param event
-	 *            event type
-	 * @param drone
+     * @param event
+     *            event type
+     * @param drone
      */
 	@Override
-	public void onDroneEvent(DroneInterfaces.DroneEventsType event, AbstractDrone drone) {
+	public void onDroneEvent(DroneInterfaces.DroneEventsType event, Drone drone) {
 		switch (event) {
 		case GPS:
 			break;

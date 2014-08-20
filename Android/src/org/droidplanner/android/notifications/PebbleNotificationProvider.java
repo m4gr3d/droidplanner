@@ -50,7 +50,7 @@ public class PebbleNotificationProvider implements NotificationHandler.Notificat
 	}
 
 	@Override
-	public void onDroneEvent(DroneInterfaces.DroneEventsType event, AbstractDrone drone) {
+	public void onDroneEvent(DroneInterfaces.DroneEventsType event, Drone drone) {
 		switch (event) {
 		case CONNECTED:
 			PebbleKit.startAppOnPebble(applicationContext, DP_UUID);

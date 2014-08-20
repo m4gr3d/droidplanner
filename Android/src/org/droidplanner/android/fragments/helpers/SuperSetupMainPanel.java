@@ -10,7 +10,6 @@ import org.droidplanner.android.helpers.calibration.CalParameters.OnCalibrationE
 import org.droidplanner.core.drone.Drone;
 import org.droidplanner.core.drone.DroneInterfaces.DroneEventsType;
 import org.droidplanner.core.drone.DroneInterfaces.OnDroneListener;
-import org.droidplanner.core.model.AbstractDrone;
 
 import android.os.Bundle;
 
@@ -59,7 +58,7 @@ public abstract class SuperSetupMainPanel extends SetupMainPanel implements OnCa
 	}
 
 	@Override
-	public void onDroneEvent(DroneEventsType event, AbstractDrone drone) {
+	public void onDroneEvent(DroneEventsType event, Drone drone) {
 		switch (event) {
 		case PARAMETER:
 			if (parameters != null) {

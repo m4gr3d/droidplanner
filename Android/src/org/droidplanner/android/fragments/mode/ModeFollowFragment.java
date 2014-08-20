@@ -4,10 +4,10 @@ import org.droidplanner.R;
 import org.droidplanner.android.DroidPlannerApp;
 import org.droidplanner.android.gcs.follow.Follow;
 import org.droidplanner.android.gcs.follow.FollowAlgorithm.FollowModes;
+import org.droidplanner.core.drone.Drone;
 import org.droidplanner.core.drone.DroneInterfaces.DroneEventsType;
 import org.droidplanner.core.drone.DroneInterfaces.OnDroneListener;
 import org.droidplanner.core.helpers.units.Length;
-import org.droidplanner.core.model.AbstractDrone;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -99,7 +99,7 @@ public class ModeFollowFragment extends ModeGuidedFragment implements OnClickLis
 	}
 
 	@Override
-	public void onDroneEvent(DroneEventsType event, AbstractDrone drone) {
+	public void onDroneEvent(DroneEventsType event, Drone drone) {
 		switch (event) {
 		case FOLLOW_CHANGE_TYPE:
 			spinner.setSelection(adapter.getPosition(followMe.getType()));

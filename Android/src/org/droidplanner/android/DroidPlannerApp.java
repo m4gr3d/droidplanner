@@ -13,7 +13,6 @@ import org.droidplanner.core.drone.DroneInterfaces;
 import org.droidplanner.core.drone.DroneInterfaces.Clock;
 import org.droidplanner.core.drone.DroneInterfaces.DroneEventsType;
 import org.droidplanner.core.drone.DroneInterfaces.Handler;
-import org.droidplanner.core.model.AbstractDrone;
 
 import android.content.Context;
 import android.os.SystemClock;
@@ -21,7 +20,7 @@ import android.os.SystemClock;
 import com.MAVLink.Messages.MAVLinkMessage;
 
 public class DroidPlannerApp extends ErrorReportApp implements MAVLinkStreams.MavlinkInputStream,
-		DroneInterfaces.OnDroneListener {
+		DroneInterfaces.OnDroneListener<Drone> {
 
 	private Drone drone;
 	public Follow followMe;
@@ -87,7 +86,7 @@ public class DroidPlannerApp extends ErrorReportApp implements MAVLinkStreams.Ma
 	}
 
 	@Override
-	public void onDroneEvent(DroneEventsType event, AbstractDrone drone) {
+	public void onDroneEvent(DroneEventsType event, Drone drone) {
 		switch (event) {
 		case MISSION_RECEIVED:
 			// Refresh the mission render state

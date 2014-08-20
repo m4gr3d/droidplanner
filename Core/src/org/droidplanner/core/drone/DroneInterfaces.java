@@ -188,8 +188,8 @@ public class DroneInterfaces {
 		FOLLOW_CHANGE_TYPE, PARAMETERS_DOWNLOADED,
 	}
 
-	public interface OnDroneListener {
-		public void onDroneEvent(DroneEventsType event, AbstractDrone drone);
+	public interface OnDroneListener<T extends AbstractDrone> {
+		public void onDroneEvent(DroneEventsType event, T drone);
 	}
 
 	public interface OnParameterManagerListener {

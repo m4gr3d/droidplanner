@@ -3,6 +3,7 @@ package org.droidplanner.android.notifications;
 import java.util.Locale;
 
 import org.droidplanner.R;
+import org.droidplanner.core.drone.Drone;
 import org.droidplanner.core.drone.DroneInterfaces.DroneEventsType;
 import org.droidplanner.core.drone.variables.Calibration;
 import org.droidplanner.core.model.AbstractDrone;
@@ -100,7 +101,7 @@ public class TTSNotificationProvider implements OnInitListener,
 	 * Warn the user if needed via the TTSNotificationProvider module
 	 */
 	@Override
-	public void onDroneEvent(DroneEventsType event, AbstractDrone drone) {
+	public void onDroneEvent(DroneEventsType event, Drone drone) {
 		if (tts != null) {
 			switch (event) {
 			case INVALID_POLYGON:

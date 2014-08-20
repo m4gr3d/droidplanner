@@ -10,8 +10,8 @@ import org.droidplanner.android.lib.utils.ParcelableUtils;
 import org.droidplanner.android.lib.utils.glass.BluetoothBase;
 import org.droidplanner.android.lib.utils.glass.GlassBtMessage;
 import org.droidplanner.android.lib.utils.glass.GlassUtils;
+import org.droidplanner.core.drone.Drone;
 import org.droidplanner.core.drone.DroneInterfaces;
-import org.droidplanner.core.model.AbstractDrone;
 
 import java.io.IOException;
 
@@ -75,7 +75,7 @@ public class GlassNotificationProvider extends BluetoothBase implements Notifica
     }
 
     @Override
-    public void onDroneEvent(DroneInterfaces.DroneEventsType event, AbstractDrone drone) {
+    public void onDroneEvent(DroneInterfaces.DroneEventsType event, Drone drone) {
         switch (event) {
             case CONNECTED:
                 break;

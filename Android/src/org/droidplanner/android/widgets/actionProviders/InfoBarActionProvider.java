@@ -25,7 +25,7 @@ import android.view.View;
  * <b>Note:</b> The parent activity must add instantiations of this class to the
  * list of DroneEvent listeners.
  */
-public class InfoBarActionProvider extends ActionProvider implements OnDroneListener {
+public class InfoBarActionProvider extends ActionProvider implements OnDroneListener<Drone> {
 
 	/**
 	 * Application context.
@@ -35,7 +35,7 @@ public class InfoBarActionProvider extends ActionProvider implements OnDroneList
 	/**
 	 * Current drone state.
 	 */
-	private AbstractDrone mDrone;
+	private Drone mDrone;
 
 	/**
 	 * Action provider's view.
@@ -74,12 +74,12 @@ public class InfoBarActionProvider extends ActionProvider implements OnDroneList
 	 * 
 	 * @param drone
 	 */
-	public void setDrone(AbstractDrone drone) {
+	public void setDrone(Drone drone) {
 		mDrone = drone;
 	}
 
 	@Override
-	public void onDroneEvent(DroneInterfaces.DroneEventsType event, AbstractDrone drone) {
+	public void onDroneEvent(DroneInterfaces.DroneEventsType event, Drone drone) {
 		setDrone(drone);
 
 		boolean updateExtra = true;

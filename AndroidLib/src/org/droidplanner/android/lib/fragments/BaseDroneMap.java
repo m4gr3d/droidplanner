@@ -13,6 +13,7 @@ import org.droidplanner.android.lib.maps.BaseDPMap;
 import org.droidplanner.android.lib.maps.graphics.GraphicDrone;
 import org.droidplanner.android.lib.maps.graphics.GraphicGuided;
 import org.droidplanner.android.lib.maps.graphics.GraphicHome;
+import org.droidplanner.core.drone.Drone;
 import org.droidplanner.core.drone.DroneInterfaces;
 import org.droidplanner.core.model.AbstractDrone;
 
@@ -88,7 +89,7 @@ public abstract class BaseDroneMap extends Fragment implements DroneInterfaces.O
     protected abstract void updateMapFragment();
 
     @Override
-    public void onDroneEvent(DroneInterfaces.DroneEventsType event, AbstractDrone drone) {
+    public void onDroneEvent(DroneInterfaces.DroneEventsType event, Drone drone) {
         switch(event) {
             case GPS:
                 mMapFragment.updateMarker(graphicDrone);

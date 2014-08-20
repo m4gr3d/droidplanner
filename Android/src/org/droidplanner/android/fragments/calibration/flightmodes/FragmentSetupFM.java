@@ -6,8 +6,8 @@ import org.droidplanner.android.fragments.calibration.SetupSidePanel;
 import org.droidplanner.android.fragments.helpers.SuperSetupMainPanel;
 import org.droidplanner.android.helpers.calibration.CalParameters;
 import org.droidplanner.android.helpers.calibration.FM_CalParameters;
+import org.droidplanner.core.drone.Drone;
 import org.droidplanner.core.drone.DroneInterfaces.DroneEventsType;
-import org.droidplanner.core.model.AbstractDrone;
 
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -109,7 +109,7 @@ public class FragmentSetupFM extends SuperSetupMainPanel {
 	}
 
 	@Override
-	public void onDroneEvent(DroneEventsType event, AbstractDrone drone) {
+	public void onDroneEvent(DroneEventsType event, Drone drone) {
 		switch (event) {
 		case RC_IN:
 			updatePWMPanels();

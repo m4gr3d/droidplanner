@@ -22,6 +22,7 @@ import org.droidplanner.android.glass.fragments.GlassMapFragment;
 import org.droidplanner.android.glass.services.DroidPlannerGlassService;
 import org.droidplanner.android.glass.views.HUD;
 import org.droidplanner.android.lib.maps.BaseDPMap;
+import org.droidplanner.core.drone.Drone;
 import org.droidplanner.core.drone.DroneInterfaces;
 import org.droidplanner.core.model.AbstractDrone;
 
@@ -180,7 +181,7 @@ public class GlassHudActivity extends FragmentActivity implements BaseDPMap.Dron
     }
 
     @Override
-    public void onDroneEvent(DroneInterfaces.DroneEventsType event, AbstractDrone drone) {
+    public void onDroneEvent(DroneInterfaces.DroneEventsType event, Drone drone) {
         switch (event) {
             case ARMING:
                 invalidateOptionsMenu();

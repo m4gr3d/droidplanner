@@ -10,7 +10,7 @@ import org.droidplanner.core.model.AbstractDrone;
 
 public class StreamRates extends DroneVariable implements OnDroneListener {
 
-	public StreamRates(Drone myDrone) {
+	public StreamRates(AbstractDrone myDrone) {
 		super(myDrone);
 		myDrone.addDroneListener(this);
 	}

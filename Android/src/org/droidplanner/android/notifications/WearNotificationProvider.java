@@ -62,7 +62,7 @@ public class WearNotificationProvider implements NotificationHandler.Notificatio
     }
 
     @Override
-    public void onDroneEvent(DroneInterfaces.DroneEventsType event, AbstractDrone drone) {
+    public void onDroneEvent(DroneInterfaces.DroneEventsType event, Drone drone) {
         handleDroneState(event, drone);
         handleDroneTelemetry(event, drone);
     }

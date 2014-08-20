@@ -15,7 +15,6 @@ import org.droidplanner.android.widgets.checklist.xml.ListXmlParser.OnXmlParserE
 import org.droidplanner.core.drone.Drone;
 import org.droidplanner.core.drone.DroneInterfaces.DroneEventsType;
 import org.droidplanner.core.drone.DroneInterfaces.OnDroneListener;
-import org.droidplanner.core.model.AbstractDrone;
 
 import android.app.Activity;
 import android.content.Context;
@@ -27,7 +26,7 @@ import android.view.ViewGroup;
 import android.widget.ExpandableListView;
 
 public class ChecklistFragment extends Fragment implements OnXmlParserError,
-		OnCheckListItemUpdateListener, OnDroneListener {
+		OnCheckListItemUpdateListener, OnDroneListener<Drone> {
 
 	private Context context;
 	private Drone drone;
@@ -85,7 +84,7 @@ public class ChecklistFragment extends Fragment implements OnXmlParserError,
 	}
 
 	@Override
-	public void onDroneEvent(DroneEventsType event, AbstractDrone drone) {
+	public void onDroneEvent(DroneEventsType event, Drone drone) {
 		onInfoUpdate();
 	}
 

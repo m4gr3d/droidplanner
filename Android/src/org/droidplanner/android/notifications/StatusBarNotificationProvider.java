@@ -74,7 +74,7 @@ public class StatusBarNotificationProvider implements NotificationHandler.Notifi
 	}
 
 	@Override
-	public void onDroneEvent(DroneInterfaces.DroneEventsType event, AbstractDrone drone) {
+	public void onDroneEvent(DroneInterfaces.DroneEventsType event, Drone drone) {
 		boolean showNotification = true;
 
         switch (event) {

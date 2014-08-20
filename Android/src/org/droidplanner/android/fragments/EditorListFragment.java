@@ -17,7 +17,6 @@ import org.droidplanner.android.widgets.adapterViews.MissionItemProxyView;
 import org.droidplanner.core.drone.Drone;
 import org.droidplanner.core.drone.DroneInterfaces.DroneEventsType;
 import org.droidplanner.core.drone.DroneInterfaces.OnDroneListener;
-import org.droidplanner.core.model.AbstractDrone;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -86,7 +85,7 @@ public class EditorListFragment extends Fragment implements OnItemLongClickListe
 	}
 
 	@Override
-	public void onDroneEvent(DroneEventsType event, AbstractDrone drone) {
+	public void onDroneEvent(DroneEventsType event, Drone drone) {
 		if (event == DroneEventsType.MISSION_UPDATE) {
 			adapter.notifyDataSetChanged();
 			updateViewVisibility();

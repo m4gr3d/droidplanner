@@ -4,10 +4,10 @@ import org.droidplanner.R;
 import org.droidplanner.android.fragments.SetupSensorFragment;
 import org.droidplanner.android.fragments.calibration.SetupMainPanel;
 import org.droidplanner.android.fragments.calibration.SetupSidePanel;
+import org.droidplanner.core.drone.Drone;
 import org.droidplanner.core.drone.DroneInterfaces.DroneEventsType;
 import org.droidplanner.core.drone.DroneInterfaces.OnDroneListener;
 import org.droidplanner.core.drone.variables.Calibration;
-import org.droidplanner.core.model.AbstractDrone;
 
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
@@ -100,7 +100,7 @@ public class FragmentSetupIMU extends SetupMainPanel implements OnDroneListener 
 	}
 
 	@Override
-	public void onDroneEvent(DroneEventsType event, AbstractDrone drone) {
+	public void onDroneEvent(DroneEventsType event, Drone drone) {
 		if (event == DroneEventsType.CALIBRATION_IMU) {
 			processMAVMessage(drone.getCalibrationSetup().getMessage());
 		} else if (event == DroneEventsType.HEARTBEAT_TIMEOUT) {

@@ -72,7 +72,7 @@ public class GoogleMapFragment extends SupportMapFragment implements BaseDPMap, 
 
 	private final HashBiMap<BaseMarkerInfo, Marker> mMarkers = HashBiMap.create();
 
-	private Drone mDrone;
+	private AbstractDrone mDrone;
 	private DroidPlannerPrefs mAppPrefs;
 
 	private final AtomicReference<AutoPanMode> mPanMode = new AtomicReference<AutoPanMode>(
@@ -655,12 +655,12 @@ public class GoogleMapFragment extends SupportMapFragment implements BaseDPMap, 
 	/**
 	 * Used to monitor drone gps location updates if autopan is enabled.
 	 * {@inheritDoc}
-	 *  @param event
-	 *            event type
-	 * @param drone
+     * @param event
+     *            event type
+     * @param drone
      */
 	@Override
-	public void onDroneEvent(DroneInterfaces.DroneEventsType event, AbstractDrone drone) {
+	public void onDroneEvent(DroneInterfaces.DroneEventsType event, Drone drone) {
 		switch (event) {
 		case GPS:
 			if (mPanMode.get() == AutoPanMode.DRONE) {

@@ -11,13 +11,13 @@ import android.content.Context;
  * This class handles DroidPlanner's status bar, and audible notifications. It
  * also provides support for the Android Wear functionality.
  */
-public class NotificationHandler implements DroneInterfaces.OnDroneListener {
+public class NotificationHandler implements DroneInterfaces.OnDroneListener<Drone> {
 
 	/**
 	 * Defines the methods that need to be supported by Droidplanner's
 	 * notification provider types (i.e: audible (text to speech), status bar).
 	 */
-	interface NotificationProvider extends DroneInterfaces.OnDroneListener {
+	interface NotificationProvider extends DroneInterfaces.OnDroneListener<Drone> {
 		void quickNotify(String feedback);
 
         /**
@@ -62,7 +62,7 @@ public class NotificationHandler implements DroneInterfaces.OnDroneListener {
 	}
 
 	@Override
-	public void onDroneEvent(DroneInterfaces.DroneEventsType event, AbstractDrone drone) {
+	public void onDroneEvent(DroneInterfaces.DroneEventsType event, Drone drone) {
 		mTtsNotification.onDroneEvent(event, drone);
 		mStatusBarNotification.onDroneEvent(event, drone);
 		mPebbleNotification.onDroneEvent(event, drone);
