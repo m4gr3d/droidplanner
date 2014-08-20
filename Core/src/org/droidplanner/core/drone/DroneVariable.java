@@ -1,11 +1,11 @@
 package org.droidplanner.core.drone;
 
-import org.droidplanner.core.model.AbstractDrone;
+import org.droidplanner.core.model.Drone;
 
 public class DroneVariable {
-	protected AbstractDrone myDrone;
+	protected Drone myDrone;
 
-	public DroneVariable(AbstractDrone myDrone) {
+	public DroneVariable(Drone myDrone) {
 		this.myDrone = myDrone;
 	}
 }

@@ -1,7 +1,6 @@
 package org.droidplanner.core.MAVLink;
 
-import org.droidplanner.core.drone.Drone;
-import org.droidplanner.core.model.AbstractDrone;
+import org.droidplanner.core.model.Drone;
 
 import com.MAVLink.Messages.ardupilotmega.msg_mission_ack;
 import com.MAVLink.Messages.ardupilotmega.msg_mission_count;
@@ -12,7 +11,7 @@ import com.MAVLink.Messages.enums.MAV_MISSION_RESULT;
 
 public class MavLinkWaypoint {
 
-	public static void sendAck(AbstractDrone drone) {
+	public static void sendAck(Drone drone) {
 		msg_mission_ack msg = new msg_mission_ack();
 		msg.target_system = 1;
 		msg.target_component = 1;
@@ -21,7 +20,7 @@ public class MavLinkWaypoint {
 
 	}
 
-	public static void requestWayPoint(AbstractDrone drone, int index) {
+	public static void requestWayPoint(Drone drone, int index) {
 		msg_mission_request msg = new msg_mission_request();
 		msg.target_system = 1;
 		msg.target_component = 1;
@@ -29,14 +28,14 @@ public class MavLinkWaypoint {
 		drone.getMavClient().sendMavPacket(msg.pack());
 	}
 
-	public static void requestWaypointsList(AbstractDrone drone) {
+	public static void requestWaypointsList(Drone drone) {
 		msg_mission_request_list msg = new msg_mission_request_list();
 		msg.target_system = 1;
 		msg.target_component = 1;
 		drone.getMavClient().sendMavPacket(msg.pack());
 	}
 
-	public static void sendWaypointCount(AbstractDrone drone, int count) {
+	public static void sendWaypointCount(Drone drone, int count) {
 		msg_mission_count msg = new msg_mission_count();
 		msg.target_system = 1;
 		msg.target_component = 1;
@@ -44,7 +43,7 @@ public class MavLinkWaypoint {
 		drone.getMavClient().sendMavPacket(msg.pack());
 	}
 
-	public static void sendSetCurrentWaypoint(AbstractDrone drone, short i) {
+	public static void sendSetCurrentWaypoint(Drone drone, short i) {
 		msg_mission_set_current msg = new msg_mission_set_current();
 		msg.target_system = 1;
 		msg.target_component = 1;

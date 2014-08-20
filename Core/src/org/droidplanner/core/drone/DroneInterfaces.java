@@ -3,7 +3,7 @@ package org.droidplanner.core.drone;
 import java.util.List;
 
 import org.droidplanner.core.MAVLink.WaypointManager;
-import org.droidplanner.core.model.AbstractDrone;
+import org.droidplanner.core.model.Drone;
 import org.droidplanner.core.parameters.Parameter;
 
 public class DroneInterfaces {
@@ -188,8 +188,8 @@ public class DroneInterfaces {
 		FOLLOW_CHANGE_TYPE, PARAMETERS_DOWNLOADED,
 	}
 
-	public interface OnDroneListener<T extends AbstractDrone> {
-		public void onDroneEvent(DroneEventsType event, T drone);
+	public interface OnDroneListener<T extends Drone> {
+		public void onDroneEvent(DroneEventsType event, Drone drone);
 	}
 
 	public interface OnParameterManagerListener {

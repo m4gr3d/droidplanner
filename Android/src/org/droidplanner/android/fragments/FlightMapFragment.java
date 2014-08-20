@@ -7,7 +7,7 @@ import org.droidplanner.android.lib.maps.BaseMarkerInfo;
 import org.droidplanner.android.lib.prefs.AutoPanMode;
 import org.droidplanner.android.utils.MapUtils;
 import org.droidplanner.android.utils.prefs.DroidPlannerPrefs;
-import org.droidplanner.core.drone.Drone;
+import org.droidplanner.core.model.Drone;
 import org.droidplanner.core.drone.DroneInterfaces.DroneEventsType;
 import org.droidplanner.core.drone.DroneInterfaces.OnDroneListener;
 import org.droidplanner.core.helpers.coordinates.Coord2D;

@@ -8,7 +8,8 @@ import org.droidplanner.android.utils.analytics.GAUtils;
 import org.droidplanner.android.utils.prefs.DroidPlannerPrefs;
 import org.droidplanner.core.MAVLink.MAVLinkStreams;
 import org.droidplanner.core.MAVLink.MavLinkMsgHandler;
-import org.droidplanner.core.drone.Drone;
+import org.droidplanner.core.model.Drone;
+import org.droidplanner.core.drone.DroneImpl;
 import org.droidplanner.core.drone.DroneInterfaces;
 import org.droidplanner.core.drone.DroneInterfaces.Clock;
 import org.droidplanner.core.drone.DroneInterfaces.DroneEventsType;
@@ -20,7 +21,7 @@ import android.os.SystemClock;
 import com.MAVLink.Messages.MAVLinkMessage;
 
 public class DroidPlannerApp extends ErrorReportApp implements MAVLinkStreams.MavlinkInputStream,
-		DroneInterfaces.OnDroneListener<Drone> {
+		DroneInterfaces.OnDroneListener {
 
 	private Drone drone;
 	public Follow followMe;
@@ -55,8 +56,8 @@ public class DroidPlannerApp extends ErrorReportApp implements MAVLinkStreams.Ma
 		};
 
 		DroidPlannerPrefs pref = new DroidPlannerPrefs(context);
-		drone = new Drone(MAVClient, clock, handler, pref);
-		drone.addDroneListener(this);
+		drone = new DroneImpl(MAVClient, clock, handler, pref);
+		getDrone().addDroneListener(this);
 
 		missionProxy = new MissionProxy(getDrone().getMission());
 		mavLinkMsgHandler = new org.droidplanner.core.MAVLink.MavLinkMsgHandler(getDrone());
