@@ -6,7 +6,6 @@ import org.droidplanner.R;
 import org.droidplanner.core.model.Drone;
 import org.droidplanner.core.drone.DroneInterfaces.DroneEventsType;
 import org.droidplanner.core.drone.variables.Calibration;
-import org.droidplanner.core.model.AbstractDrone;
 
 import android.content.Context;
 import android.content.SharedPreferences;

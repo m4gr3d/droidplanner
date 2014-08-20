@@ -12,7 +12,6 @@ import org.droidplanner.core.model.Drone;
 import org.droidplanner.core.drone.DroneInterfaces.DroneEventsType;
 import org.droidplanner.core.drone.DroneInterfaces.OnDroneListener;
 import org.droidplanner.core.gcs.GCSHeartbeat;
-import org.droidplanner.core.model.AbstractDrone;
 
 import android.app.ActionBar;
 import android.content.ComponentName;

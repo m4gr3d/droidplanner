@@ -17,7 +17,6 @@ import org.droidplanner.android.utils.prefs.DroidPlannerPrefs;
 import org.droidplanner.core.model.Drone;
 import org.droidplanner.core.drone.DroneInterfaces;
 import org.droidplanner.core.helpers.coordinates.Coord2D;
-import org.droidplanner.core.model.AbstractDrone;
 
 import android.app.Activity;
 import android.content.Context;
@@ -72,7 +71,7 @@ public class GoogleMapFragment extends SupportMapFragment implements BaseDPMap, 
 
 	private final HashBiMap<BaseMarkerInfo, Marker> mMarkers = HashBiMap.create();
 
-	private AbstractDrone mDrone;
+	private Drone mDrone;
 	private DroidPlannerPrefs mAppPrefs;
 
 	private final AtomicReference<AutoPanMode> mPanMode = new AtomicReference<AutoPanMode>(

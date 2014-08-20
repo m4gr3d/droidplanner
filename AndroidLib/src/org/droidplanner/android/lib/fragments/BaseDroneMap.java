@@ -13,9 +13,8 @@ import org.droidplanner.android.lib.maps.BaseDPMap;
 import org.droidplanner.android.lib.maps.graphics.GraphicDrone;
 import org.droidplanner.android.lib.maps.graphics.GraphicGuided;
 import org.droidplanner.android.lib.maps.graphics.GraphicHome;
-import org.droidplanner.core.drone.Drone;
 import org.droidplanner.core.drone.DroneInterfaces;
-import org.droidplanner.core.model.AbstractDrone;
+import org.droidplanner.core.model.Drone;
 
 /**
  * Base implementation for fragments that need access to a DPMap instance.
@@ -28,7 +27,7 @@ public abstract class BaseDroneMap extends Fragment implements DroneInterfaces.O
     protected GraphicDrone graphicDrone;
     protected GraphicGuided guided;
 
-    protected AbstractDrone drone;
+    protected Drone drone;
 
     protected Context context;
 

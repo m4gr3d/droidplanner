@@ -11,7 +11,6 @@ import org.droidplanner.android.widgets.actionProviders.InfoBarItem.SignalInfo;
 import org.droidplanner.core.model.Drone;
 import org.droidplanner.core.drone.DroneInterfaces;
 import org.droidplanner.core.drone.DroneInterfaces.OnDroneListener;
-import org.droidplanner.core.model.AbstractDrone;
 
 import android.content.Context;
 import android.view.ActionProvider;

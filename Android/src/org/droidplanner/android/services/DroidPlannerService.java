@@ -14,8 +14,8 @@ import org.droidplanner.android.gcs.follow.Follow;
 import org.droidplanner.android.notifications.NotificationHandler;
 import org.droidplanner.android.utils.Utils;
 import org.droidplanner.android.utils.prefs.DroidPlannerPrefs;
-import org.droidplanner.core.drone.Drone;
 import org.droidplanner.core.drone.DroneInterfaces;
+import org.droidplanner.core.model.Drone;
 
 /**
  * This is DroidPlanner's background service. It's goal is to manage communication,

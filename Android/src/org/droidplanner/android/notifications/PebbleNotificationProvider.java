@@ -7,7 +7,6 @@ import org.droidplanner.android.gcs.follow.Follow;
 import org.droidplanner.android.gcs.follow.FollowAlgorithm.FollowModes;
 import org.droidplanner.core.model.Drone;
 import org.droidplanner.core.drone.DroneInterfaces;
-import org.droidplanner.core.model.AbstractDrone;
 
 import android.content.Context;
 

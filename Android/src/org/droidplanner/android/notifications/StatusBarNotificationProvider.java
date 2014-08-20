@@ -5,9 +5,8 @@ import org.droidplanner.android.activities.FlightActivity;
 import org.droidplanner.android.services.DroidPlannerService;
 import org.droidplanner.android.utils.TextUtils;
 import org.droidplanner.android.utils.prefs.DroidPlannerPrefs;
-import org.droidplanner.core.drone.Drone;
 import org.droidplanner.core.drone.DroneInterfaces;
-import org.droidplanner.core.model.AbstractDrone;
+import org.droidplanner.core.model.Drone;
 
 import android.app.PendingIntent;
 import android.content.Context;

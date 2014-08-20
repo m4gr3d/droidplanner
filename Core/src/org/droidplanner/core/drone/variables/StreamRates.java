@@ -6,17 +6,16 @@ import org.droidplanner.core.drone.DroneInterfaces.DroneEventsType;
 import org.droidplanner.core.drone.DroneInterfaces.OnDroneListener;
 import org.droidplanner.core.drone.DroneVariable;
 import org.droidplanner.core.drone.Preferences.Rates;
-import org.droidplanner.core.model.AbstractDrone;
 
 public class StreamRates extends DroneVariable implements OnDroneListener {
 
-	public StreamRates(AbstractDrone myDrone) {
+	public StreamRates(Drone myDrone) {
 		super(myDrone);
 		myDrone.addDroneListener(this);
 	}
 
 	@Override
-	public void onDroneEvent(DroneEventsType event, AbstractDrone drone) {
+	public void onDroneEvent(DroneEventsType event, Drone drone) {
 		switch (event) {
 		case HEARTBEAT_FIRST:
 		case HEARTBEAT_RESTORED:

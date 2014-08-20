@@ -22,9 +22,8 @@ import org.droidplanner.android.glass.fragments.GlassMapFragment;
 import org.droidplanner.android.glass.services.DroidPlannerGlassService;
 import org.droidplanner.android.glass.views.HUD;
 import org.droidplanner.android.lib.maps.BaseDPMap;
-import org.droidplanner.core.drone.Drone;
 import org.droidplanner.core.drone.DroneInterfaces;
-import org.droidplanner.core.model.AbstractDrone;
+import org.droidplanner.core.model.Drone;
 
 import java.util.List;
 
@@ -36,7 +35,7 @@ public class GlassHudActivity extends FragmentActivity implements BaseDPMap.Dron
             mDrone = (DroidPlannerGlassService.GlassDrone) service;
 
             //TODO: query the drone connection state
-            mDrone.queryConnectionState();
+            mDrone.getMavClient().queryConnectionState();
 
             updateMenu(mMenu);
 
@@ -49,7 +48,7 @@ public class GlassHudActivity extends FragmentActivity implements BaseDPMap.Dron
         }
     };
 
-    private AbstractDrone mDrone;
+    private Drone mDrone;
     private HUD hudWidget;
 
     /**
@@ -111,7 +110,7 @@ public class GlassHudActivity extends FragmentActivity implements BaseDPMap.Dron
     protected void updateMenu(Menu menu) {
         if (menu != null && mDrone != null) {
             //TODO: fix
-            final boolean isDroneConnected = mDrone.isDroneConnected();
+            final boolean isDroneConnected = mDrone.getMavClient().isConnected();
 
             //Update the toggle connection menu title
             MenuItem connectionToggleItem = menu.findItem(R.id.menu_toggle_connection);
@@ -128,7 +127,7 @@ public class GlassHudActivity extends FragmentActivity implements BaseDPMap.Dron
 
             //Get the list of apm modes for this drone
             //TODO: fix
-            List<ApmModes> apmModesList = mDrone.getApmModes();
+            List<ApmModes> apmModesList = ApmModes.getModeList(mDrone.getType());
 
             //Add them to the flight modes menu
             for (ApmModes apmMode : apmModesList) {
@@ -152,7 +151,7 @@ public class GlassHudActivity extends FragmentActivity implements BaseDPMap.Dron
                 final ApmModes selectedMode = ApmModes.getMode(itemTitle, mDrone.getType());
                 if (ApmModes.isValid(selectedMode)) {
                     //TODO: fix
-                    mDrone.changeFlightMode(selectedMode);
+                    mDrone.getState().changeFlightMode(selectedMode);
                     return true;
                 }
 
@@ -234,7 +233,7 @@ public class GlassHudActivity extends FragmentActivity implements BaseDPMap.Dron
     }
 
     @Override
-    public AbstractDrone getDrone() {
+    public Drone getDrone() {
         return mDrone;
     }
 }

@@ -6,7 +6,6 @@ import java.util.List;
 import org.droidplanner.android.lib.R;
 import org.droidplanner.android.lib.maps.BaseDPMap.PathSource;
 import org.droidplanner.android.lib.maps.BaseMarkerInfo;
-import org.droidplanner.core.drone.Drone;
 import org.droidplanner.core.drone.variables.GPS;
 import org.droidplanner.core.drone.variables.GuidedPoint;
 import org.droidplanner.core.helpers.coordinates.Coord2D;

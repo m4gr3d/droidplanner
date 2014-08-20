@@ -14,9 +14,8 @@ import org.droidplanner.android.lib.parcelables.ParcelableSpeed;
 import org.droidplanner.android.lib.utils.ParcelableUtils;
 import org.droidplanner.android.lib.utils.WearUtils;
 import org.droidplanner.android.services.WearNotificationService;
-import org.droidplanner.core.drone.Drone;
 import org.droidplanner.core.drone.DroneInterfaces;
-import org.droidplanner.core.model.AbstractDrone;
+import org.droidplanner.core.model.Drone;
 
 /**
  * Relays drone data to the connected wear nodes.

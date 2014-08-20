@@ -10,8 +10,8 @@ import org.droidplanner.android.lib.utils.ParcelableUtils;
 import org.droidplanner.android.lib.utils.glass.BluetoothBase;
 import org.droidplanner.android.lib.utils.glass.GlassBtMessage;
 import org.droidplanner.android.lib.utils.glass.GlassUtils;
-import org.droidplanner.core.drone.Drone;
 import org.droidplanner.core.drone.DroneInterfaces;
+import org.droidplanner.core.model.Drone;
 
 import java.io.IOException;
 

@@ -11,9 +11,8 @@ import org.droidplanner.android.fragments.mode.FlightModePanel;
 import org.droidplanner.android.lib.maps.BaseDPMap;
 import org.droidplanner.android.utils.analytics.GAUtils;
 import org.droidplanner.android.lib.prefs.AutoPanMode;
-import org.droidplanner.core.drone.Drone;
 import org.droidplanner.core.drone.DroneInterfaces.DroneEventsType;
-import org.droidplanner.core.drone.DroneInterfaces.OnDroneListener;
+import org.droidplanner.core.model.Drone;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
