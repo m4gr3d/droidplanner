@@ -7,6 +7,7 @@ import org.droidplanner.android.gcs.follow.Follow;
 import org.droidplanner.android.gcs.follow.FollowAlgorithm.FollowModes;
 import org.droidplanner.core.drone.Drone;
 import org.droidplanner.core.drone.DroneInterfaces;
+import org.droidplanner.core.model.AbstractDrone;
 
 import android.content.Context;
 
@@ -49,7 +50,7 @@ public class PebbleNotificationProvider implements NotificationHandler.Notificat
 	}
 
 	@Override
-	public void onDroneEvent(DroneInterfaces.DroneEventsType event, Drone drone) {
+	public void onDroneEvent(DroneInterfaces.DroneEventsType event, AbstractDrone drone) {
 		switch (event) {
 		case CONNECTED:
 			PebbleKit.startAppOnPebble(applicationContext, DP_UUID);

@@ -6,6 +6,7 @@ import org.droidplanner.android.lib.prefs.AutoPanMode;
 import org.droidplanner.core.drone.Drone;
 import org.droidplanner.core.drone.DroneInterfaces;
 import org.droidplanner.core.helpers.coordinates.Coord2D;
+import org.droidplanner.core.model.AbstractDrone;
 
 import android.graphics.Color;
 
@@ -50,7 +51,7 @@ public interface BaseDPMap extends DroneInterfaces.OnDroneListener {
         /**
          * @return the drone object the application is interacting with.
          */
-        public Drone getDrone();
+        public AbstractDrone getDrone();
     }
 
 	interface PathSource {

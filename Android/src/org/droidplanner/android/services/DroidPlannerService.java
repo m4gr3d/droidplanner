@@ -16,6 +16,7 @@ import org.droidplanner.android.utils.Utils;
 import org.droidplanner.android.utils.prefs.DroidPlannerPrefs;
 import org.droidplanner.core.drone.Drone;
 import org.droidplanner.core.drone.DroneInterfaces;
+import org.droidplanner.core.model.AbstractDrone;
 
 /**
  * This is DroidPlanner's background service. It's goal is to manage communication,
@@ -97,7 +98,7 @@ public class DroidPlannerService extends Service implements DroneInterfaces.OnDr
     }
 
     @Override
-    public void onDroneEvent(DroneInterfaces.DroneEventsType event, Drone drone) {
+    public void onDroneEvent(DroneInterfaces.DroneEventsType event, AbstractDrone drone) {
         switch (event) {
             case CONNECTED:
                 break;

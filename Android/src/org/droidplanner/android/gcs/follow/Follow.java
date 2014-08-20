@@ -10,6 +10,7 @@ import org.droidplanner.core.drone.DroneInterfaces.DroneEventsType;
 import org.droidplanner.core.drone.DroneInterfaces.Handler;
 import org.droidplanner.core.drone.DroneInterfaces.OnDroneListener;
 import org.droidplanner.core.helpers.units.Length;
+import org.droidplanner.core.model.AbstractDrone;
 
 import android.content.Context;
 import android.location.Location;
@@ -81,7 +82,7 @@ public class Follow implements OnDroneListener, LocationReceiver {
 	}
 
 	@Override
-	public void onDroneEvent(DroneEventsType event, Drone drone) {
+	public void onDroneEvent(DroneEventsType event, AbstractDrone drone) {
 		switch (event) {
 		case MODE:
 			if ((drone.getState().getMode() != ApmModes.ROTOR_GUIDED)) {

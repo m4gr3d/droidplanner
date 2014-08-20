@@ -8,6 +8,7 @@ import org.droidplanner.core.MAVLink.MavLinkStreamRates;
 import org.droidplanner.core.drone.Drone;
 import org.droidplanner.core.drone.DroneInterfaces.DroneEventsType;
 import org.droidplanner.core.drone.DroneInterfaces.OnDroneListener;
+import org.droidplanner.core.model.AbstractDrone;
 
 import android.graphics.Color;
 import android.os.Bundle;
@@ -117,7 +118,7 @@ public class TuningFragment extends Fragment implements OnDroneListener {
 	}
 
 	@Override
-	public void onDroneEvent(DroneEventsType event, Drone drone) {
+	public void onDroneEvent(DroneEventsType event, AbstractDrone drone) {
 		switch (event) {
 		case ORIENTATION:
 			onNewOrientationData(drone);

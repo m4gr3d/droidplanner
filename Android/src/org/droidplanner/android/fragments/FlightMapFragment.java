@@ -4,21 +4,18 @@ import org.droidplanner.android.lib.dialogs.GuidedDialog;
 import org.droidplanner.android.lib.dialogs.GuidedDialog.GuidedDialogListener;
 import org.droidplanner.android.lib.maps.BaseDPMap;
 import org.droidplanner.android.lib.maps.BaseMarkerInfo;
-import org.droidplanner.android.lib.utils.BaseMapUtils;
 import org.droidplanner.android.lib.prefs.AutoPanMode;
 import org.droidplanner.android.utils.MapUtils;
 import org.droidplanner.android.utils.prefs.DroidPlannerPrefs;
-import org.droidplanner.core.drone.Drone;
 import org.droidplanner.core.drone.DroneInterfaces.DroneEventsType;
 import org.droidplanner.core.drone.DroneInterfaces.OnDroneListener;
 import org.droidplanner.core.helpers.coordinates.Coord2D;
+import org.droidplanner.core.model.AbstractDrone;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
@@ -127,7 +124,7 @@ public class FlightMapFragment extends DroneMap implements BaseDPMap.OnMapLongCl
 	}
 
 	@Override
-	public void onDroneEvent(DroneEventsType event, Drone drone) {
+	public void onDroneEvent(DroneEventsType event, AbstractDrone drone) {
 		switch (event) {
 		case ARMING:
 			// Clear the previous flight path when arming.

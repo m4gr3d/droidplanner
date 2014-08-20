@@ -6,6 +6,7 @@ import org.droidplanner.android.widgets.AttitudeIndicator;
 import org.droidplanner.core.drone.Drone;
 import org.droidplanner.core.drone.DroneInterfaces.DroneEventsType;
 import org.droidplanner.core.drone.DroneInterfaces.OnDroneListener;
+import org.droidplanner.core.model.AbstractDrone;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -66,7 +67,7 @@ public class TelemetryFragment extends Fragment implements OnDroneListener {
 	}
 
 	@Override
-	public void onDroneEvent(DroneEventsType event, Drone drone) {
+	public void onDroneEvent(DroneEventsType event, AbstractDrone drone) {
 		switch (event) {
 		case NAVIGATION:
 			break;

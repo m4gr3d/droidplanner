@@ -3,15 +3,15 @@ package org.droidplanner.android.notifications;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
-import android.os.Handler;
-import android.os.Message;
 import android.util.Log;
+import android.widget.Toast;
 
+import org.droidplanner.android.lib.utils.ParcelableUtils;
 import org.droidplanner.android.lib.utils.glass.BluetoothBase;
 import org.droidplanner.android.lib.utils.glass.GlassBtMessage;
 import org.droidplanner.android.lib.utils.glass.GlassUtils;
-import org.droidplanner.core.drone.Drone;
 import org.droidplanner.core.drone.DroneInterfaces;
+import org.droidplanner.core.model.AbstractDrone;
 
 import java.io.IOException;
 
@@ -64,7 +64,9 @@ public class GlassNotificationProvider extends BluetoothBase implements Notifica
 
     @Override
     public void quickNotify(String feedback) {
-        //TODO: complete
+        final GlassBtMessage btMsg = new GlassBtMessage(GlassUtils.BT_TOAST_MSG, Toast.LENGTH_LONG,
+                feedback, null);
+        write(ParcelableUtils.marshall(btMsg));
     }
 
     @Override
@@ -73,10 +75,22 @@ public class GlassNotificationProvider extends BluetoothBase implements Notifica
     }
 
     @Override
-    public void onDroneEvent(DroneInterfaces.DroneEventsType event, Drone drone) {
-        //TODO: complete
+    public void onDroneEvent(DroneInterfaces.DroneEventsType event, AbstractDrone drone) {
         switch (event) {
+            case CONNECTED:
+                break;
 
+            case DISCONNECTED:
+                break;
+
+            case ORIENTATION:
+                break;
+
+            case SPEED:
+                break;
+
+            case STATE:
+                break;
         }
     }
 

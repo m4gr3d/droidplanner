@@ -16,6 +16,7 @@ import org.droidplanner.android.lib.utils.WearUtils;
 import org.droidplanner.android.services.WearNotificationService;
 import org.droidplanner.core.drone.Drone;
 import org.droidplanner.core.drone.DroneInterfaces;
+import org.droidplanner.core.model.AbstractDrone;
 
 /**
  * Relays drone data to the connected wear nodes.
@@ -61,7 +62,7 @@ public class WearNotificationProvider implements NotificationHandler.Notificatio
     }
 
     @Override
-    public void onDroneEvent(DroneInterfaces.DroneEventsType event, Drone drone) {
+    public void onDroneEvent(DroneInterfaces.DroneEventsType event, AbstractDrone drone) {
         handleDroneState(event, drone);
         handleDroneTelemetry(event, drone);
     }

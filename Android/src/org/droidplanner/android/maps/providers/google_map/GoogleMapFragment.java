@@ -17,6 +17,7 @@ import org.droidplanner.android.utils.prefs.DroidPlannerPrefs;
 import org.droidplanner.core.drone.Drone;
 import org.droidplanner.core.drone.DroneInterfaces;
 import org.droidplanner.core.helpers.coordinates.Coord2D;
+import org.droidplanner.core.model.AbstractDrone;
 
 import android.app.Activity;
 import android.content.Context;
@@ -654,14 +655,12 @@ public class GoogleMapFragment extends SupportMapFragment implements BaseDPMap, 
 	/**
 	 * Used to monitor drone gps location updates if autopan is enabled.
 	 * {@inheritDoc}
-	 * 
-	 * @param event
+	 *  @param event
 	 *            event type
 	 * @param drone
-	 *            drone state
-	 */
+     */
 	@Override
-	public void onDroneEvent(DroneInterfaces.DroneEventsType event, Drone drone) {
+	public void onDroneEvent(DroneInterfaces.DroneEventsType event, AbstractDrone drone) {
 		switch (event) {
 		case GPS:
 			if (mPanMode.get() == AutoPanMode.DRONE) {

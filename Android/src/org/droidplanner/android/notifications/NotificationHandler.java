@@ -3,6 +3,7 @@ package org.droidplanner.android.notifications;
 import org.droidplanner.android.DroidPlannerApp;
 import org.droidplanner.core.drone.Drone;
 import org.droidplanner.core.drone.DroneInterfaces;
+import org.droidplanner.core.model.AbstractDrone;
 
 import android.content.Context;
 
@@ -61,7 +62,7 @@ public class NotificationHandler implements DroneInterfaces.OnDroneListener {
 	}
 
 	@Override
-	public void onDroneEvent(DroneInterfaces.DroneEventsType event, Drone drone) {
+	public void onDroneEvent(DroneInterfaces.DroneEventsType event, AbstractDrone drone) {
 		mTtsNotification.onDroneEvent(event, drone);
 		mStatusBarNotification.onDroneEvent(event, drone);
 		mPebbleNotification.onDroneEvent(event, drone);

@@ -19,6 +19,7 @@ import org.droidplanner.core.drone.Drone;
 import org.droidplanner.core.drone.DroneInterfaces;
 import org.droidplanner.core.drone.DroneInterfaces.DroneEventsType;
 import org.droidplanner.core.drone.variables.HeartBeat;
+import org.droidplanner.core.model.AbstractDrone;
 
 import android.content.ActivityNotFoundException;
 import android.content.Context;
@@ -422,7 +423,7 @@ public class SettingsFragment extends DpPreferenceFragment implements
 	}
 
 	@Override
-	public void onDroneEvent(DroneEventsType event, Drone drone) {
+	public void onDroneEvent(DroneEventsType event, AbstractDrone drone) {
 		switch (event) {
 		case DISCONNECTED:
 			updateMavlinkVersionPreference(null);

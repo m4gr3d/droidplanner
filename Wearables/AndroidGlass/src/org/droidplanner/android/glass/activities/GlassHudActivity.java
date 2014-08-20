@@ -20,11 +20,10 @@ import com.google.android.glass.view.WindowUtils;
 import org.droidplanner.R;
 import org.droidplanner.android.glass.fragments.GlassMapFragment;
 import org.droidplanner.android.glass.services.DroidPlannerGlassService;
-import org.droidplanner.android.glass.services.DroidPlannerGlassService.DroidPlannerApi;
 import org.droidplanner.android.glass.views.HUD;
 import org.droidplanner.android.lib.maps.BaseDPMap;
-import org.droidplanner.core.drone.Drone;
 import org.droidplanner.core.drone.DroneInterfaces;
+import org.droidplanner.core.model.AbstractDrone;
 
 import java.util.List;
 
@@ -33,23 +32,23 @@ public class GlassHudActivity extends FragmentActivity implements BaseDPMap.Dron
     private final ServiceConnection mServiceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
-            mDpApi = (DroidPlannerApi) service;
-            mDrone = mDpApi.getDrone();
-            mDpApi.queryConnectionState();
+            mDrone = (DroidPlannerGlassService.GlassDrone) service;
+
+            //TODO: query the drone connection state
+            mDrone.queryConnectionState();
 
             updateMenu(mMenu);
 
-            mDpApi.addDroneListener(GlassHudActivity.this);
+            mDrone.addDroneListener(GlassHudActivity.this);
         }
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
-            mDpApi = null;
+            mDrone = null;
         }
     };
 
-    private DroidPlannerApi mDpApi;
-    private Drone mDrone;
+    private AbstractDrone mDrone;
     private HUD hudWidget;
 
     /**
@@ -109,8 +108,9 @@ public class GlassHudActivity extends FragmentActivity implements BaseDPMap.Dron
     }
 
     protected void updateMenu(Menu menu) {
-        if (menu != null && mDpApi != null) {
-            final boolean isDroneConnected = mDpApi.isDroneConnected();
+        if (menu != null && mDrone != null) {
+            //TODO: fix
+            final boolean isDroneConnected = mDrone.isDroneConnected();
 
             //Update the toggle connection menu title
             MenuItem connectionToggleItem = menu.findItem(R.id.menu_toggle_connection);
@@ -126,7 +126,8 @@ public class GlassHudActivity extends FragmentActivity implements BaseDPMap.Dron
             flightModesMenu.clear();
 
             //Get the list of apm modes for this drone
-            List<ApmModes> apmModesList = mDpApi.getApmModes();
+            //TODO: fix
+            List<ApmModes> apmModesList = mDrone.getApmModes();
 
             //Add them to the flight modes menu
             for (ApmModes apmMode : apmModesList) {
@@ -147,9 +148,10 @@ public class GlassHudActivity extends FragmentActivity implements BaseDPMap.Dron
 
                 //Handle the flight modes
                 final String itemTitle = item.getTitle().toString();
-                final ApmModes selectedMode = ApmModes.getMode(itemTitle, mDpApi.getDroneType());
+                final ApmModes selectedMode = ApmModes.getMode(itemTitle, mDrone.getType());
                 if (ApmModes.isValid(selectedMode)) {
-                    mDpApi.changeFlightMode(selectedMode);
+                    //TODO: fix
+                    mDrone.changeFlightMode(selectedMode);
                     return true;
                 }
 
@@ -171,14 +173,14 @@ public class GlassHudActivity extends FragmentActivity implements BaseDPMap.Dron
     @Override
     public void onStop() {
         super.onStop();
-        if(mDpApi != null){
-            mDpApi.removeDroneListener(this);
+        if(mDrone != null){
+            mDrone.removeDroneListener(this);
         }
         unbindService(mServiceConnection);
     }
 
     @Override
-    public void onDroneEvent(DroneInterfaces.DroneEventsType event, Drone drone) {
+    public void onDroneEvent(DroneInterfaces.DroneEventsType event, AbstractDrone drone) {
         switch (event) {
             case ARMING:
                 invalidateOptionsMenu();
@@ -231,7 +233,7 @@ public class GlassHudActivity extends FragmentActivity implements BaseDPMap.Dron
     }
 
     @Override
-    public Drone getDrone() {
+    public AbstractDrone getDrone() {
         return mDrone;
     }
 }

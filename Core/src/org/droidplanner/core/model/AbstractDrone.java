@@ -11,6 +11,7 @@ import org.droidplanner.core.drone.profiles.VehicleProfile;
 import org.droidplanner.core.drone.variables.Altitude;
 import org.droidplanner.core.drone.variables.Battery;
 import org.droidplanner.core.drone.variables.GPS;
+import org.droidplanner.core.drone.variables.GuidedPoint;
 import org.droidplanner.core.drone.variables.Home;
 import org.droidplanner.core.drone.variables.Navigation;
 import org.droidplanner.core.drone.variables.Orientation;
@@ -69,4 +70,6 @@ public interface AbstractDrone {
     public Orientation getOrientation();
 
     public Navigation getNavigation();
+
+    public GuidedPoint getGuidedPoint();
 }

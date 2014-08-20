@@ -9,12 +9,12 @@ import org.droidplanner.android.fragments.TelemetryFragment;
 import org.droidplanner.android.fragments.helpers.FlightSlidingDrawerContent;
 import org.droidplanner.android.fragments.mode.FlightModePanel;
 import org.droidplanner.android.lib.maps.BaseDPMap;
-import org.droidplanner.android.services.UploaderService;
 import org.droidplanner.android.utils.analytics.GAUtils;
 import org.droidplanner.android.lib.prefs.AutoPanMode;
 import org.droidplanner.core.drone.Drone;
 import org.droidplanner.core.drone.DroneInterfaces.DroneEventsType;
 import org.droidplanner.core.drone.DroneInterfaces.OnDroneListener;
+import org.droidplanner.core.model.AbstractDrone;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -329,7 +329,7 @@ public class FlightActivity extends DrawerNavigationUI implements BaseDPMap.Dron
 	}
 
 	@Override
-	public void onDroneEvent(DroneEventsType event, Drone drone) {
+	public void onDroneEvent(DroneEventsType event, AbstractDrone drone) {
 		super.onDroneEvent(event, drone);
 		switch (event) {
 		case FAILSAFE:

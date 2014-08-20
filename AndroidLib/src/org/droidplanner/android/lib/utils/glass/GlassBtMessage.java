@@ -10,11 +10,13 @@ public class GlassBtMessage implements Parcelable {
 
     private final String mMessageAction;
     private final int mArg;
+    private final String mMessage;
     private final Parcelable mPayload;
 
-    public GlassBtMessage(String action, int arg, Parcelable payload){
+    public GlassBtMessage(String action, int arg, String message, Parcelable payload){
         mMessageAction = action;
         mArg = arg;
+        mMessage = message;
         mPayload = payload;
     }
 
@@ -24,6 +26,10 @@ public class GlassBtMessage implements Parcelable {
 
     public int getArg() {
         return mArg;
+    }
+
+    public String getMessage(){
+        return mMessage;
     }
 
     public Parcelable getPayload() {
@@ -39,12 +45,14 @@ public class GlassBtMessage implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.mMessageAction);
         dest.writeInt(this.mArg);
+        dest.writeString(this.mMessage);
         dest.writeParcelable(this.mPayload, 0);
     }
 
     private GlassBtMessage(Parcel in) {
         this.mMessageAction = in.readString();
         this.mArg = in.readInt();
+        this.mMessage = in.readString();
         this.mPayload = in.readParcelable(Parcelable.class.getClassLoader());
     }
 

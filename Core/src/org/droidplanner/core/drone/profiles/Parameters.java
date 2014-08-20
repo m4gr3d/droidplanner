@@ -11,6 +11,7 @@ import org.droidplanner.core.drone.DroneInterfaces.DroneEventsType;
 import org.droidplanner.core.drone.DroneInterfaces.Handler;
 import org.droidplanner.core.drone.DroneInterfaces.OnDroneListener;
 import org.droidplanner.core.drone.DroneVariable;
+import org.droidplanner.core.model.AbstractDrone;
 import org.droidplanner.core.parameters.Parameter;
 
 import android.annotation.SuppressLint;
@@ -151,7 +152,7 @@ public class Parameters extends DroneVariable implements OnDroneListener {
 	}
 
 	@Override
-	public void onDroneEvent(DroneEventsType event, Drone drone) {
+	public void onDroneEvent(DroneEventsType event, AbstractDrone drone) {
 		switch(event){
 		case HEARTBEAT_FIRST:
 			if (drone.getState().isFlying() == false) {

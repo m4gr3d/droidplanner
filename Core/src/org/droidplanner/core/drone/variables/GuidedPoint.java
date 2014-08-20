@@ -7,6 +7,7 @@ import org.droidplanner.core.drone.DroneInterfaces.OnDroneListener;
 import org.droidplanner.core.drone.DroneVariable;
 import org.droidplanner.core.helpers.coordinates.Coord2D;
 import org.droidplanner.core.helpers.units.Altitude;
+import org.droidplanner.core.model.AbstractDrone;
 
 import com.MAVLink.Messages.ApmModes;
 
@@ -26,7 +27,7 @@ public class GuidedPoint extends DroneVariable implements OnDroneListener {
 	}
 
 	@Override
-	public void onDroneEvent(DroneEventsType event, Drone drone) {
+	public void onDroneEvent(DroneEventsType event, AbstractDrone drone) {
 		switch (event) {
 		case MODE:
 			if ((myDrone.getState().getMode() == ApmModes.ROTOR_GUIDED)) {

@@ -213,6 +213,7 @@ public class Drone implements AbstractDrone {
         return navigation;
     }
 
+    @Override
     public GuidedPoint getGuidedPoint() {
         return guidedPoint;
     }

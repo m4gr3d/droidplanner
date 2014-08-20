@@ -8,21 +8,39 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Binder;
-import android.os.Handler;
 import android.os.IBinder;
-import android.os.Message;
 import android.preference.PreferenceManager;
+import android.widget.Toast;
 
-import com.MAVLink.Messages.ApmModes;
-import com.MAVLink.Messages.enums.MAV_TYPE;
+import com.MAVLink.Messages.ardupilotmega.msg_heartbeat;
 
 import org.droidplanner.android.glass.activities.BTDeviceActivity;
 import org.droidplanner.android.glass.fragments.BTDeviceCardsFragment;
 import org.droidplanner.android.lib.utils.glass.BluetoothBase;
 import org.droidplanner.android.lib.utils.glass.GlassBtMessage;
-import org.droidplanner.core.drone.Drone;
+import org.droidplanner.android.lib.utils.glass.GlassUtils;
+import org.droidplanner.core.MAVLink.MAVLinkStreams;
+import org.droidplanner.core.MAVLink.WaypointManager;
 import org.droidplanner.core.drone.DroneInterfaces;
+import org.droidplanner.core.drone.DroneInterfaces.DroneEventsType;
+import org.droidplanner.core.drone.DroneInterfaces.OnDroneListener;
+import org.droidplanner.core.drone.Preferences;
+import org.droidplanner.core.drone.profiles.Parameters;
+import org.droidplanner.core.drone.profiles.VehicleProfile;
+import org.droidplanner.core.drone.variables.Altitude;
+import org.droidplanner.core.drone.variables.Battery;
+import org.droidplanner.core.drone.variables.GPS;
+import org.droidplanner.core.drone.variables.GuidedPoint;
+import org.droidplanner.core.drone.variables.Home;
+import org.droidplanner.core.drone.variables.Navigation;
+import org.droidplanner.core.drone.variables.Orientation;
+import org.droidplanner.core.drone.variables.Radio;
+import org.droidplanner.core.drone.variables.Speed;
+import org.droidplanner.core.drone.variables.State;
+import org.droidplanner.core.firmware.FirmwareType;
+import org.droidplanner.core.model.AbstractDrone;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -40,7 +58,7 @@ public class DroidPlannerGlassService extends Service {
     /**
      * Handle to the DroidPlanner api implementation.
      */
-    private final DroidPlannerApi mDpApi = new DroidPlannerApi();
+    private final GlassDrone mGlassDrone = new GlassDrone();
 
     /**
      * Bluetooth link between the glass app, and the mobile app.
@@ -49,7 +67,7 @@ public class DroidPlannerGlassService extends Service {
 
     @Override
     public IBinder onBind(Intent intent) {
-        return mDpApi;
+        return mGlassDrone;
     }
 
     @Override
@@ -73,42 +91,136 @@ public class DroidPlannerGlassService extends Service {
     /**
      * Provide access to droidplanner set of apis.
      */
-    public class DroidPlannerApi extends Binder {
+    public class GlassDrone extends Binder implements AbstractDrone {
 
-        public void addDroneListener(DroneInterfaces.OnDroneListener listener) {
-            //TODO: complete
+        private final List<OnDroneListener> mDroneListeners = new ArrayList<OnDroneListener>();
+
+        /**
+         * Drone type
+         */
+        private int mType;
+
+        public void addDroneListener(OnDroneListener listener) {
+            mDroneListeners.add(listener);
         }
 
-        public void removeDroneListener(DroneInterfaces.OnDroneListener listener) {
-            //TODO: complete
+        public void removeDroneListener(OnDroneListener listener) {
+            mDroneListeners.remove(listener);
         }
 
-        public Drone getDrone() {
-            //TODO: complete
+        @Override
+        public void notifyDroneEvent(DroneInterfaces.DroneEventsType event) {
+            if(mDroneListeners.isEmpty()){
+                return;
+            }
+
+            for(OnDroneListener listener: mDroneListeners){
+                listener.onDroneEvent(event, this);
+            }
+        }
+
+        @Override
+        public GPS getGps() {
             return null;
         }
 
-        public boolean isDroneConnected() {
-            //TODO: complete
-            return false;
+        @Override
+        public int getMavlinkVersion() {
+            return 0;
         }
 
-        public List<ApmModes> getApmModes() {
-            //TODO: complete
+        @Override
+        public void onHeartbeat(msg_heartbeat msg) {}
+
+        @Override
+        public State getState() {
             return null;
         }
 
-        public int getDroneType() {
-            //TODO: complete
-            return MAV_TYPE.MAV_TYPE_GENERIC;
+        @Override
+        public Parameters getParameters() {
+            return null;
         }
 
-        public void changeFlightMode(ApmModes mode) {
-            //TODO: complete
+        @Override
+        public void setType(int type) {
+            mType = type;
+            notifyDroneEvent(DroneEventsType.TYPE);
         }
 
-        public void queryConnectionState() {
-            //TODO: complete
+        @Override
+        public int getType() {
+            return mType;
+        }
+
+        @Override
+        public FirmwareType getFirmwareType() {
+            return null;
+        }
+
+        @Override
+        public void loadVehicleProfile() {
+
+        }
+
+        @Override
+        public VehicleProfile getVehicleProfile() {
+            return null;
+        }
+
+        @Override
+        public MAVLinkStreams.MAVLinkOutputStream getMavClient() {
+            return null;
+        }
+
+        @Override
+        public Preferences getPreferences() {
+            return null;
+        }
+
+        @Override
+        public WaypointManager getWaypointManager() {
+            return null;
+        }
+
+        @Override
+        public Speed getSpeed() {
+            return null;
+        }
+
+        @Override
+        public Battery getBattery() {
+            return null;
+        }
+
+        @Override
+        public Radio getRadio() {
+            return null;
+        }
+
+        @Override
+        public Home getHome() {
+            return null;
+        }
+
+        @Override
+        public Altitude getAltitude() {
+            return null;
+        }
+
+        @Override
+        public Orientation getOrientation() {
+            return null;
+        }
+
+        @Override
+        public Navigation getNavigation() {
+            return null;
+        }
+
+        @Override
+        public GuidedPoint getGuidedPoint() {
+            return null;
         }
     }
 
@@ -186,7 +298,12 @@ public class DroidPlannerGlassService extends Service {
 
         @Override
         protected void onBtMsgReceived(GlassBtMessage btMsg) {
-            //TODO: handle received message.
+            final Context context = getApplicationContext();
+
+            if(GlassUtils.BT_TOAST_MSG.equals(btMsg.getMessageAction())){
+                //noinspection ResourceType
+                Toast.makeText(context, btMsg.getMessage(), btMsg.getArg()).show();
+            }
         }
 
         /**

@@ -24,9 +24,9 @@ import org.droidplanner.android.proxy.mission.item.fragments.MissionDetailFragme
 import org.droidplanner.android.lib.utils.file.IO.MissionReader;
 import org.droidplanner.android.lib.utils.file.IO.MissionWriter;
 import org.droidplanner.android.lib.prefs.AutoPanMode;
-import org.droidplanner.core.drone.Drone;
 import org.droidplanner.core.drone.DroneInterfaces.DroneEventsType;
 import org.droidplanner.core.helpers.coordinates.Coord2D;
+import org.droidplanner.core.model.AbstractDrone;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
@@ -257,7 +257,7 @@ public class EditorActivity extends SuperUI implements BaseDPMap.DroneProvider, 
 	}
 
 	@Override
-	public void onDroneEvent(DroneEventsType event, Drone drone) {
+	public void onDroneEvent(DroneEventsType event, AbstractDrone drone) {
 		super.onDroneEvent(event, drone);
 
 		switch (event) {

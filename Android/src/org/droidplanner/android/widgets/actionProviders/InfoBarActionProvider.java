@@ -11,6 +11,7 @@ import org.droidplanner.android.widgets.actionProviders.InfoBarItem.SignalInfo;
 import org.droidplanner.core.drone.Drone;
 import org.droidplanner.core.drone.DroneInterfaces;
 import org.droidplanner.core.drone.DroneInterfaces.OnDroneListener;
+import org.droidplanner.core.model.AbstractDrone;
 
 import android.content.Context;
 import android.view.ActionProvider;
@@ -34,7 +35,7 @@ public class InfoBarActionProvider extends ActionProvider implements OnDroneList
 	/**
 	 * Current drone state.
 	 */
-	private Drone mDrone;
+	private AbstractDrone mDrone;
 
 	/**
 	 * Action provider's view.
@@ -73,12 +74,12 @@ public class InfoBarActionProvider extends ActionProvider implements OnDroneList
 	 * 
 	 * @param drone
 	 */
-	public void setDrone(Drone drone) {
+	public void setDrone(AbstractDrone drone) {
 		mDrone = drone;
 	}
 
 	@Override
-	public void onDroneEvent(DroneInterfaces.DroneEventsType event, Drone drone) {
+	public void onDroneEvent(DroneInterfaces.DroneEventsType event, AbstractDrone drone) {
 		setDrone(drone);
 
 		boolean updateExtra = true;

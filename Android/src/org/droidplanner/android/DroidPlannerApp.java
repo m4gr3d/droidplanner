@@ -13,6 +13,7 @@ import org.droidplanner.core.drone.DroneInterfaces;
 import org.droidplanner.core.drone.DroneInterfaces.Clock;
 import org.droidplanner.core.drone.DroneInterfaces.DroneEventsType;
 import org.droidplanner.core.drone.DroneInterfaces.Handler;
+import org.droidplanner.core.model.AbstractDrone;
 
 import android.content.Context;
 import android.os.SystemClock;
@@ -86,7 +87,7 @@ public class DroidPlannerApp extends ErrorReportApp implements MAVLinkStreams.Ma
 	}
 
 	@Override
-	public void onDroneEvent(DroneEventsType event, Drone drone) {
+	public void onDroneEvent(DroneEventsType event, AbstractDrone drone) {
 		switch (event) {
 		case MISSION_RECEIVED:
 			// Refresh the mission render state

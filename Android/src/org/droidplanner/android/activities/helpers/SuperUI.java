@@ -12,6 +12,7 @@ import org.droidplanner.core.drone.Drone;
 import org.droidplanner.core.drone.DroneInterfaces.DroneEventsType;
 import org.droidplanner.core.drone.DroneInterfaces.OnDroneListener;
 import org.droidplanner.core.gcs.GCSHeartbeat;
+import org.droidplanner.core.model.AbstractDrone;
 
 import android.app.ActionBar;
 import android.content.ComponentName;
@@ -128,7 +129,7 @@ public abstract class SuperUI extends FragmentActivity implements OnDroneListene
 	}
 
 	@Override
-	public void onDroneEvent(DroneEventsType event, Drone drone) {
+	public void onDroneEvent(DroneEventsType event, AbstractDrone drone) {
 		if (infoBar != null) {
 			infoBar.onDroneEvent(event, drone);
 		}

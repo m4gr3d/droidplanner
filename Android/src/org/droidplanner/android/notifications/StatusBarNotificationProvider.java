@@ -2,17 +2,16 @@ package org.droidplanner.android.notifications;
 
 import org.droidplanner.R;
 import org.droidplanner.android.activities.FlightActivity;
-import org.droidplanner.android.activities.helpers.SuperUI;
 import org.droidplanner.android.services.DroidPlannerService;
 import org.droidplanner.android.utils.TextUtils;
 import org.droidplanner.android.utils.prefs.DroidPlannerPrefs;
 import org.droidplanner.core.drone.Drone;
 import org.droidplanner.core.drone.DroneInterfaces;
+import org.droidplanner.core.model.AbstractDrone;
 
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Handler;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
@@ -75,7 +74,7 @@ public class StatusBarNotificationProvider implements NotificationHandler.Notifi
 	}
 
 	@Override
-	public void onDroneEvent(DroneInterfaces.DroneEventsType event, Drone drone) {
+	public void onDroneEvent(DroneInterfaces.DroneEventsType event, AbstractDrone drone) {
 		boolean showNotification = true;
 
         switch (event) {

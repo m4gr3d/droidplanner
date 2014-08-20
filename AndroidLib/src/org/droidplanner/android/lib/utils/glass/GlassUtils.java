@@ -7,8 +7,9 @@ import java.util.UUID;
  */
 public class GlassUtils {
 
-    //Not instantiable
-    private GlassUtils(){}
+    private static final String CLAZZ_NAME = GlassUtils.class.getName();
+
+    public static final String BT_TOAST_MSG = CLAZZ_NAME + ".BT_TOAST_MSG";
 
     /**
      * Name for the SDP record when creating server socket.
@@ -21,6 +22,6 @@ public class GlassUtils {
      */
     public static final UUID GLASS_BT_UUID_SECURE = UUID.fromString("fa87c0d0-afac-11de-8a39-0800200c9a66");
 
-
-
+    //Not instantiable
+    private GlassUtils(){}
 }
