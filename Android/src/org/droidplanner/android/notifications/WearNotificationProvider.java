@@ -101,6 +101,7 @@ public class WearNotificationProvider implements NotificationHandler.Notificatio
     private void handleDroneTelemetry(DroneInterfaces.DroneEventsType event, Drone drone) {
         boolean relayInfo = true;
         switch (event) {
+            case GPS:
             case HOME:
                 mDroneInfoBundle.putString(WearUtils.KEY_DRONE_HOME,
                         drone.getHome().getDroneDistanceToHome().toString());

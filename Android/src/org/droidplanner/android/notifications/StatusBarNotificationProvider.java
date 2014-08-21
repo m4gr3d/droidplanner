@@ -108,6 +108,7 @@ public class StatusBarNotificationProvider implements NotificationHandler.Notifi
                 updateGps(drone);
                 break;
 
+            case GPS:
             case HOME:
                 updateHome(drone);
                 break;

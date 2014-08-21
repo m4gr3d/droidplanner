@@ -20,6 +20,7 @@ import com.google.android.glass.view.WindowUtils;
 import org.droidplanner.R;
 import org.droidplanner.android.glass.fragments.GlassMapFragment;
 import org.droidplanner.android.glass.services.DroidPlannerGlassService;
+import org.droidplanner.android.glass.services.GlassDrone;
 import org.droidplanner.android.glass.views.HUD;
 import org.droidplanner.android.lib.maps.BaseDPMap;
 import org.droidplanner.core.drone.DroneInterfaces;
@@ -32,7 +33,7 @@ public class GlassHudActivity extends FragmentActivity implements BaseDPMap.Dron
     private final ServiceConnection mServiceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
-            mDrone = (DroidPlannerGlassService.GlassDrone) service;
+            mDrone = (GlassDrone) service;
 
             //TODO: query the drone connection state
             mDrone.getMavClient().queryConnectionState();

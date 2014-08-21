@@ -77,10 +77,21 @@ public class GlassNotificationProvider extends BluetoothBase implements Notifica
     @Override
     public void onDroneEvent(DroneInterfaces.DroneEventsType event, Drone drone) {
         switch (event) {
+            case ATTITUDE:
+                break;
+
+            case BATTERY:
+                break;
+
             case CONNECTED:
                 break;
 
             case DISCONNECTED:
+                break;
+
+            case GPS:
+            case GPS_COUNT:
+            case GPS_FIX:
                 break;
 
             case ORIENTATION:
