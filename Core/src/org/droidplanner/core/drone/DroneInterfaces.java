@@ -173,14 +173,14 @@ public class DroneInterfaces {
 		MISSION_WP_UPDATE,
 
 		/**
-         * Signals that FollowMe mode has been enabled.
+         * 'Follow' mode has been enabled.
          */
 		FOLLOW_START,
 
         /**
-         * Signals that FollowMe mode has been disabled.
+         * 'Follow' mode has been disabled.
          */
-        FOLLOW_STOP,
+        FOLLOW_END,
 
 		/**
          * 

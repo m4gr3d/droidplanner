@@ -1,7 +1,9 @@
 package org.droidplanner.android;
 
-import org.droidplanner.android.communication.MAVLinkClient;
-import org.droidplanner.android.gcs.follow.Follow;
+import org.droidplanner.android.communication.service.MAVLinkClient;
+import org.droidplanner.android.communication.service.UploaderService;
+import org.droidplanner.android.gcs.location.FusedLocation;
+import org.droidplanner.android.notifications.NotificationHandler;
 import org.droidplanner.android.proxy.mission.MissionProxy;
 import org.droidplanner.android.services.UploaderService;
 import org.droidplanner.android.utils.analytics.GAUtils;
@@ -14,6 +16,7 @@ import org.droidplanner.core.drone.DroneInterfaces;
 import org.droidplanner.core.drone.DroneInterfaces.Clock;
 import org.droidplanner.core.drone.DroneInterfaces.DroneEventsType;
 import org.droidplanner.core.drone.DroneInterfaces.Handler;
+import org.droidplanner.core.gcs.follow.Follow;
 
 import android.content.Context;
 import android.os.SystemClock;
@@ -62,13 +65,14 @@ public class DroidPlannerApp extends ErrorReportApp implements MAVLinkStreams.Ma
 		missionProxy = new MissionProxy(getDrone().getMission());
 		mavLinkMsgHandler = new org.droidplanner.core.MAVLink.MavLinkMsgHandler(getDrone());
 
-		followMe = new Follow(this, getDrone(), handler);
+		followMe = new Follow(getDrone(), handler, new FusedLocation(context));
 
 		GAUtils.initGATracker(this);
 		GAUtils.startNewSession(context);
 
-        // Any time the application is started, do a quick scan to see if we need any uploads
-        startService(UploaderService.createIntent(this));
+		// Any time the application is started, do a quick scan to see if we
+		// need any uploads
+		startService(UploaderService.createIntent(this));
 	}
 
 	@Override

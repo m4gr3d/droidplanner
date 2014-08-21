@@ -1,26 +1,28 @@
-package org.droidplanner.android.gcs.follow;
+package org.droidplanner.core.gcs.follow;
 
-import org.droidplanner.android.gcs.follow.FollowAlgorithm.FollowModes;
-import org.droidplanner.android.gcs.location.FusedLocation;
-import org.droidplanner.android.gcs.location.LocationFinder;
-import org.droidplanner.android.gcs.location.LocationReceiver;
-import org.droidplanner.android.gcs.roi.ROIEstimator;
+import org.droidplanner.core.drone.variables.State;
 import org.droidplanner.core.model.Drone;
 import org.droidplanner.core.drone.DroneInterfaces.DroneEventsType;
 import org.droidplanner.core.drone.DroneInterfaces.Handler;
 import org.droidplanner.core.drone.DroneInterfaces.OnDroneListener;
+import org.droidplanner.core.gcs.follow.FollowAlgorithm.FollowModes;
+import org.droidplanner.core.gcs.location.Location;
+import org.droidplanner.core.gcs.location.Location.LocationFinder;
+import org.droidplanner.core.gcs.location.Location.LocationReceiver;
+import org.droidplanner.core.gcs.roi.ROIEstimator;
 import org.droidplanner.core.helpers.units.Length;
-
-import android.content.Context;
-import android.location.Location;
-import android.util.Log;
-import android.widget.Toast;
 
 import com.MAVLink.Messages.ApmModes;
 
 public class Follow implements OnDroneListener, LocationReceiver {
 
-	private Context context;
+    //Set of return value for the 'toggleFollowMeState' method.
+    public static final int FOLLOW_INVALID_STATE = -1;
+    public static final int FOLLOW_DRONE_NOT_ARMED = -2;
+    public static final int FOLLOW_DRONE_DISCONNECTED = -3;
+    public static final int FOLLOW_START = 0;
+    public static final int FOLLOW_END = 1;
+
 	private boolean followMeEnabled = false;
 	private Drone drone;
 
@@ -28,52 +30,55 @@ public class Follow implements OnDroneListener, LocationReceiver {
 	private LocationFinder locationFinder;
 	private FollowAlgorithm followAlgorithm;
 
-	public Follow(Context context, Drone drone, Handler handler) {
-		this.context = context;
+	public Follow(Drone drone, Handler handler, LocationFinder locationFinder) {
 		this.drone = drone;
-		followAlgorithm = new FollowLeash(drone, new Length(5.0));
-		locationFinder = new FusedLocation(context, this);
-		roiEstimator = new ROIEstimator(handler,drone);
+		followAlgorithm = new FollowAbove(drone, new Length(0.0));
+		this.locationFinder = locationFinder;
+		locationFinder.setLocationListner(this);
+		roiEstimator = new ROIEstimator(handler, drone);
 		drone.addDroneListener(this);
 	}
 
-	public void toggleFollowMeState() {
+	public int toggleFollowMeState() {
+        final State droneState = drone.getState();
+        if(droneState == null){
+            return FOLLOW_INVALID_STATE;
+        }
+
 		if (isEnabled()) {
 			disableFollowMe();
 			drone.getState().changeFlightMode(ApmModes.ROTOR_LOITER);
-		} else {
+            return FOLLOW_END;
+		}
+        else {
 			if (drone.getMavClient().isConnected()) {
 				if (drone.getState().isArmed()) {
 					drone.getState().changeFlightMode(ApmModes.ROTOR_GUIDED);
 					enableFollowMe();
-				} else {
-					Toast.makeText(context, "Drone Not Armed", Toast.LENGTH_SHORT).show();
+                    return FOLLOW_START;
 				}
-			} else {
-				Toast.makeText(context, "Drone Not Connected", Toast.LENGTH_SHORT).show();
+                else {
+                    return FOLLOW_DRONE_NOT_ARMED;
+				}
+			}
+            else {
+                return FOLLOW_DRONE_DISCONNECTED;
 			}
 		}
 	}
 
 	private void enableFollowMe() {
-		Log.d("follow", "enable");
-		Toast.makeText(context, "FollowMe Enabled", Toast.LENGTH_SHORT).show();
-		
 		locationFinder.enableLocationUpdates();
-
 		followMeEnabled = true;
         drone.notifyDroneEvent(DroneEventsType.FOLLOW_START);
 	}
 
 	private void disableFollowMe() {
+        locationFinder.disableLocationUpdates();
 		if (followMeEnabled) {
-			Toast.makeText(context, "FollowMe Disabled", Toast.LENGTH_SHORT).show();
 			followMeEnabled = false;
-			Log.d("follow", "disable");
+            drone.notifyDroneEvent(DroneEventsType.FOLLOW_END);
 		}
-		locationFinder.disableLocationUpdates();
-		roiEstimator.disableLocationUpdates();
-        drone.notifyDroneEvent(DroneEventsType.FOLLOW_STOP);
 	}
 
 	public boolean isEnabled() {

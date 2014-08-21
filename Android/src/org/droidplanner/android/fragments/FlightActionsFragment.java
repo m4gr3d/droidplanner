@@ -2,9 +2,9 @@ package org.droidplanner.android.fragments;
 
 import org.droidplanner.R;
 import org.droidplanner.android.DroidPlannerApp;
-import org.droidplanner.android.gcs.follow.Follow;
 import org.droidplanner.android.utils.analytics.GAUtils;
 import org.droidplanner.core.model.Drone;
+import org.droidplanner.core.gcs.follow.Follow;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.MAVLink.Messages.ApmModes;
 import com.google.android.gms.analytics.HitBuilders;
@@ -113,9 +114,34 @@ public class FlightActionsFragment extends Fragment implements OnClickListener {
 			break;
 
 		case R.id.mc_follow:
-			followMe.toggleFollowMeState();
-			eventBuilder.setAction("FollowMe selected").setLabel(
-					followMe.isEnabled() ? "FollowMe enabled" : "FollowMe disabled");
+			final int result = followMe.toggleFollowMeState();
+            String eventLabel = null;
+            switch(result){
+                case Follow.FOLLOW_START:
+                    eventLabel = "FollowMe enabled";
+                    break;
+
+                case Follow.FOLLOW_END:
+                    eventLabel = "FollowMe disabled";
+                    break;
+
+                case Follow.FOLLOW_INVALID_STATE:
+                    eventLabel = "FollowMe error: invalid state";
+                    break;
+
+                case Follow.FOLLOW_DRONE_DISCONNECTED:
+                    eventLabel = "FollowMe error: drone not connected";
+                    break;
+
+                case Follow.FOLLOW_DRONE_NOT_ARMED:
+                    eventLabel = "FollowMe error: drone not armed";
+                    break;
+            }
+
+            if(eventLabel != null){
+                eventBuilder.setAction("FollowMe selected").setLabel(eventLabel);
+                Toast.makeText(getActivity(), eventLabel, Toast.LENGTH_SHORT).show();
+            }
 			break;
 
 		default:
