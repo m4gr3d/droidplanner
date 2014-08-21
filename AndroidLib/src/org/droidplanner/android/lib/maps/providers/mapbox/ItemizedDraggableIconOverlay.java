@@ -1,4 +1,4 @@
-package org.droidplanner.android.maps.providers.mapbox;
+package org.droidplanner.android.lib.maps.providers.mapbox;
 
 import android.content.Context;
 import android.graphics.Point;

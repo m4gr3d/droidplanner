@@ -10,11 +10,11 @@ import com.MAVLink.Messages.ApmModes;
 
 import org.droidplanner.android.DroidPlannerApp;
 import org.droidplanner.android.activities.helpers.BluetoothDevicesActivity;
-import org.droidplanner.android.gcs.follow.Follow;
 import org.droidplanner.android.notifications.NotificationHandler;
 import org.droidplanner.android.utils.Utils;
 import org.droidplanner.android.utils.prefs.DroidPlannerPrefs;
 import org.droidplanner.core.drone.DroneInterfaces;
+import org.droidplanner.core.gcs.follow.Follow;
 import org.droidplanner.core.model.Drone;
 
 /**

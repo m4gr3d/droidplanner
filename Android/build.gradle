@@ -8,12 +8,6 @@ dependencies {
     compile 'com.google.android.gms:play-services:5.0.89'
 
     compile files('libs/droneapi-java.jar')
-    compile ('com.mapbox.mapboxsdk:mapbox-android-sdk:0.4.0@aar'){
-        transitive=true
-    }
-    compile ('com.cocoahero.android:geojson:1.0.0@aar'){
-        transitive=true
-    }
 
     compile files('libs/usbseriallibrary.jar')
     compile files('libs/j2xx.jar')

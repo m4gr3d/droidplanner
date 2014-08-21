@@ -13,7 +13,7 @@ import com.google.android.glass.touchpad.GestureDetector;
 import org.droidplanner.R;
 import org.droidplanner.android.lib.fragments.BaseDroneMap;
 import org.droidplanner.android.lib.maps.BaseDPMap;
-import org.droidplanner.android.lib.maps.providers.osm.OSMapFragment;
+import org.droidplanner.android.lib.maps.providers.mapbox.MapBoxFragment;
 import org.droidplanner.android.lib.prefs.AutoPanMode;
 
 /**
@@ -72,12 +72,12 @@ public class GlassMapFragment extends BaseDroneMap {
 
                         switch (gesture) {
                             case SWIPE_RIGHT: {
-                                updateMapZoomLevel(mMapFragment.getZoomLevel() + mZoomStep);
+                                updateMapZoomLevel(mMapFragment.getMapZoomLevel() + mZoomStep);
                                 return true;
                             }
 
                             case SWIPE_LEFT: {
-                                updateMapZoomLevel(mMapFragment.getZoomLevel() - mZoomStep);
+                                updateMapZoomLevel(mMapFragment.getMapZoomLevel() - mZoomStep);
                                 return true;
                             }
                         }
@@ -92,8 +92,7 @@ public class GlassMapFragment extends BaseDroneMap {
         final FragmentManager fm = getChildFragmentManager();
         mMapFragment = (BaseDPMap) fm.findFragmentById(R.id.map_fragment_container);
         if(mMapFragment == null){
-            //TODO: replace with mapbox map implementation
-            mMapFragment = new OSMapFragment();
+            mMapFragment = new MapBoxFragment();
             fm.beginTransaction()
                     .add(R.id.map_fragment_container, (Fragment) mMapFragment)
                     .commit();

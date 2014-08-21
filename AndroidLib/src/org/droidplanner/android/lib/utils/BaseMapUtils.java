@@ -3,20 +3,21 @@ package org.droidplanner.android.lib.utils;
 import android.content.res.Resources;
 import android.location.Location;
 
+import com.mapbox.mapboxsdk.api.ILatLng;
+import com.mapbox.mapboxsdk.geometry.LatLng;
+
 import org.droidplanner.core.helpers.coordinates.Coord2D;
-import org.osmdroid.api.IGeoPoint;
-import org.osmdroid.util.GeoPoint;
 
 public class BaseMapUtils {
 
     //Not instantiable
     protected BaseMapUtils(){}
 
-    public static GeoPoint CoordToGeoPoint(Coord2D coord) {
-        return new GeoPoint(coord.getLat(), coord.getLng());
+    public static LatLng CoordToLatLng(Coord2D coord){
+        return new LatLng(coord.getLat(), coord.getLng());
     }
 
-    public static Coord2D GeoPointToCoord(IGeoPoint point) {
+    public static Coord2D ILatLngToCoord(ILatLng point){
         return new Coord2D(point.getLatitude(), point.getLongitude());
     }
 

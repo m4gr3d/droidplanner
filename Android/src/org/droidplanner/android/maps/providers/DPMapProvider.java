@@ -3,7 +3,7 @@ package org.droidplanner.android.maps.providers;
 import org.droidplanner.android.lib.maps.BaseDPMap;
 import org.droidplanner.android.maps.providers.google_map.GoogleMapFragment;
 import org.droidplanner.android.maps.providers.google_map.GoogleMapProviderPreferences;
-import org.droidplanner.android.maps.providers.mapbox.MapBoxFragment;
+import org.droidplanner.android.lib.maps.providers.mapbox.MapBoxFragment;
 import org.droidplanner.android.maps.providers.mapbox.MapBoxProviderPreferences;
 
 /**

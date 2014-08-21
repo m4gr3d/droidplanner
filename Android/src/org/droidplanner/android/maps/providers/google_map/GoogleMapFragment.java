@@ -199,7 +199,7 @@ public class GoogleMapFragment extends SupportMapFragment implements BaseDPMap, 
     }
 
     @Override
-    public float getZoomLevel() {
+    public float getMapZoomLevel() {
         return mMap.getCameraPosition().zoom;
     }
 

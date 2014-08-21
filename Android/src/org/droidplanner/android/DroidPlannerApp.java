@@ -1,9 +1,7 @@
 package org.droidplanner.android;
 
-import org.droidplanner.android.communication.service.MAVLinkClient;
-import org.droidplanner.android.communication.service.UploaderService;
+import org.droidplanner.android.communication.MAVLinkClient;
 import org.droidplanner.android.gcs.location.FusedLocation;
-import org.droidplanner.android.notifications.NotificationHandler;
 import org.droidplanner.android.proxy.mission.MissionProxy;
 import org.droidplanner.android.services.UploaderService;
 import org.droidplanner.android.utils.analytics.GAUtils;

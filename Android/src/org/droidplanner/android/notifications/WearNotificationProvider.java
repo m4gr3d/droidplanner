@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
-import org.droidplanner.android.gcs.follow.Follow;
 import org.droidplanner.android.lib.parcelables.ParcelableApmMode;
 import org.droidplanner.android.lib.parcelables.ParcelableBattery;
 import org.droidplanner.android.lib.parcelables.ParcelableGPS;
@@ -15,6 +14,7 @@ import org.droidplanner.android.lib.utils.ParcelableUtils;
 import org.droidplanner.android.lib.utils.WearUtils;
 import org.droidplanner.android.services.WearNotificationService;
 import org.droidplanner.core.drone.DroneInterfaces;
+import org.droidplanner.core.gcs.follow.Follow;
 import org.droidplanner.core.model.Drone;
 
 /**

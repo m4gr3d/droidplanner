@@ -171,11 +171,6 @@ public interface BaseDPMap extends DroneInterfaces.OnDroneListener {
     public float getMinZoomLevel();
 
 	/**
-	 * @return this map's provider.
-	 */
-	public DPMapProvider getProvider();
-
-	/**
 	 * Move the map to the drone location.
 	 */
 	public void goToDroneLocation();
