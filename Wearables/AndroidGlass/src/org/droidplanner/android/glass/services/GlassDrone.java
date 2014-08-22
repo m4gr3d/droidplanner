@@ -4,6 +4,11 @@ import android.os.Binder;
 
 import com.MAVLink.Messages.ardupilotmega.msg_heartbeat;
 
+import org.droidplanner.android.lib.parcelables.ParcelableAltitude;
+import org.droidplanner.android.lib.parcelables.ParcelableBattery;
+import org.droidplanner.android.lib.parcelables.ParcelableGPS;
+import org.droidplanner.android.lib.parcelables.ParcelableOrientation;
+import org.droidplanner.android.lib.parcelables.ParcelableRadio;
 import org.droidplanner.android.lib.parcelables.ParcelableSpeed;
 import org.droidplanner.core.MAVLink.MAVLinkStreams;
 import org.droidplanner.core.MAVLink.WaypointManager;
@@ -46,14 +51,39 @@ public class GlassDrone extends Binder implements Drone {
      */
     private int mType;
 
-    private ParcelableSpeed mSpeedParcel;
+    private final Speed mSpeed = new Speed(this);
+    private final Battery mBattery = new Battery(this);
+    private final Orientation mOrientation = new Orientation(this);
+    private final GPS mGps = new GPS(this);
+    private final Radio mRadio = new Radio(this);
+    private final Altitude mAltitude = new Altitude(this);
 
     GlassDrone(DroidPlannerGlassService dpService){
         mDPServiceRef = new WeakReference<DroidPlannerGlassService>(dpService);
     }
 
-    void setSpeedParcel(ParcelableSpeed speedParcel){
-        mSpeedParcel = speedParcel;
+    void setSpeed(ParcelableSpeed speedParcel){
+        speedParcel.updateSpeed(mSpeed);
+    }
+
+    void setBattery(ParcelableBattery batteryParcel){
+        batteryParcel.updateBattery(mBattery);
+    }
+
+    void setOrientation(ParcelableOrientation orientationParcel){
+        orientationParcel.updateOrientation(mOrientation);
+    }
+
+    void setGps(ParcelableGPS gpsParcel){
+        gpsParcel.updateGps(mGps);
+    }
+
+    void setRadio(ParcelableRadio radioParcel){
+        radioParcel.updateRadio(mRadio);
+    }
+
+    void setAltitude(ParcelableAltitude altitudeParcel){
+        altitudeParcel.updateAltitude(mAltitude);
     }
 
     public void addDroneListener(DroneInterfaces.OnDroneListener listener) {
@@ -77,8 +107,7 @@ public class GlassDrone extends Binder implements Drone {
 
     @Override
     public GPS getGps() {
-        //TODO: implement
-        return null;
+        return mGps;
     }
 
     @Override
@@ -144,19 +173,17 @@ public class GlassDrone extends Binder implements Drone {
 
     @Override
     public Speed getSpeed() {
-        //TODO: implement
-        return null;
+        return mSpeed;
     }
 
     @Override
     public Battery getBattery() {
-        //TODO: implement
-        return null;
+        return mBattery;
     }
 
     @Override
     public Radio getRadio() {
-        return null;
+        return mRadio;
     }
 
     @Override
@@ -166,14 +193,12 @@ public class GlassDrone extends Binder implements Drone {
 
     @Override
     public Altitude getAltitude() {
-        //TODO: implement
-        return null;
+        return mAltitude;
     }
 
     @Override
     public Orientation getOrientation() {
-        //TODO: implement
-        return null;
+        return mOrientation;
     }
 
     @Override

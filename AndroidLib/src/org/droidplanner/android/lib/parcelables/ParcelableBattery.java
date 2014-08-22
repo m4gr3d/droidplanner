@@ -4,6 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import org.droidplanner.core.drone.variables.Battery;
+import org.droidplanner.core.model.Drone;
 
 /**
  * Parcelable wrapper for a Battery object.
@@ -30,6 +31,16 @@ public class ParcelableBattery implements Parcelable {
 
     public double getBattCurrent() {
         return battCurrent;
+    }
+
+    public Battery getBattery(Drone drone){
+        final Battery battery = new Battery(drone);
+        return updateBattery(battery);
+    }
+
+    public Battery updateBattery(Battery reuse){
+        reuse.setBatteryState(battVolt, battRemain, battCurrent);
+        return reuse;
     }
 
     @Override

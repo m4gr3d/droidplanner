@@ -4,6 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import org.droidplanner.core.drone.variables.Orientation;
+import org.droidplanner.core.model.Drone;
 
 /**
  * Parcelable wrapper for an Orientation object.
@@ -29,6 +30,16 @@ public class ParcelableOrientation implements Parcelable {
 
     public double getYaw() {
         return yaw;
+    }
+
+    public Orientation getOrientation(Drone drone){
+        final Orientation orientation = new Orientation(drone);
+        return updateOrientation(orientation);
+    }
+
+    public Orientation updateOrientation(Orientation reuse){
+        reuse.setRollPitchYaw(roll, pitch, yaw);
+        return reuse;
     }
 
     @Override

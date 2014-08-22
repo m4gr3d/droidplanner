@@ -5,6 +5,7 @@ import android.os.Parcelable;
 
 import org.droidplanner.core.drone.variables.GPS;
 import org.droidplanner.core.helpers.coordinates.Coord2D;
+import org.droidplanner.core.model.Drone;
 
 /**
  * Parcelable wrapper for a GPS object.
@@ -33,6 +34,17 @@ public class ParcelableGPS implements Parcelable {
         } else {
             return new Coord2D(0, 0);
         }
+    }
+
+    public GPS getGps(Drone drone){
+        final GPS gps = new GPS(drone);
+        return updateGps(gps);
+    }
+
+    public GPS updateGps(GPS reuse){
+        reuse.setGpsState(fixType, satCount, gps_eph);
+        reuse.setPosition(position.getCoord());
+        return reuse;
     }
 
     public double getGpsEPH() {

@@ -5,6 +5,7 @@ import android.os.Parcelable;
 
 import org.droidplanner.core.drone.variables.Radio;
 import org.droidplanner.core.helpers.math.MathUtil;
+import org.droidplanner.core.model.Drone;
 
 /**
  * Parcelable wrapper for a Radio object.
@@ -73,6 +74,17 @@ public class ParcelableRadio implements Parcelable {
     public int getSignalStrength() {
         return (int) (MathUtil.Normalize(Math.min(getFadeMargin(), getRemFadeMargin()),
                 Radio.MIN_FADE_MARGIN, Radio.MAX_FADE_MARGIN) * 100);
+    }
+
+    public Radio getRadio(Drone drone){
+        final Radio radio = new Radio(drone);
+        return updateRadio(radio);
+    }
+
+    public Radio updateRadio(Radio reuse){
+        reuse.setRadioState((short)rxerrors, (short)fixed, (byte)rssi, (byte)remrssi, (byte)txbuf,
+                (byte)noise, (byte)remnoise);
+        return reuse;
     }
 
     @Override

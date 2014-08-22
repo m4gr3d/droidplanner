@@ -4,6 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import org.droidplanner.core.drone.variables.Speed;
+import org.droidplanner.core.model.Drone;
 
 /**
  * Parcelable wrapper for a Speed object.
@@ -46,6 +47,17 @@ public class ParcelableSpeed implements Parcelable {
         this.groundSpeed = groundSpeed;
         this.airSpeed = airSpeed;
         this.verticalSpeed = climb;
+    }
+
+    public Speed getSpeed(Drone drone){
+        final Speed speed = new Speed(drone);
+        return updateSpeed(speed);
+    }
+
+    public Speed updateSpeed(Speed reuse){
+        reuse.setGroundAndAirSpeeds(groundSpeed, airSpeed, verticalSpeed);
+        reuse.setSpeedError(targetSpeed - airSpeed);
+        return reuse;
     }
 
     @Override
