@@ -1,13 +1,15 @@
 package org.droidplanner.core.drone.variables;
 
-import org.droidplanner.core.drone.Drone;
 import org.droidplanner.core.drone.DroneInterfaces.DroneEventsType;
 import org.droidplanner.core.drone.DroneVariable;
 import org.droidplanner.core.helpers.math.MathUtil;
+import org.droidplanner.core.model.Drone;
 
 public class Radio extends DroneVariable {
 	private static final int MAX_FADE_MARGIN = 50;
 	private static final int MIN_FADE_MARGIN = 6;
+
+	private double previousSignalStrength = 100;
 
 	private int rxerrors = -1;
 	private int fixed = -1;
@@ -81,7 +83,15 @@ public class Radio extends DroneVariable {
 			this.remnoise = SikValueToDB(remnoise & 0xFF);
 			this.txbuf = txbuf & 0xFF;
 
-			myDrone.events.notifyDroneEvent(DroneEventsType.RADIO);
+
+			int currentSignalStrength = getSignalStrength();
+			//if signal strength dips below 10%
+			if(currentSignalStrength < 10.0 && previousSignalStrength >=10.0){
+				myDrone.notifyDroneEvent(DroneEventsType.WARNING_SIGNAL_WEAK);
+			}
+			previousSignalStrength = currentSignalStrength;
+
+			myDrone.notifyDroneEvent(DroneEventsType.RADIO);
 		}
 
 	}

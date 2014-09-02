@@ -5,9 +5,9 @@ import org.droidplanner.android.DroidPlannerApp;
 import org.droidplanner.android.activities.ConfigurationActivity;
 import org.droidplanner.android.fragments.calibration.SetupMainPanel;
 import org.droidplanner.android.fragments.calibration.SetupSidePanel;
-import org.droidplanner.core.drone.Drone;
 import org.droidplanner.core.drone.DroneInterfaces.DroneEventsType;
 import org.droidplanner.core.drone.DroneInterfaces.OnDroneListener;
+import org.droidplanner.core.model.Drone;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -98,13 +98,13 @@ public abstract class SuperSetupFragment extends Fragment implements OnDroneList
 
 	@Override
 	public void onStart() {
-		drone.events.addDroneListener(this);
+		drone.addDroneListener(this);
 		super.onStart();
 	}
 
 	@Override
 	public void onStop() {
-		drone.events.removeDroneListener(this);
+		drone.removeDroneListener(this);
 		super.onStop();
 	}
 

@@ -2,8 +2,8 @@ package org.droidplanner.android.notifications;
 
 import org.droidplanner.android.weather.item.IWeatherItem;
 import org.droidplanner.android.weather.provider.IWeatherDataProvider;
-import org.droidplanner.core.drone.Drone;
 import org.droidplanner.core.drone.DroneInterfaces;
+import org.droidplanner.core.model.Drone;
 
 import android.content.Context;
 
@@ -36,10 +36,16 @@ public class NotificationHandler implements DroneInterfaces.OnDroneListener, IWe
 	 */
 	private final PebbleNotificationProvider mPebbleNotification;
 
+	/**
+	 * Handles emergency beep notification.
+	 */
+	private final EmergencyBeepNotificationProvider mBeepNotification;
+
 	public NotificationHandler(Context context) {
 		mTtsNotification = new TTSNotificationProvider(context);
 		mStatusBarNotification = new StatusBarNotificationProvider(context);
 		mPebbleNotification = new PebbleNotificationProvider(context);
+		mBeepNotification = new EmergencyBeepNotificationProvider(context);
 	}
 
 	@Override
@@ -47,6 +53,7 @@ public class NotificationHandler implements DroneInterfaces.OnDroneListener, IWe
 		mTtsNotification.onDroneEvent(event, drone);
 		mStatusBarNotification.onDroneEvent(event, drone);
 		mPebbleNotification.onDroneEvent(event, drone);
+		mBeepNotification.onDroneEvent(event, drone);
 	}
 
 	/**

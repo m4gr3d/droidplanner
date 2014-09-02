@@ -5,15 +5,13 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.droidplanner.core.MAVLink.MavLinkParameters;
-import org.droidplanner.core.drone.Drone;
 import org.droidplanner.core.drone.DroneInterfaces;
 import org.droidplanner.core.drone.DroneInterfaces.DroneEventsType;
 import org.droidplanner.core.drone.DroneInterfaces.Handler;
 import org.droidplanner.core.drone.DroneInterfaces.OnDroneListener;
 import org.droidplanner.core.drone.DroneVariable;
+import org.droidplanner.core.model.Drone;
 import org.droidplanner.core.parameters.Parameter;
-
-import android.annotation.SuppressLint;
 
 import com.MAVLink.Messages.MAVLinkMessage;
 import com.MAVLink.Messages.ardupilotmega.msg_param_value;
@@ -32,10 +30,9 @@ public class Parameters extends DroneVariable implements OnDroneListener {
 
 	private int expectedParams;
 
-	@SuppressLint("UseSparseArrays")
 	private HashMap<Integer, Parameter> parameters = new HashMap<Integer, Parameter>();
 
-	public DroneInterfaces.OnParameterManagerListener parameterListener;
+	private DroneInterfaces.OnParameterManagerListener parameterListener;
 
 	public Handler watchdog;
 	public Runnable watchdogCallback = new Runnable() {
@@ -45,10 +42,12 @@ public class Parameters extends DroneVariable implements OnDroneListener {
 		}
 	};
 
+	public ArrayList<Parameter> parameterList;
+
 	public Parameters(Drone myDrone, Handler handler) {
 		super(myDrone);
 		this.watchdog = handler;
-		myDrone.events.addDroneListener(this);
+		myDrone.addDroneListener(this);
 	}
 
 	public void getAllParameters() {
@@ -80,26 +79,27 @@ public class Parameters extends DroneVariable implements OnDroneListener {
 		parameters.put((int) m_value.param_index, param);
 
 		expectedParams = m_value.param_count;
-		
+
 		// update listener
 		if (parameterListener != null)
-			parameterListener.onParameterReceived(param, m_value.param_index,
-					m_value.param_count);
+			parameterListener.onParameterReceived(param, m_value.param_index, m_value.param_count);
 
 		// Are all parameters here? Notify the listener with the parameters
 		if (parameters.size() >= m_value.param_count) {
+			List<Parameter> parameterList = new ArrayList<Parameter>();
+			for (int key : parameters.keySet()) {
+				parameterList.add(parameters.get(key));
+			}
+			killWatchdog();
+			myDrone.notifyDroneEvent(DroneEventsType.PARAMETERS_DOWNLOADED);
+
 			if (parameterListener != null) {
-				List<Parameter> parameterList = new ArrayList<Parameter>();
-				for (int key : parameters.keySet()) {
-					parameterList.add(parameters.get(key));
-				}
-				killWatchdog();
 				parameterListener.onEndReceivingParameters(parameterList);
 			}
 		} else {
 			resetWatchdog();
 		}
-		myDrone.events.notifyDroneEvent(DroneEventsType.PARAMETER);
+		myDrone.notifyDroneEvent(DroneEventsType.PARAMETER);
 	}
 
 	private void reRequestMissingParams(int howManyParams) {
@@ -149,14 +149,23 @@ public class Parameters extends DroneVariable implements OnDroneListener {
 
 	@Override
 	public void onDroneEvent(DroneEventsType event, Drone drone) {
-		switch(event){
+		switch (event) {
+		case HEARTBEAT_FIRST:
+			if (drone.getState().isFlying() == false) {
+				getAllParameters();
+			}
+			break;
 		case DISCONNECTED:
 		case HEARTBEAT_TIMEOUT:
 			killWatchdog();
 			break;
 		default:
 			break;
-		
+
 		}
+	}
+
+	public void setParameterListener(DroneInterfaces.OnParameterManagerListener parameterListener) {
+		this.parameterListener = parameterListener;
 	}
 }

@@ -9,6 +9,56 @@ All the changes are logged below (preferable with the pull request numbers in pa
 
 # Releases
 
+## Droidplanner v2.7.2
+* Extra speech warnings (#1012,#835)
+* Gray drone on heartbeat loss (#1002,#497,#1018)
+* Crash alert. beep beep (#1010,#1031)
+* Gopro specs (#1029)
+* Correct Area calculation method (#1001,#842)
+* MavLink Connection restructuring (#1009)
+* Set sequence number in msg_heartbeat (#956)
+* Fix problem on settings screen (#998,#1008)
+* Fix .gitignore for android studio files (#1016)
+* Fix German translation (#1004)
+* Catch possible NullPointerException (#1014,#1013)
+
+## Droidplanner v2.7.1
+* Fix sporadic bug on logging code (#1000)
+* Fix problem on settings screen (#998)
+
+## Droidplanner v2.7.0
+* Development of a desktop App (#982)
+* Periodic voice notifications (#996)
+* Follow-me safety/performance improvements (#992)
+* Fix Failsafe message text (#981)
+* Fix home info display (#993)
+* Mapbox integration (#985)
+* Small typo fixes on the code(#990)
+* Implement follow-me on Desktop app (#989)
+* Making follow-me code more generic (#988)
+* Encapsulate Drone model on CORE project (#994)
+* Fix on the build system (#984,#979,#991,#996)
+
+## Droidplanner v2.6.2
+* Parameter download on start-up (#976)
+* Use FTDI usb library for FTDI devices (#975)
+* Fix NullPointer error on editor (#972)
+* Fix a couple of mission items unpack method (#971)
+
+## Droidplanner v2.6.1
+* Failsafe messages (#922)
+* Fixed the circle item on mission planning (#970)
+* Do not crash the app when there is no USB device (#954)
+* Refactor the ROI class (#947)
+* New 3D distance method (#943)
+* Fix issues with Droneshare uploader (#920)
+* Do not allow mission items after RTL or Land (#959)
+* When the user doesn't have TTS, fail silently (#924, #911)
+* Fix issue with waypoint tool icon on editor (#909,#918)
+* Moved all the libraries to a sub-folder (#960)
+* Moved follow-me development to another branch (#948)
+* Smaller changes to project structure (#921, #923, #938, #939, #945, #946)
+
 ## Droidplanner v2.6.0
 * Improved follow-me ROI (#916)
 * New follow-modes, 'track from above', ' right' and 'left' (#908, #887)

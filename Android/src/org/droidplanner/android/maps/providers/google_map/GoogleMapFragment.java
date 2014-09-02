@@ -14,9 +14,9 @@ import org.droidplanner.android.maps.providers.DPMapProvider;
 import org.droidplanner.android.utils.DroneHelper;
 import org.droidplanner.android.utils.prefs.AutoPanMode;
 import org.droidplanner.android.utils.prefs.DroidPlannerPrefs;
-import org.droidplanner.core.drone.Drone;
 import org.droidplanner.core.drone.DroneInterfaces;
 import org.droidplanner.core.helpers.coordinates.Coord2D;
+import org.droidplanner.core.model.Drone;
 
 import android.content.Context;
 import android.content.IntentSender;
@@ -30,6 +30,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -189,6 +190,26 @@ public class GoogleMapFragment extends SupportMapFragment implements DPMap,
 	}
 
 	@Override
+	public Coord2D getMapCenter() {
+		return DroneHelper.LatLngToCoord(mMap.getCameraPosition().target);
+	}
+
+	@Override
+	public float getMapZoomLevel() {
+		return mMap.getCameraPosition().zoom;
+	}
+
+	@Override
+	public float getMaxZoomLevel() {
+		return mMap.getMaxZoomLevel();
+	}
+
+	@Override
+	public float getMinZoomLevel() {
+		return mMap.getMinZoomLevel();
+	}
+
+	@Override
 	public void selectAutoPanMode(AutoPanMode target) {
 		final AutoPanMode currentMode = mPanMode.get();
 		if (currentMode == target)
@@ -201,7 +222,7 @@ public class GoogleMapFragment extends SupportMapFragment implements DPMap,
 		if (mPanMode.compareAndSet(current, update)) {
 			switch (current) {
 			case DRONE:
-				mDrone.events.removeDroneListener(this);
+				mDrone.removeDroneListener(this);
 				break;
 
 			case USER:
@@ -219,7 +240,7 @@ public class GoogleMapFragment extends SupportMapFragment implements DPMap,
 
 			switch (update) {
 			case DRONE:
-				mDrone.events.addDroneListener(this);
+				mDrone.addDroneListener(this);
 				break;
 
 			case USER:
@@ -280,7 +301,13 @@ public class GoogleMapFragment extends SupportMapFragment implements DPMap,
 
 	@Override
 	public void updateMarker(MarkerInfo markerInfo, boolean isDraggable) {
-		final LatLng position = DroneHelper.CoordToLatLang(markerInfo.getPosition());
+        //if the drone hasn't received a gps signal yet
+        final Coord2D coord = markerInfo.getPosition();
+        if(coord == null){
+            return;
+        }
+
+		final LatLng position = DroneHelper.CoordToLatLang(coord);
 		Marker marker = mMarkers.get(markerInfo);
 		if (marker == null) {
 			// Generate the marker
@@ -372,7 +399,7 @@ public class GoogleMapFragment extends SupportMapFragment implements DPMap,
 	}
 
 	@Override
-	public void updateCamera(Coord2D coord, int zoomLevel) {
+	public void updateCamera(Coord2D coord, float zoomLevel) {
 		if (coord != null) {
 			mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(DroneHelper.CoordToLatLang(coord),
 					zoomLevel));
@@ -486,8 +513,12 @@ public class GoogleMapFragment extends SupportMapFragment implements DPMap,
 
 	@Override
 	public void goToDroneLocation() {
+		if(!mDrone.getGps().isPositionValid()){
+			Toast.makeText(getActivity().getApplicationContext(), "No drone location available", Toast.LENGTH_SHORT).show();
+			return;
+		}
 		final float currentZoomLevel = mMap.getCameraPosition().zoom;
-		final Coord2D droneLocation = mDrone.GPS.getPosition();
+		final Coord2D droneLocation = mDrone.getGps().getPosition();
 		updateCamera(droneLocation, (int) currentZoomLevel);
 	}
 
@@ -661,10 +692,10 @@ public class GoogleMapFragment extends SupportMapFragment implements DPMap,
 	public void onDroneEvent(DroneInterfaces.DroneEventsType event, Drone drone) {
 		switch (event) {
 		case GPS:
-			if (mPanMode.get() == AutoPanMode.DRONE) {
+			if (mPanMode.get() == AutoPanMode.DRONE && drone.getGps().isPositionValid()) {
 				final float currentZoomLevel = mMap.getCameraPosition().zoom;
-				final Coord2D droneLocation = drone.GPS.getPosition();
-				updateCamera(droneLocation, (int) currentZoomLevel);
+				final Coord2D droneLocation = drone.getGps().getPosition();
+				updateCamera(droneLocation, currentZoomLevel);
 			}
 			break;
 		default:

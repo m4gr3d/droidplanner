@@ -15,10 +15,10 @@ import org.droidplanner.android.activities.helpers.MapPreferencesActivity;
 import org.droidplanner.android.communication.service.UploaderService;
 import org.droidplanner.android.maps.providers.DPMapProvider;
 import org.droidplanner.android.utils.file.DirectoryPath;
-import org.droidplanner.core.drone.Drone;
 import org.droidplanner.core.drone.DroneInterfaces;
 import org.droidplanner.core.drone.DroneInterfaces.DroneEventsType;
 import org.droidplanner.core.drone.variables.HeartBeat;
+import org.droidplanner.core.model.Drone;
 
 import android.content.ActivityNotFoundException;
 import android.content.Context;
@@ -28,6 +28,7 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.CheckBoxPreference;
 import android.preference.EditTextPreference;
 import android.preference.ListPreference;
@@ -35,6 +36,7 @@ import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceManager;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -52,10 +54,25 @@ public class SettingsFragment extends DpPreferenceFragment implements
 	 */
 	private final static String TAG = SettingsFragment.class.getSimpleName();
 
+    private static final String PACKAGE_NAME = SettingsFragment.class.getPackage().getName();
+
+    /**
+     * Action used to broadcast updates to the period for the spoken status summary.
+     */
+    public static final String ACTION_UPDATED_STATUS_PERIOD = PACKAGE_NAME + "" +
+            ".ACTION_UPDATED_STATUS_PERIOD";
+
+    /**
+     * Used to retrieve the new period for the spoken status summary.
+     */
+    public static final String EXTRA_UPDATED_STATUS_PERIOD = "extra_updated_status_period";
+
 	/**
 	 * Keep track of which preferences' summary need to be updated.
 	 */
 	private final HashSet<String> mDefaultSummaryPrefs = new HashSet<String>();
+
+    private final Handler mHandler = new Handler();
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -97,15 +114,13 @@ public class SettingsFragment extends DpPreferenceFragment implements
 			}
 		}
 
+		setupPeriodicControls();
+
 		// Populate the map preference category
 		final String mapsProvidersPrefKey = getString(R.string.pref_maps_providers_key);
 		final ListPreference mapsProvidersPref = (ListPreference) findPreference(mapsProvidersPrefKey);
 		if (mapsProvidersPref != null) {
-			// Grab the list of maps provider
-			// TODO: enable full list of map providers when osm implementation
-			// is feature complete.
-			// final DPMapProvider[] providers = DPMapProvider.values();
-			final DPMapProvider[] providers = new DPMapProvider[] { DPMapProvider.GOOGLE_MAP };
+			final DPMapProvider[] providers = DPMapProvider.values();
 			final int providersCount = providers.length;
 			final CharSequence[] providersNames = new CharSequence[providersCount];
 			final CharSequence[] providersNamesValues = new CharSequence[providersCount];
@@ -196,115 +211,112 @@ public class SettingsFragment extends DpPreferenceFragment implements
 
 		updateMavlinkVersionPreference(null);
 		setupPebblePreference();
-        setDronesharePreferencesListeners();
+		setDronesharePreferencesListeners();
 	}
 
-    /**
-     * When a droneshare preference is updated, the listener will kick start the droneshare
-     * uploader service to see if any action is needed.
-     */
-    private void setDronesharePreferencesListeners() {
-        final Context context = getActivity().getApplicationContext();
+	/**
+	 * When a droneshare preference is updated, the listener will kick start the
+	 * droneshare uploader service to see if any action is needed.
+	 */
+	private void setDronesharePreferencesListeners() {
+		final Context context = getActivity().getApplicationContext();
 
-        CheckBoxPreference dshareTogglePref = (CheckBoxPreference) findPreference(getString(R
-                .string.pref_dshare_enabled_key));
-        if(dshareTogglePref != null){
-            dshareTogglePref.setOnPreferenceChangeListener(new Preference
-                    .OnPreferenceChangeListener() {
-                @Override
-                public boolean onPreferenceChange(Preference preference, Object newValue) {
-                    if((Boolean) newValue){
-                        context.startService(UploaderService.createIntent(context));
-                    }
-                    return true;
-                }
-            });
-        }
+		CheckBoxPreference dshareTogglePref = (CheckBoxPreference) findPreference(getString(R.string.pref_dshare_enabled_key));
+		if (dshareTogglePref != null) {
+			dshareTogglePref
+					.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+						@Override
+						public boolean onPreferenceChange(Preference preference, Object newValue) {
+							if ((Boolean) newValue) {
+								context.startService(UploaderService.createIntent(context));
+							}
+							return true;
+						}
+					});
+		}
 
-        EditTextPreference dshareUsernamePref = (EditTextPreference) findPreference(getString(R
-                .string.pref_dshare_username_key));
-        if(dshareUsernamePref != null){
-            dshareUsernamePref.setOnPreferenceChangeListener(new Preference
-                    .OnPreferenceChangeListener() {
-                @Override
-                public boolean onPreferenceChange(Preference preference, Object newValue) {
-                    if(!newValue.toString().isEmpty()){
-                        context.startService(UploaderService.createIntent(context));
-                    }
-                    return true;
-                }
-            });
-        }
+		EditTextPreference dshareUsernamePref = (EditTextPreference) findPreference(getString(R.string.pref_dshare_username_key));
+		if (dshareUsernamePref != null) {
+			dshareUsernamePref
+					.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+						@Override
+						public boolean onPreferenceChange(Preference preference, Object newValue) {
+							if (!newValue.toString().isEmpty()) {
+								context.startService(UploaderService.createIntent(context));
+							}
+							return true;
+						}
+					});
+		}
 
-        EditTextPreference dsharePasswordPref = (EditTextPreference) findPreference(getString(R
-                .string.pref_dshare_password_key));
-        if(dsharePasswordPref != null){
-            dsharePasswordPref.setOnPreferenceChangeListener(new Preference
-                    .OnPreferenceChangeListener() {
-                @Override
-                public boolean onPreferenceChange(Preference preference, Object newValue) {
-                    if(!newValue.toString().isEmpty()){
-                        context.startService(UploaderService.createIntent(context));
-                    }
-                    return true;
-                }
-            });
-        }
-    }
+		EditTextPreference dsharePasswordPref = (EditTextPreference) findPreference(getString(R.string.pref_dshare_password_key));
+		if (dsharePasswordPref != null) {
+			dsharePasswordPref
+					.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+						@Override
+						public boolean onPreferenceChange(Preference preference, Object newValue) {
+							if (!newValue.toString().isEmpty()) {
+								context.startService(UploaderService.createIntent(context));
+							}
+							return true;
+						}
+					});
+		}
+	}
 
-    /**
-     * Pebble Install Button. When clicked, will check for pebble if pebble
-     * is not present, error displayed. If it is, the pbw (pebble bundle)
-     * will be copied from assets to external memory (makes sure to
-     * overwrite), and sends pbw intent for pebble app to install bundle.
-     */
-    private void setupPebblePreference(){
-        final Context context = getActivity().getApplicationContext();
+	/**
+	 * Pebble Install Button. When clicked, will check for pebble if pebble is
+	 * not present, error displayed. If it is, the pbw (pebble bundle) will be
+	 * copied from assets to external memory (makes sure to overwrite), and
+	 * sends pbw intent for pebble app to install bundle.
+	 */
+	private void setupPebblePreference() {
+		final Context context = getActivity().getApplicationContext();
 
-        Preference pebblePreference = findPreference(getString(R.string.pref_pebble_install_key));
-        pebblePreference.setOnPreferenceClickListener(new OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference pref) {
-                if (PebbleKit.isWatchConnected(context)) {
-                    InputStream in = null;
-                    OutputStream out = null;
-                    try {
-                        in = context.getAssets().open("Pebble/DroidPlanner.pbw");
-                        File outFile = new File(DirectoryPath.getDroidPlannerPath(),
-                                "DroidPlanner.pbw");
-                        out = new FileOutputStream(outFile);
-                        byte[] buffer = new byte[1024];
-                        int read;
-                        while ((read = in.read(buffer)) != -1) {
-                            out.write(buffer, 0, read);
-                        }
-                        in.close();
-                        in = null;
-                        out.flush();
-                        out.close();
-                        out = null;
+		Preference pebblePreference = findPreference(getString(R.string.pref_pebble_install_key));
+		pebblePreference.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+			@Override
+			public boolean onPreferenceClick(Preference pref) {
+				if (PebbleKit.isWatchConnected(context)) {
+					InputStream in = null;
+					OutputStream out = null;
+					try {
+						in = context.getAssets().open("Pebble/DroidPlanner.pbw");
+						File outFile = new File(DirectoryPath.getDroidPlannerPath(),
+								"DroidPlanner.pbw");
+						out = new FileOutputStream(outFile);
+						byte[] buffer = new byte[1024];
+						int read;
+						while ((read = in.read(buffer)) != -1) {
+							out.write(buffer, 0, read);
+						}
+						in.close();
+						in = null;
+						out.flush();
+						out.close();
+						out = null;
 
-                        Intent intent = new Intent(Intent.ACTION_VIEW);
-                        intent.setData(Uri.fromFile(outFile));
-                        intent.setClassName("com.getpebble.android",
-                                "com.getpebble.android.ui.UpdateActivity");
-                        startActivity(intent);
-                    } catch (IOException e) {
-                        Log.e("pebble", "Failed to copy pbw asset", e);
-                        Toast.makeText(context, "Failed to copy pbw asset", Toast.LENGTH_SHORT)
-                                .show();
-                    } catch (ActivityNotFoundException e) {
-                        Log.e("pebble", "Pebble App Not installed", e);
-                        Toast.makeText(context, "Pebble App Not installed", Toast.LENGTH_SHORT)
-                                .show();
-                    }
-                } else {
-                    Toast.makeText(context, "No Pebble Connected", Toast.LENGTH_SHORT).show();
-                }
-                return true;
-            }
-        });
-    }
+						Intent intent = new Intent(Intent.ACTION_VIEW);
+						intent.setData(Uri.fromFile(outFile));
+						intent.setClassName("com.getpebble.android",
+								"com.getpebble.android.ui.UpdateActivity");
+						startActivity(intent);
+					} catch (IOException e) {
+						Log.e("pebble", "Failed to copy pbw asset", e);
+						Toast.makeText(context, "Failed to copy pbw asset", Toast.LENGTH_SHORT)
+								.show();
+					} catch (ActivityNotFoundException e) {
+						Log.e("pebble", "Pebble App Not installed", e);
+						Toast.makeText(context, "Pebble App Not installed", Toast.LENGTH_SHORT)
+								.show();
+					}
+				} else {
+					Toast.makeText(context, "No Pebble Connected", Toast.LENGTH_SHORT).show();
+				}
+				return true;
+			}
+		});
+	}
 
 	private void initSummaryPerPrefs() {
 		mDefaultSummaryPrefs.clear();
@@ -372,9 +384,9 @@ public class SettingsFragment extends DpPreferenceFragment implements
 					+ getString(R.string.set_to_zero_to_disable));
 		}
 
+		DroidPlannerApp droidPlannerApp = (DroidPlannerApp) getActivity().getApplication();
 		if (key.equals(getString(R.string.pref_vehicle_type_key))) {
-			((DroidPlannerApp) getActivity().getApplication()).getDrone().events
-					.notifyDroneEvent(DroneEventsType.TYPE);
+			droidPlannerApp.getDrone().notifyDroneEvent(DroneEventsType.TYPE);
 		}
 
 		if (key.equals(getString(R.string.pref_rc_mode_key))) {
@@ -386,19 +398,56 @@ public class SettingsFragment extends DpPreferenceFragment implements
 		}
 	}
 
+	private void setupPeriodicControls() {
+		final PreferenceCategory periodicSpeechPrefs = (PreferenceCategory) findPreference(getString(R.string.pref_tts_periodic_key));
+		ListPreference periodic = ((ListPreference) periodicSpeechPrefs.getPreference(0));
+        periodic.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, final Object newValue) {
+                //Broadcast the event locally on update.
+                //A handler is used to that the current action has the time to return,
+                // and store the value in the preferences.
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        LocalBroadcastManager.getInstance(getActivity())
+                                .sendBroadcast(new Intent(ACTION_UPDATED_STATUS_PERIOD)
+                                        .putExtra(EXTRA_UPDATED_STATUS_PERIOD, (String) newValue));
+
+                        setupPeriodicControls();
+                    }
+                });
+                return true;
+            }
+        });
+
+		int val = Integer.parseInt(periodic.getValue());
+
+        final boolean isEnabled = val != 0;
+		if (isEnabled) {
+			periodic.setSummary("Status every " + val + " seconds");
+		} else {
+			periodic.setSummary("Status disabled");
+		}
+
+		for (int i = 1; i < periodicSpeechPrefs.getPreferenceCount(); i++) {
+			periodicSpeechPrefs.getPreference(i).setEnabled(isEnabled);
+		}
+	}
+
 	@Override
 	public void onStart() {
 		super.onStart();
 
 		final Drone drone = ((DroidPlannerApp) getActivity().getApplication()).getDrone();
-		final byte mavlinkVersion = drone.heartbeat.getMavlinkVersion();
+		final int mavlinkVersion = drone.getMavlinkVersion();
 		if (mavlinkVersion != HeartBeat.INVALID_MAVLINK_VERSION) {
 			updateMavlinkVersionPreference(String.valueOf(mavlinkVersion));
 		} else {
 			updateMavlinkVersionPreference(null);
 		}
 
-		drone.events.addDroneListener(this);
+		drone.addDroneListener(this);
 	}
 
 	@Override
@@ -406,7 +455,7 @@ public class SettingsFragment extends DpPreferenceFragment implements
 		super.onStop();
 
 		final Drone drone = ((DroidPlannerApp) getActivity().getApplication()).getDrone();
-		drone.events.removeDroneListener(this);
+		drone.removeDroneListener(this);
 	}
 
 	@Override
@@ -431,7 +480,7 @@ public class SettingsFragment extends DpPreferenceFragment implements
 
 		case HEARTBEAT_FIRST:
 		case HEARTBEAT_RESTORED:
-			updateMavlinkVersionPreference(String.valueOf(drone.heartbeat.getMavlinkVersion()));
+			updateMavlinkVersionPreference(String.valueOf(drone.getMavlinkVersion()));
 			break;
 		default:
 			break;

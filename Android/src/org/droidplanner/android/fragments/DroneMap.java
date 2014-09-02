@@ -12,10 +12,10 @@ import org.droidplanner.android.maps.providers.DPMapProvider;
 import org.droidplanner.android.proxy.mission.MissionProxy;
 import org.droidplanner.android.utils.Utils;
 import org.droidplanner.android.utils.prefs.AutoPanMode;
-import org.droidplanner.core.drone.Drone;
 import org.droidplanner.core.drone.DroneInterfaces.DroneEventsType;
 import org.droidplanner.core.drone.DroneInterfaces.OnDroneListener;
 import org.droidplanner.core.helpers.coordinates.Coord2D;
+import org.droidplanner.core.model.Drone;
 
 import android.app.Activity;
 import android.content.Context;
@@ -80,14 +80,14 @@ public abstract class DroneMap extends Fragment implements OnDroneListener {
 	@Override
 	public void onPause() {
 		super.onPause();
-		drone.events.removeDroneListener(this);
+		drone.removeDroneListener(this);
 		mMapFragment.saveCameraPosition();
 	}
 
 	@Override
 	public void onResume() {
 		super.onResume();
-		drone.events.addDroneListener(this);
+		drone.addDroneListener(this);
 		mMapFragment.loadCameraPosition();
 		update();
 	}
@@ -114,7 +114,9 @@ public abstract class DroneMap extends Fragment implements OnDroneListener {
 		case GPS:
 			mMapFragment.updateMarker(graphicDrone);
 			mMapFragment.updateDroneLeashPath(guided);
-			mMapFragment.addFlightPathPoint(drone.GPS.getPosition());
+			if(drone.getGps().isPositionValid()) {
+				mMapFragment.addFlightPathPoint(drone.getGps().getPosition());
+			}
 			break;
 
 		case GUIDEDPOINT:
@@ -122,6 +124,15 @@ public abstract class DroneMap extends Fragment implements OnDroneListener {
 			mMapFragment.updateDroneLeashPath(guided);
 			break;
 
+		case HEARTBEAT_RESTORED:
+		case HEARTBEAT_FIRST:
+			mMapFragment.updateMarker(graphicDrone);
+			break;
+
+		case DISCONNECTED:
+		case HEARTBEAT_TIMEOUT:
+			mMapFragment.updateMarker(graphicDrone);
+			break;
 		default:
 			break;
 		}

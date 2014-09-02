@@ -1,8 +1,8 @@
 package org.droidplanner.core.drone.variables;
 
-import org.droidplanner.core.drone.Drone;
 import org.droidplanner.core.drone.DroneInterfaces.DroneEventsType;
 import org.droidplanner.core.drone.DroneVariable;
+import org.droidplanner.core.model.Drone;
 
 public class Battery extends DroneVariable {
 	private double battVolt = -1;
@@ -31,7 +31,7 @@ public class Battery extends DroneVariable {
 			this.battVolt = battVolt;
 			this.battRemain = battRemain;
 			this.battCurrent = battCurrent;
-			myDrone.events.notifyDroneEvent(DroneEventsType.BATTERY);
+			myDrone.notifyDroneEvent(DroneEventsType.BATTERY);
 		}
 	}
 }
